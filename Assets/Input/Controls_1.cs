@@ -50,7 +50,7 @@ public partial class @Controls_1: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""WASD"",
                     ""id"": ""a1444738-f01d-4bab-b210-bf913dca31c3"",
-                    ""path"": ""2DVector(mode=2)"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -105,7 +105,7 @@ public partial class @Controls_1: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Left stick"",
                     ""id"": ""a933e065-4756-4292-882b-4b70bbf62b2f"",
-                    ""path"": ""2DVector(mode=2)"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
