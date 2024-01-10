@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DroneMovement: MonoBehaviour
+public class DroneControl: MonoBehaviour
 {
-    private Controls_1 input = null;
+    private DPad_Control inputDPad = null;
+    private XRI_Control inputXRI = null;
+    [SerializeField] private ParticleSystem droneSpray;
     private Rigidbody rb;
     private Vector2 throttleYawVector = Vector2.zero;
     private Vector2 throttleYawVector_prev = Vector2.zero;
@@ -19,32 +21,75 @@ public class DroneMovement: MonoBehaviour
 
     private void Awake()
     {
-        input = new Controls_1();
+        inputDPad = new DPad_Control();
+        inputXRI = new XRI_Control();
         rb = GetComponent<Rigidbody>();
+        var main = droneSpray.main;
+        main.loop = true;
     }
 
     // Subscribe
     private void OnEnable()
     {
-        input.Enable();
-        // Left stick
-        input.DroneContol.ThrottleYaw.performed += OnThrottleYawPerformed;
-        input.DroneContol.ThrottleYaw.canceled += OnThrottleYawCancelled;
-        // Right stick
-        input.DroneContol.PitchRoll.performed += OnPitchRollPerformed;
-        input.DroneContol.PitchRoll.canceled += OnPitchRollCancelled;
+        if (name == "Observing Drone")
+        {
+            inputDPad.Enable();
+            // Left stick
+            inputDPad.DPadContol.ThrottleYaw.performed += OnThrottleYawPerformed;
+            inputDPad.DPadContol.ThrottleYaw.canceled += OnThrottleYawCancelled;
+            // Right stick
+            inputDPad.DPadContol.PitchRoll.performed += OnPitchRollPerformed;
+            inputDPad.DPadContol.PitchRoll.canceled += OnPitchRollCancelled;
+            // Right trigger (spray)
+            inputDPad.DPadContol.Spray.performed += OnSprayPerformed;
+            inputDPad.DPadContol.Spray.canceled += OnSprayCancelled;
+        }
+        if (name == "Washing Drone")
+        {
+            inputXRI.Enable();
+            // Left stick
+            inputXRI.XRILeftHandLocomotion.Move.performed += OnThrottleYawPerformed;
+            inputXRI.XRILeftHandLocomotion.Move.canceled += OnThrottleYawCancelled;
+            // Right stick
+            inputXRI.XRIRightHandLocomotion.Move.performed += OnPitchRollPerformed;
+            inputXRI.XRIRightHandLocomotion.Move.canceled += OnPitchRollCancelled;
+            // Right trigger (spray)
+            inputXRI.XRIRightHandInteraction.Activate.performed += OnSprayPerformed;
+            inputXRI.XRIRightHandInteraction.Activate.canceled += OnSprayCancelled;
+        }
+
     }
 
     // Unsubscribe
     private void OnDisable()
     {
-        input.Disable();
-        // Left stick
-        input.DroneContol.ThrottleYaw.performed -= OnThrottleYawPerformed;
-        input.DroneContol.ThrottleYaw.canceled -= OnThrottleYawCancelled;
-        // Right stick
-        input.DroneContol.PitchRoll.performed -= OnPitchRollPerformed;
-        input.DroneContol.PitchRoll.canceled -= OnPitchRollCancelled;
+        if (name == "Observing Drone")
+        {
+            inputDPad.Disable();
+            // Left stick
+            inputDPad.DPadContol.ThrottleYaw.performed -= OnThrottleYawPerformed;
+            inputDPad.DPadContol.ThrottleYaw.canceled -= OnThrottleYawCancelled;
+            // Right stick
+            inputDPad.DPadContol.PitchRoll.performed -= OnPitchRollPerformed;
+            inputDPad.DPadContol.PitchRoll.canceled -= OnPitchRollCancelled;
+            // Right trigger (spray)
+            inputDPad.DPadContol.Spray.performed -= OnSprayPerformed;
+            inputDPad.DPadContol.Spray.canceled -= OnSprayCancelled;
+        }
+        if (name == "Washing Drone")
+        {
+            inputXRI.Disable();
+            // Left stick
+            inputXRI.XRILeftHandLocomotion.Move.performed -= OnThrottleYawPerformed;
+            inputXRI.XRILeftHandLocomotion.Move.canceled -= OnThrottleYawCancelled;
+            // Right stick
+            inputXRI.XRIRightHandLocomotion.Move.performed -= OnPitchRollPerformed;
+            inputXRI.XRIRightHandLocomotion.Move.canceled -= OnPitchRollCancelled;
+            // Right trigger (spray)
+            inputXRI.XRIRightHandInteraction.Activate.performed -= OnSprayPerformed;
+            inputXRI.XRIRightHandInteraction.Activate.canceled -= OnSprayCancelled;
+        }
+
     }
 
     private void FixedUpdate()
@@ -201,5 +246,17 @@ public class DroneMovement: MonoBehaviour
         if (newX != 0 && newY == 0) pitchRollVector = new Vector2(pitchRollVector.x, 0);
         if (newX == 0 && newY == 0) pitchRollVector = Vector2.zero;
     }
+
+    private void OnSprayPerformed(InputAction.CallbackContext value)
+    {
+        if (!droneSpray.isPlaying) droneSpray.Play();
+        else droneSpray.Stop();
+    }
+
+    private void OnSprayCancelled(InputAction.CallbackContext value)
+    {
+
+    }
+
 
 }
