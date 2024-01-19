@@ -217,11 +217,10 @@ public class DroneControl: MonoBehaviour
     // ########## Left stick callbacks ##########
     private void OnThrottleYawPerformed(InputAction.CallbackContext value)
     {
+        if (throttleYawVector.x == 0) rotateTimer = 0; // Starting new rotation.
+
         throttleYawVector_prev = throttleYawVector;
         throttleYawVector = value.ReadValue<Vector2>();
-        //speedTimer = 0f;
-        if (throttleYawVector.x != 0) rotateTimer = 0;
-       // if (throttleYawVector.y != 0) speedTimer = 0;
     }
 
     private void OnThrottleYawCancelled(InputAction.CallbackContext value)
@@ -229,6 +228,7 @@ public class DroneControl: MonoBehaviour
         throttleYawVector_prev = throttleYawVector;
         throttleYawVector = Vector2.zero;
         speedTimer = 0f;
+        rotateTimer = 0;
     }
 
     // ########## Right stick callbacks ##########
