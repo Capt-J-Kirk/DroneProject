@@ -8,6 +8,7 @@ public class DroneControl: MonoBehaviour
     private DPad_Control inputDPad = null;
     private XRI_Control inputXRI = null;
     [SerializeField] private ParticleSystem droneSpray;
+    [HideInInspector] public bool isSpraying = false;
     private Rigidbody rb;
     private Vector2 throttleYawVector = Vector2.zero;
     private Vector2 throttleYawVector_prev = Vector2.zero;
@@ -249,8 +250,16 @@ public class DroneControl: MonoBehaviour
 
     private void OnSprayPerformed(InputAction.CallbackContext value)
     {
-        if (!droneSpray.isPlaying) droneSpray.Play();
-        else droneSpray.Stop();
+        if (!droneSpray.isPlaying)
+        {
+            droneSpray.Play();
+            isSpraying = true;
+        }
+        else
+        {
+            droneSpray.Stop();
+            isSpraying = false;
+        }
     }
 
     private void OnSprayCancelled(InputAction.CallbackContext value)
