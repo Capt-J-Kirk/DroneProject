@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class QuadcopterController: MonoBehaviour
 {
+    public UserInput input;
     public float maxVelocity = 10f; // Maximum linear velocity
     public float maxAcceleration = 5f; // Maximum linear acceleration
     public float drag = 0.5f; // Drag coefficient
@@ -47,6 +48,11 @@ public class QuadcopterController: MonoBehaviour
         return transform.rotation;
     }
 
+    private void Awake()
+    {
+        input = FindFirstObjectByType<UserInput>();
+        input = FindFirstObjectByType<UserInput>();
+    }
 
     void Start()
     {
@@ -64,6 +70,8 @@ public class QuadcopterController: MonoBehaviour
         ApplyForces();
         ClampVelocity();
         UpdatePID();
+
+        Debug.Log("ThrottleYaw:" + input.throttleYawVector + ", PitchRoll: " + input.pitchRollVector);
     }
 
     void ApplyForces()
@@ -105,19 +113,17 @@ public class QuadcopterController: MonoBehaviour
         rb.AddRelativeTorque(torque);
     }
 
-    public void ApplyUserInput(float horizontalInput, float verticalInput)
+    public void ApplyUserInput(Vector2 trottleYaw, Vector2 pitchRoll)
     {
         // Apply torque for rotation
-        Vector3 torque = new Vector3(0f, horizontalInput, 0f) * maxAngularAcceleration;
+        Vector3 torque = new Vector3(trottleYaw.y, pitchRoll.x, pitchRoll.y) * trottleYaw.x;
         rb.AddRelativeTorque(torque);
 
-        // Apply thrust for linear movement
-        Vector3 thrust = transform.up * verticalInput * maxAcceleration;
-        rb.AddForce(thrustForce + thrust);
+       
 
         // Calculate desired pitch, roll, and yaw from user input (sensitivity)
-        float desiredPitch = verticalInput * 45.0f;  // Adjust as needed 
-        float desiredRoll = horizontalInput * 45.0f;  // Adjust as needed
+        float desiredPitch = pitchRoll.x;  // Adjust as needed 
+        float desiredRoll = pitchRoll.y;  // Adjust as needed
         float desiredYaw = 0f;  // You may adjust this based on user input
 
         // Set the target pitch, roll, and yaw

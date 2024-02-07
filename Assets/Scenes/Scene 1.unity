@@ -3166,6 +3166,59 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 309988968}
   m_Mesh: {fileID: -470067213634067786, guid: f1f96acc629a09f489acfb46f1b106d4, type: 3}
+--- !u!1 &325843543
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 325843545}
+  - component: {fileID: 325843544}
+  m_Layer: 0
+  m_Name: UserInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &325843544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325843543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82386c12fac32044ab1e56a034f639b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  droneSpray: {fileID: 0}
+  isSpraying: 0
+  throttleYawVector: {x: 0, y: 0}
+  throttleYawVector_prev: {x: 0, y: 0}
+  pitchRollVector: {x: 0, y: 0}
+  speedTimer: 0
+  rotateTimer: 0
+  maxAngularSpeed: 90
+  maxDegPitchRoll: 30
+--- !u!4 &325843545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325843543}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &326585036
 GameObject:
   m_ObjectHideFlags: 0
@@ -7839,6 +7892,7 @@ GameObject:
   - component: {fileID: 1015122125}
   - component: {fileID: 1015122124}
   - component: {fileID: 1015122127}
+  - component: {fileID: 1015122128}
   m_Layer: 0
   m_Name: Washing Drone
   m_TagString: Untagged
@@ -7880,7 +7934,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1015122123}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6489bd0aa9f2974eb9dc5a97cbde5e9, type: 3}
   m_Name: 
@@ -7947,6 +8001,26 @@ MonoBehaviour:
     colorBlendType: 0
     normalBlendType: 0
     heightBlendType: 0
+--- !u!114 &1015122128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015122123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0538c7ead94efeb4884b09ee53f6045d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input: {fileID: 0}
+  maxVelocity: 10
+  maxAcceleration: 5
+  drag: 0.5
+  mass: 5
+  maxAngularVelocity: 5
+  maxAngularAcceleration: 2
+  thrustForce: {x: 0, y: 0, z: 0}
 --- !u!1 &1027646507
 GameObject:
   m_ObjectHideFlags: 0
@@ -18471,6 +18545,7 @@ GameObject:
   - component: {fileID: 2124728580}
   - component: {fileID: 2124728579}
   - component: {fileID: 2124728578}
+  - component: {fileID: 2124728581}
   m_Layer: 0
   m_Name: Observing Drone
   m_TagString: Untagged
@@ -18512,7 +18587,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124728577}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6489bd0aa9f2974eb9dc5a97cbde5e9, type: 3}
   m_Name: 
@@ -18539,6 +18614,25 @@ Transform:
   - {fileID: 1586988313}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2124728581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124728577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38fd640e60650c74f845acac8aae917d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVelocity: 10
+  maxAcceleration: 5
+  drag: 0.5
+  mass: 5
+  maxAngularVelocity: 5
+  maxAngularAcceleration: 2
+  thrustForce: {x: 0, y: 0, z: 0}
 --- !u!1 &2126477472
 GameObject:
   m_ObjectHideFlags: 0
@@ -45775,6 +45869,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 705507995}
+  - {fileID: 325843545}
   - {fileID: 932389679}
   - {fileID: 187037888}
   - {fileID: 543450653418075816}

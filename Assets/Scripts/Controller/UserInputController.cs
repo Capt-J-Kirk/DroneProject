@@ -61,7 +61,7 @@ public class UserInputController: MonoBehaviour
         // apply to main drone
         if (quadcopterController != null)
         {
-            quadcopterController.ApplyUserInput(horizontalInput, verticalInput);
+            //quadcopterController.ApplyUserInput(horizontalInput, verticalInput);
         }
         else
         {

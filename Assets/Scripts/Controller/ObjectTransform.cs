@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class ObjectTransform: MonoBehaviour
 {
+    //&string obsDroneName = "Sec Drone";
+    string obsDroneName = "Observing Drone";
+
     // Reference to the first GameObject
     public GameObject Quadcopter_main;
 
@@ -23,7 +26,7 @@ public class ObjectTransform: MonoBehaviour
     {
         // assigning drone objects
         Quadcopter_main = GameObject.Find("Washing Drone");
-        Quadcopter_secondary = GameObject.Find("Sec Drone");
+        Quadcopter_secondary = GameObject.Find(obsDroneName);
 
         // Ensure that a GameObject is assigned
         if (Quadcopter_main == null || Quadcopter_secondary == null)
