@@ -20,6 +20,9 @@ namespace Es.InkPainter.Sample
 		private Brush brush;
 
 		[SerializeField]
+		private Camera paintCamera;
+
+		[SerializeField]
 		private UseMethodType useMethodType = UseMethodType.RaycastHitInfo;
 
 		[SerializeField]
@@ -29,17 +32,21 @@ namespace Es.InkPainter.Sample
 		{
 			if(Input.GetMouseButton(0))
 			{
-				var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				bool success = true;
+				//var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = paintCamera.ScreenPointToRay(Input.mousePosition);
+                bool success = true;
 				RaycastHit hitInfo;
 				if(Physics.Raycast(ray, out hitInfo))
 				{
+					Debug.Log("Mouse painter hit with raycast, I hit: " + hitInfo.collider.name);
+
 					var paintObject = hitInfo.transform.GetComponent<InkCanvas>();
 					if(paintObject != null)
 						switch(useMethodType)
 						{
 							case UseMethodType.RaycastHitInfo:
 								success = erase ? paintObject.Erase(brush, hitInfo) : paintObject.Paint(brush, hitInfo);
+								if (success) Debug.Log("I hit: " + hitInfo.point);
 								break;
 
 							case UseMethodType.WorldPoint:

@@ -112,7 +112,7 @@ namespace Es.InkPainter
 		private Texture brushHeightTexture;
 
 		[SerializeField, Range(0, 1)]
-		private float brushScale = 0.1f;
+		public float brushScale = 0.1f;
 
 		[SerializeField, Range(0, 360)]
 		private float rotateAngle = 0;
