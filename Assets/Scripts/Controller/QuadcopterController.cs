@@ -62,35 +62,6 @@ public class QuadcopterController: MonoBehaviour
 
     }
 
-    // set target values for roll, pitch and yaw
-    //private float targetRoll = 0f;
-    //private float targetPitch = 0f;
-    //private float targetYaw = 0f;
-
-    // // Set target roll value
-    // public void SetTargetRoll(float value)
-    // {
-    //     targetRoll = value;
-    // }
-
-    // // Set target pitch value
-    // public void SetTargetPitch(float value)
-    // {
-    //     targetPitch = value;
-    // }
-
-    // // Set target yaw value
-    // public void SetTargetYaw(float value)
-    // {
-    //     targetYaw = value;
-    // }
-
-    //   public Quaternion GetQuadcopterRotation()
-    // {
-    //     return transform.rotation;
-    // }
-
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -159,11 +130,6 @@ public class QuadcopterController: MonoBehaviour
 
         // Apply control input 
         ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput);
-
-
-        // Apply torque for 
-        //Vector3 torque = new Vector3(rollControlInput, pitchControlInput, yawControlInput);
-        //rb.AddRelativeTorque(torque);
     }
 
     void ControlMotors(float roll, float pitch, float yaw, float throttle)
@@ -187,23 +153,6 @@ public class QuadcopterController: MonoBehaviour
     public void ApplyUserInput(float roll, float pitch, float yaw, float throttle)
     {
         CalcDesiredPose(roll, pitch, yaw, throttle);
-        // // Apply torque for rotation
-        // Vector3 torque = new Vector3(0f, horizontalInput, 0f) * maxAngularAcceleration;
-        // rb.AddRelativeTorque(torque);
-
-        // // Apply thrust for linear movement
-        // Vector3 thrust = transform.up * verticalInput * maxAcceleration;
-        // rb.AddForce(thrustForce + thrust);
-
-        // // Calculate desired pitch, roll, and yaw from user input (sensitivity)
-        // float desiredPitch = verticalInput * 45.0f;  // Adjust as needed 
-        // float desiredRoll = horizontalInput * 45.0f;  // Adjust as needed
-        // float desiredYaw = 0f;  // You may adjust this based on user input
-
-        // // Set the target pitch, roll, and yaw
-        // SetTargetPitch(desiredPitch);
-        // SetTargetRoll(desiredRoll);
-        // SetTargetYaw(desiredYaw);
-
+ 
     }
 }
