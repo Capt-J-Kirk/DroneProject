@@ -9031,7 +9031,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1015122123}
   serializedVersion: 4
-  m_Mass: 20
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -9057,7 +9057,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1015122123}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6489bd0aa9f2974eb9dc5a97cbde5e9, type: 3}
   m_Name: 
@@ -9131,12 +9131,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1015122123}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0538c7ead94efeb4884b09ee53f6045d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 0}
   maxVelocity: 10
   maxAcceleration: 5
   drag: 0.5
@@ -9144,6 +9143,24 @@ MonoBehaviour:
   maxAngularVelocity: 5
   maxAngularAcceleration: 2
   thrustForce: {x: 0, y: 0, z: 0}
+  speed: 5
+  baseAltitude: 0
+  altitudeChangeRate: 10
+  inputController: {fileID: 0}
+  rollKp: 1
+  rollKi: 0.1
+  rollKd: 0.01
+  pitchKp: 1
+  pitchKi: 0.1
+  pitchKd: 0.01
+  yawKp: 1
+  yawKi: 0.1
+  yawKd: 0.01
+  altitudeKp: 1
+  altitudeKi: 0.1
+  altitudeKd: 0.01
+  desiredPosition: {x: 0, y: 0, z: 0}
+  desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1027646507
 GameObject:
   m_ObjectHideFlags: 0

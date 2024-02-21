@@ -113,8 +113,8 @@ public class UserInput : MonoBehaviour
        
         // apply to main drone
         if (quadcopterController != null)
-        {
-            quadcopterController.ApplyUserInput(throttleYawVector, pitchRollVector);
+        {   // ApplyUserInput(float roll, float pitch, float yaw, float throttle)
+            quadcopterController.ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
         }
         else
         {

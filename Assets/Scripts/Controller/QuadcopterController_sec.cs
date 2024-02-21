@@ -128,9 +128,9 @@ public class QuadcopterController_sec: MonoBehaviour
         Vector3 currentAngularVelocity = rb.angularVelocity;
 
         // Calculate control input for each axis using PID
-        float rollControlInput = pidControllerRoll.Update(transform.rotation.eulerAngles.x, currentAngularVelocity.x, targetRoll);
-        float pitchControlInput = pidControllerPitch.Update(transform.rotation.eulerAngles.y, currentAngularVelocity.y, targetPitch);
-        float yawControlInput = pidControllerYaw.Update(transform.rotation.eulerAngles.z, currentAngularVelocity.z, targetYaw);
+        float rollControlInput = pidControllerRoll.UpdateAA(transform.rotation.eulerAngles.x, currentAngularVelocity.x, targetRoll);
+        float pitchControlInput = pidControllerPitch.UpdateAA(transform.rotation.eulerAngles.y, currentAngularVelocity.y, targetPitch);
+        float yawControlInput = pidControllerYaw.UpdateAA(transform.rotation.eulerAngles.z, currentAngularVelocity.z, targetYaw);
 
         // Apply torque for rotation
         Vector3 torque = new Vector3(rollControlInput, pitchControlInput, yawControlInput);

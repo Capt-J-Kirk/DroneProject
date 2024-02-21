@@ -8,14 +8,14 @@ public class PIDController
     private float integral = 0f; 
     private float previousError = 0f;
 
-    public PIDController(float Kp, float ki, float kd)
+    public PIDController(float kp, float ki, float kd)
     {
         proportionalGain = kp;
         integralGain = ki;
         derivativeGain = kd;
     }
 
-    public float Update(float setPoint, float actualValue, float timeFrame)
+    public float UpdateAA(float setPoint, float actualValue, float timeFrame)
     {
         float error = setPoint - actualValue;
 
@@ -23,11 +23,13 @@ public class PIDController
         float proportional = proportionalGain * error;
 
         // Integral term
-        integral += error * Time.fixedDeltaTime;
+        //integral += error * Time.fixedDeltaTime;
+        integral += error * timeFrame;
         float integralTerm = integralGain * integral;
 
         // Derivative term
-        float derivative = derivativeGain * ((error - previousError) / Time.fixedDeltaTime);
+        //float derivative = derivativeGain * ((error - previousError) / Time.fixedDeltaTime);
+        float derivative = derivativeGain * ((error - previousError) / timeFrame);
 
         // Update previous error
         previousError = error;
