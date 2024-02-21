@@ -5,19 +5,19 @@ public class PIDController
     private float integralGain;
     private float derivativeGain;
 
-    private float integral;
-    private float previousError;
+    private float integral = 0f; 
+    private float previousError = 0f;
 
-    public PIDController(float pGain, float iGain, float dGain)
+    public PIDController(float Kp, float ki, float kd)
     {
-        proportionalGain = pGain;
-        integralGain = iGain;
-        derivativeGain = dGain;
+        proportionalGain = kp;
+        integralGain = ki;
+        derivativeGain = kd;
     }
 
-    public float Update(float current, float currentVelocity, float target)
+    public float Update(float setPoint, float actualValue, float timeFrame)
     {
-        float error = target - current;
+        float error = setPoint - actualValue;
 
         // Proportional term
         float proportional = proportionalGain * error;
@@ -33,6 +33,7 @@ public class PIDController
         previousError = error;
 
         // Calculate and return the control input
-        return proportional + integralTerm + derivative;
+        float output = proportional + integralTerm + derivative;
+        return output;
     }
 }
