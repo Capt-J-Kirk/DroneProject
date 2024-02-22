@@ -151,15 +151,15 @@ public class QuadcopterController: MonoBehaviour
 
         // pitch, forward and backward
         //rb.AddTorque(transform.right * pitch * speed, ForceMode.Acceleration);
-        //rb.AddTorque(transform.right * pitch * speed, ForceMode.VelocityChange);
+        rb.AddTorque(transform.right * pitch * speed, ForceMode.VelocityChange);
 
         // roll, left and right
         //rb.AddTorque(-transform.forward * roll * speed, ForceMode.Acceleration);
-        //rb.AddTorque(-transform.forward * roll * speed, ForceMode.VelocityChange);
+        rb.AddTorque(-transform.forward * roll * speed, ForceMode.VelocityChange);
 
         // yaw, left and right
         //rb.AddTorque(transform.up * yaw * speed, ForceMode.Acceleration);
-        //rb.AddTorque(transform.up * yaw * speed, ForceMode.VelocityChange);
+        rb.AddTorque(transform.up * yaw * speed, ForceMode.VelocityChange);
 
         Debug.Log("Drone pos: " + rb.position);
         Debug.Log("Drone vel: " + rb.velocity);
