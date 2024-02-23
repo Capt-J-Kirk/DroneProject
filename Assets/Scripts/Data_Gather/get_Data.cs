@@ -20,9 +20,9 @@ public class AccessData : MonoBehaviour
 
         // use the attempt number, and start time for the naming of the txt file
         //fileCount = attempt + start_time;
-        fileCount = 1;
+        int fileCount = 1;
         string fileName = $"ObjectHitsData_{fileCount}.txt";
-        string filePath = Path.Combine(Application.persistentDataPath, filename);
+        string filePath = Path.Combine(Application.persistentDataPath, fileName);
 
         using (StreamWriter writer = new StreamWriter(filePath))
         {

@@ -145,7 +145,7 @@ public class QuadcopterController: MonoBehaviour
     {
         // Throttle, the upward force
         //Vector3 lift = Vector3.up * throttle * speed;
-        Vector3 lift = transform.up * 5f * speed;
+        Vector3 lift = transform.up * throttle * speed;
         //rb.AddForce(lift, ForceMode.Acceleration);
         rb.AddForce(lift, ForceMode.VelocityChange);
 

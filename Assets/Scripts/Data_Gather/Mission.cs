@@ -48,7 +48,7 @@ public class MissionManager : MonoBehaviour
     private void GetCleanScore(int availablePoints,int scoredPoints)
     {
         totalAvailablePnts = availablePoints;
-        scoredPnts = scoredPo;ints
+        scoredPnts = scoredPoints;
     }
 
     private void GetRayDetections()
@@ -60,15 +60,15 @@ public class MissionManager : MonoBehaviour
     public void FinishAttempt()
     {
         endTime = Time.time;
-        GetCleanScore();
-        GetRayDetections();
-        WriteToFile();
+        //GetCleanScore();
+        //GetRayDetections();
+        //WriteToFile();
         // Call this method when the player finishes the attempt
     }
 
     private void WriteToFile()
     {
-        string times = $"Attempts: {attemptCount}, Start Time: {startTime}, End Time: {endTime}, Duration: {endTime - startTime}, CleanAvailableScorePnts: {totalAvailablePnts}, CleanScoredPnts: {}";
+        string times = $"Attempts: {attemptCount}, Start Time: {startTime}, End Time: {endTime}, Duration: {endTime - startTime}, CleanAvailableScorePnts: {totalAvailablePnts}, CleanScoredPnts: {scoredPnts}";
         File.AppendAllText(filePath, times + "\n");
     }
 }

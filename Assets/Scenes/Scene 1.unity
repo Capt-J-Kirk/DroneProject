@@ -9146,6 +9146,7 @@ MonoBehaviour:
   speed: 5
   baseAltitude: 0
   altitudeChangeRate: 10
+  rb: {fileID: 1015122124}
   inputController: {fileID: 0}
   rollKp: 1
   rollKi: 0.1
