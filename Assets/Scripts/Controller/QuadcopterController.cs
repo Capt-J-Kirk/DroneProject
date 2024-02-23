@@ -87,6 +87,7 @@ public class QuadcopterController: MonoBehaviour
 
     void FixedUpdate()
     {
+        test();
         UpdatePID();
         ApplyForces();
         ClampVelocity();
@@ -161,18 +162,27 @@ public class QuadcopterController: MonoBehaviour
         //rb.AddTorque(transform.up * yaw * speed, ForceMode.Acceleration);
         rb.AddTorque(transform.up * yaw * speed, ForceMode.VelocityChange);
 
-        Debug.Log("Drone pos: " + rb.position);
-        Debug.Log("Drone vel: " + rb.velocity);
-        Debug.Log("Drone rot: " + rb.transform.rotation);
-        Debug.Log("Drone ang: " + rb.angularVelocity);
-        Debug.Log("throttle: " + throttle);
+        // Debug.Log("Drone pos: " + rb.position);
+        // Debug.Log("Drone vel: " + rb.velocity);
+        // Debug.Log("Drone rot: " + rb.transform.rotation);
+        // Debug.Log("Drone ang: " + rb.angularVelocity);
+        // Debug.Log("throttle: " + throttle);
 
     }
 
+    public void test()
+    {
+
+        Vector2 ty = UserInput.GCInstance.throttleYawVector;
+        Vector2 pr = UserInput.GCInstance.pitchRollVector;
+
+        Debug.Log("drone test r/p/y/th: " + pr + "/" + pr + "/" + ty + "/" + ty);
+    }
 
 
     public void ApplyUserInput(float roll, float pitch, float yaw, float throttle)
     {
+    
         CalcDesiredPose(roll, pitch, yaw, throttle);
         Debug.Log("drone r/p/y/th: " + roll + "/" + pitch + "/" + yaw + "/" + throttle);
  

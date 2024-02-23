@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class UserInput : MonoBehaviour
 {
+    public static UserInput GCInstance;
     private DPad_Control inputDPad = null;
     private XRI_Control inputXRI = null;
 
@@ -29,6 +30,8 @@ public class UserInput : MonoBehaviour
     {
         inputDPad = new DPad_Control();
         inputXRI = new XRI_Control();
+
+        GCInstance = this;
      
     }
 
@@ -114,7 +117,7 @@ public class UserInput : MonoBehaviour
         // apply to main drone
         if (quadcopterController != null)
         {   // ApplyUserInput(float roll, float pitch, float yaw, float throttle)
-            quadcopterController.ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+            //quadcopterController.ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
         }
         else
         {
