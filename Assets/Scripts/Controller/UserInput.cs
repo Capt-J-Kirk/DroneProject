@@ -118,6 +118,7 @@ public class UserInput : MonoBehaviour
         if (quadcopterController != null)
         {   // ApplyUserInput(float roll, float pitch, float yaw, float throttle)
             //quadcopterController.ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+            GetComponent<QuadcopterController>().ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
         }
         else
         {
@@ -134,6 +135,7 @@ public class UserInput : MonoBehaviour
 
         throttleYawVector_prev = throttleYawVector;
         throttleYawVector = value.ReadValue<Vector2>();
+        Debug.Log("throttle/yaw " +throttleYawVector);
     }
 
     private void OnThrottleYawCancelled(InputAction.CallbackContext value)

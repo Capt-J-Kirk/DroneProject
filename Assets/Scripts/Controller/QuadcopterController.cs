@@ -176,7 +176,7 @@ public class QuadcopterController: MonoBehaviour
         Vector2 ty = UserInput.GCInstance.throttleYawVector;
         Vector2 pr = UserInput.GCInstance.pitchRollVector;
 
-        Debug.Log("drone test r/p/y/th: " + pr + "/" + pr + "/" + ty + "/" + ty);
+        //Debug.Log("drone test r/p/y/th: " + pr + "/" + pr + "/" + ty + "/" + ty);
     }
 
 

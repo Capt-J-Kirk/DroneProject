@@ -9016,6 +9016,7 @@ GameObject:
   - component: {fileID: 1015122124}
   - component: {fileID: 1015122127}
   - component: {fileID: 1015122128}
+  - component: {fileID: 1015122129}
   m_Layer: 0
   m_Name: Washing Drone
   m_TagString: Untagged
@@ -9162,6 +9163,27 @@ MonoBehaviour:
   altitudeKd: 0.01
   desiredPosition: {x: 0, y: 0, z: 0}
   desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1015122129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015122123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82386c12fac32044ab1e56a034f639b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  droneSpray: {fileID: 0}
+  isSpraying: 0
+  throttleYawVector: {x: 0, y: 0}
+  throttleYawVector_prev: {x: 0, y: 0}
+  pitchRollVector: {x: 0, y: 0}
+  speedTimer: 0
+  rotateTimer: 0
+  maxAngularSpeed: 90
+  maxDegPitchRoll: 30
 --- !u!1 &1027646507
 GameObject:
   m_ObjectHideFlags: 0
