@@ -17,6 +17,9 @@ public class RaycastCounter : MonoBehaviour
     private Dictionary<string, int> hitsCount = new Dictionary<string, int>();
     private bool isRecording = false; // Flag, recording state
     private RaycastHit hit; // Declare this at the class level
+    private GameObject lastHitObject = null; // To keep track of the last hit object
+    private List<string> objectTransitions = new List<string>(); // To track transitions
+
 
     public bool StartRaycast()
     {
