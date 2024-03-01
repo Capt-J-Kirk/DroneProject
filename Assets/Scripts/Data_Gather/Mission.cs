@@ -29,7 +29,9 @@ public class MissionManager : MonoBehaviour
 
     private void StartNewAttempt()
     {
+        //add raycasting script 
         // add raycasting
+        GetComponent<Raycasting>().StartRaycast();
         PositionGameObjects();
         startTime = Time.time;
         attemptCount++;
@@ -45,16 +47,18 @@ public class MissionManager : MonoBehaviour
     }
 
 
-    private void GetCleanScore(int availablePoints,int scoredPoints)
+    public void GetCleanScore(int availablePoints,int scoredPoints)
     {
         totalAvailablePnts = availablePoints;
         scoredPnts = scoredPoints;
     }
 
-    private void GetRayDetections()
+    public void GetRayDetections()
     {
 
     }
+
+
 
 
     public void FinishAttempt()
@@ -63,12 +67,14 @@ public class MissionManager : MonoBehaviour
         //GetCleanScore();
         //GetRayDetections();
         //WriteToFile();
+        // add save raycasting data
+        GetComponent<Raycasting>().StopRaycast();
         // Call this method when the player finishes the attempt
     }
 
     private void WriteToFile()
     {
-        string times = $"Attempts: {attemptCount}, Start Time: {startTime}, End Time: {endTime}, Duration: {endTime - startTime}, CleanAvailableScorePnts: {totalAvailablePnts}, CleanScoredPnts: {scoredPnts}";
+        string times = $"Attempt: {attemptCount}, Start Time: {startTime}, End Time: {endTime}, Duration: {endTime - startTime}, CleanAvailableScorePnts: {totalAvailablePnts}, CleanScoredPnts: {scoredPnts}";
         File.AppendAllText(filePath, times + "\n");
     }
 }
