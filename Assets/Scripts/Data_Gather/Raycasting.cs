@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.XR.Interaction.Toolkit;
 
 // This script should be attached to the player/camera that are casting the ray
 
@@ -16,10 +17,11 @@ public class RaycastCounter : MonoBehaviour
 {
     private Dictionary<string, int> hitsCount = new Dictionary<string, int>();
     private bool isRecording = false; // Flag, recording state
+    private bool wasButtonPressed = false;
     private RaycastHit hit; // Declare this at the class level
     private GameObject lastHitObject = null; // To keep track of the last hit object
     private List<string> objectTransitions = new List<string>(); // To track transitions
-
+    public XRController rightHandController; // Assign this in the inspector
 
     public bool StartRaycast()
     {
@@ -51,31 +53,78 @@ public class RaycastCounter : MonoBehaviour
 // FIX THIS FUNCTION TO incorporate the START AND STOP functions 
     void Update()
     {
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            isRecording = !isRecording; //toggle the state
+            if(!isRecording)
+            {
+                SaveDetectedObjectsHits();
+                Debug.Log("Recording stopped.");
+            }
+        }
 
         if (isRecording)
         {
             PerformRaycast();
             Debug.Log("Recording started.");
         }
-        else
-        {   
-            SaveDetectedObjectsHits();
-            Debug.Log("Recording stopped.");
-        }
+        // else
+        // {   
+        //     SaveDetectedObjectsHits();
+        //     Debug.Log("Recording stopped.");
+        // }
     
 
        
     }
 
-    void PerformRaycast()
+    // void PerformRaycast()
+    // {
+    //     if(rightHandController && rightHandController.enableInputActions)
+    //     {
+    //         //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //         Ray ray = new Ray(rightHandController.transform.position, rightHandController.transform.forward);
+            
+    //         if (Physics.Raycast(ray, out hit))
+    //         {
+    //             if (hit.collider.CompareTag("TrackableObject"))
+    //             {
+    //                 string objectName = hit.transform.name;
+    //                 Debug.Log("Hit " + hit.collider.gameObject.name);
+    //                 // Update hits count
+    //                 if (hitsCount.ContainsKey(objectName))
+    //                 {
+    //                     hitsCount[objectName]++;
+    //                 }
+    //                 else
+    //                 {
+    //                     hitsCount.Add(objectName, 1);
+    //                 }
+
+    //                 // Check and record object transition
+    //                 if (lastHitObject != null && lastHitObject.name != objectName)
+    //                 {
+    //                     string transition = $"{lastHitObject.name} to {objectName}";
+    //                     objectTransitions.Add(transition);
+    //                 }
+
+    //                 lastHitObject = hit.collider.gameObject; // Update last hit object
+    //             }
+    //         }
+    //     }
+    // }
+void PerformRaycast()
     {
+      
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // "TrackableObject"
         if (Physics.Raycast(ray, out hit))
         {
-            if (hit.collider.CompareTag("TrackableObject"))
+            if (hit.collider.CompareTag("Terrain"))
             {
                 string objectName = hit.transform.name;
-
+                Debug.Log("Hit " + hit.collider.gameObject.name);
                 // Update hits count
                 if (hitsCount.ContainsKey(objectName))
                 {
@@ -96,8 +145,8 @@ public class RaycastCounter : MonoBehaviour
                 lastHitObject = hit.collider.gameObject; // Update last hit object
             }
         }
+        
     }
-
     private void SaveDetectedObjectsHits()
     {
         string hitsFileName = $"ObjectHitsData_{System.DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
