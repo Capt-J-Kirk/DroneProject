@@ -22,6 +22,10 @@ public class RaycastCounter : MonoBehaviour
     private GameObject lastHitObject = null; // To keep track of the last hit object
     private List<string> objectTransitions = new List<string>(); // To track transitions
     public XRController rightHandController; // Assign this in the inspector
+    public LayerMask layerToDetect;
+    public int maxDistance = 20; // ray casting distance for valid detection
+
+    private bool wasPressed = true;
 
     public bool StartRaycast()
     {
@@ -61,13 +65,19 @@ public class RaycastCounter : MonoBehaviour
             {
                 SaveDetectedObjectsHits();
                 Debug.Log("Recording stopped.");
+                wasPressed = true;
             }
         }
 
         if (isRecording)
         {
             PerformRaycast();
-            Debug.Log("Recording started.");
+            if (wasPressed)
+            {
+                Debug.Log("Recording started.");
+                wasPressed = false;
+            }
+            
         }
         // else
         // {   
@@ -121,7 +131,7 @@ void PerformRaycast()
         // "TrackableObject"
         if (Physics.Raycast(ray, out hit))
         {
-            if (hit.collider.CompareTag("Terrain"))
+            if (hit.collider.CompareTag("TrackableObject"))
             {
                 string objectName = hit.transform.name;
                 Debug.Log("Hit " + hit.collider.gameObject.name);

@@ -2783,7 +2783,7 @@ GameObject:
   - component: {fileID: 244798640}
   - component: {fileID: 244798639}
   - component: {fileID: 244798638}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas_Screen_B
   m_TagString: TrackableObject
   m_Icon: {fileID: 0}
@@ -5751,7 +5751,7 @@ GameObject:
   - component: {fileID: 599766081}
   - component: {fileID: 599766080}
   - component: {fileID: 599766079}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas_Screen_A
   m_TagString: TrackableObject
   m_Icon: {fileID: 0}
@@ -6281,7 +6281,7 @@ MonoBehaviour:
   m_ConeCastAngle: 6
   m_RaycastMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 64
   m_RaycastTriggerInteraction: 1
   m_RaycastSnapVolumeInteraction: 1
   m_HitClosestOnly: 0
@@ -6545,6 +6545,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96433f3f4ae0c445bdd12c93050956f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightHandController: {fileID: 0}
+  layerToDetect:
+    serializedVersion: 2
+    m_Bits: 64
+  maxDistance: 20
 --- !u!1 &627770580
 GameObject:
   m_ObjectHideFlags: 0
@@ -9469,6 +9474,8 @@ MonoBehaviour:
   maxPitch: 10
   PitchValue: 0
   RollValue: 0
+  YawValue: 0
+  throttleValue: 0
   baseAltitude: 0
   altitudeChangeRate: 10
   rb: {fileID: 1015122124}
@@ -16763,7 +16770,7 @@ GameObject:
   - component: {fileID: 1305685853}
   - component: {fileID: 1305685852}
   - component: {fileID: 1305685851}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ControllerPad
   m_TagString: TrackableObject
   m_Icon: {fileID: 0}

@@ -20,6 +20,7 @@ public class QuadcopterController: MonoBehaviour
     public float PitchValue = 0f;
     public float RollValue = 0f;
     public float YawValue = 0f;
+    public float throttleValue = 0;
     public float baseAltitude;
     public float altitudeChangeRate = 10f; // Change in altitude per unit of throttle input
 
@@ -53,6 +54,7 @@ public class QuadcopterController: MonoBehaviour
         PitchValue = pitchChange;
         RollValue = rollChange;
         YawValue = yawChange;
+
         // Simple not taking the current pose into account!
         //desiredOrientation = Quaternion.Euler(new Vector3(pitchInput, yawInput, rollInput));
         //desiredAltitude = baseAltitude + (throttleInput * altitudeChangeRate);
@@ -153,14 +155,14 @@ public class QuadcopterController: MonoBehaviour
 
         // Apply control input 
         //ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput);
-        ControlMotors(RollValue,PitchValue,YawValue,altitudeControlInput);
+        ControlMotors(RollValue,PitchValue,YawValue,altitudeControlInput, throttleValue);
     }
 
-    void ControlMotors(float roll, float pitch, float yaw, float throttle)
+    void ControlMotors(float roll, float pitch, float yaw, float lift2 ,float throttle)
     {
 
         // Clamp the control signal. 
-        float throttle2 = Mathf.Clamp(throttle, 0f, maxVelocity);
+        float throttle2 = Mathf.Clamp(lift2, 0f, maxVelocity);
         // Throttle, the upward force
         //Vector3 lift = Vector3.up * throttle * speed;
         Vector3 lift = transform.up * throttle2;
@@ -170,17 +172,17 @@ public class QuadcopterController: MonoBehaviour
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxPitch, maxPitch);
         //rb.AddTorque(transform.right * pitch * speed, ForceMode.Acceleration);
-        rb.AddTorque(transform.right * clampPitch * throttle2, ForceMode.VelocityChange);
+        rb.AddTorque(transform.right * clampPitch * throttle, ForceMode.VelocityChange);
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxRoll, maxRoll);
         //rb.AddTorque(-transform.forward * roll * speed, ForceMode.Acceleration);
-        rb.AddTorque(-transform.forward * clampRoll * throttle2, ForceMode.VelocityChange);
+        rb.AddTorque(-transform.forward * clampRoll * throttle, ForceMode.VelocityChange);
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxYaw, maxYaw);
         //rb.AddTorque(transform.up * yaw * speed, ForceMode.Acceleration);
-        rb.AddTorque(transform.up * clampYaw * throttle2, ForceMode.VelocityChange);
+        rb.AddTorque(transform.up * clampYaw * throttle, ForceMode.VelocityChange);
 
         // Debug.Log("Drone pos: " + rb.position);
         // Debug.Log("Drone vel: " + rb.velocity);
@@ -195,6 +197,7 @@ public class QuadcopterController: MonoBehaviour
         // make a clamped input such that the system dosn't accumulate the user-inputs past the bounderies. 
         // make if it recieves a zero it clears the
         CalcDesiredPose(roll, pitch, yaw, throttle);
+        throttleValue = throttle;
         //Debug.Log("drone r/p/y/th: " + roll + "/" + pitch + "/" + yaw + "/" + throttle);
  
     }
