@@ -31,7 +31,7 @@ public class MissionManager : MonoBehaviour
     {
         //add raycasting script 
         // add raycasting
-        GetComponent<Raycasting>().StartRaycast();
+        GetComponent<RaycastCounter>().StartRaycast();
         PositionGameObjects();
         startTime = Time.time;
         attemptCount++;
@@ -68,7 +68,7 @@ public class MissionManager : MonoBehaviour
         //GetRayDetections();
         //WriteToFile();
         // add save raycasting data
-        GetComponent<Raycasting>().StopRaycast();
+        GetComponent<RaycastCounter>().StopRaycast();
         // Call this method when the player finishes the attempt
     }
 

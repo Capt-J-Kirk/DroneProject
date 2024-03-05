@@ -13,9 +13,9 @@ public class QuadcopterController: MonoBehaviour
     public float maxAngularAcceleration = 2f; // Maximum angular acceleration
     //public Vector3 thrustForce = new Vector3(0f, 5f, 0f); // Thrust force
     public float speed = 5.0f;
-    public float maxYaw = 5.0f;
-    public float maxRoll = 2.0f;
-    public float maxPitch = 2.0f; 
+    public float maxYaw = 10.0f;
+    public float maxRoll = 10.0f;
+    public float maxPitch = 10.0f; 
 
     public float PitchValue = 0f;
     public float RollValue = 0f;
@@ -31,10 +31,10 @@ public class QuadcopterController: MonoBehaviour
     public UserInput inputController;
 
     // needs fine tuning! 
-    public float rollKp = 1.0f, rollKi = 0.1f, rollKd = 0.01f;
-    public float pitchKp = 1.0f, pitchKi = 0.1f, pitchKd = 0.01f;
-    public float yawKp = 1.0f, yawKi = 0.1f, yawKd = 0.01f;
-    public float altitudeKp = 1.0f, altitudeKi = 0.1f, altitudeKd = 0.01f;    
+    public float rollKp = 3.0f, rollKi = 0.1f, rollKd = 0.01f;
+    public float pitchKp = 3.0f, pitchKi = 0.1f, pitchKd = 0.01f;
+    public float yawKp = 3.0f, yawKi = 0.1f, yawKd = 0.01f;
+    public float altitudeKp = 3.0f, altitudeKi = 0.1f, altitudeKd = 0.01f;    
 
     // desired pose
     public Vector3 desiredPosition;
@@ -157,7 +157,7 @@ public class QuadcopterController: MonoBehaviour
     {
 
         // Clamp the control signal. 
-        throttle2 = Mathf.Clamp(throttle, 0f, maxVelocity);
+        float throttle2 = Mathf.Clamp(throttle, 0f, maxVelocity);
         // Throttle, the upward force
         //Vector3 lift = Vector3.up * throttle * speed;
         Vector3 lift = transform.up * throttle2;
@@ -165,17 +165,17 @@ public class QuadcopterController: MonoBehaviour
         rb.AddForce(lift, ForceMode.VelocityChange);
 
         // pitch, forward and backward
-        clampPitch = Mathf.Clamp(pitch, -maxPitch, maxPitch);
+        float clampPitch = Mathf.Clamp(pitch, -maxPitch, maxPitch);
         //rb.AddTorque(transform.right * pitch * speed, ForceMode.Acceleration);
         rb.AddTorque(transform.right * clampPitch * throttle2, ForceMode.VelocityChange);
 
         // roll, left and right
-        clampRoll = Mathf.Clamp(roll, -maxRoll, maxRoll);
+        float clampRoll = Mathf.Clamp(roll, -maxRoll, maxRoll);
         //rb.AddTorque(-transform.forward * roll * speed, ForceMode.Acceleration);
         rb.AddTorque(-transform.forward * clampRoll * throttle2, ForceMode.VelocityChange);
 
         // yaw, left and right
-        clampYaw = Mathf.Clamp(yaw, -maxYaw, maxYaw);
+        float clampYaw = Mathf.Clamp(yaw, -maxYaw, maxYaw);
         //rb.AddTorque(transform.up * yaw * speed, ForceMode.Acceleration);
         rb.AddTorque(transform.up * clampYaw * throttle2, ForceMode.VelocityChange);
 
