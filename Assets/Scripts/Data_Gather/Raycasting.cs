@@ -15,6 +15,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class RaycastCounter : MonoBehaviour
 {
+    public Camera camera;
     private Dictionary<string, int> hitsCount = new Dictionary<string, int>();
     private bool isRecording = false; // Flag, recording state
     private bool wasButtonPressed = false;
@@ -126,15 +127,21 @@ public class RaycastCounter : MonoBehaviour
     // }
 void PerformRaycast()
     {
-      
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // gp væk fra screenPointToRay
+        Ray ray = camera.ScreenPointToRay(camera.transform.position);
+        Debug.Log("mouse" + Input.mousePosition);
+        Debug.DrawRay(camera.transform.position, camera.transform.forward*30, Color.green);
         // "TrackableObject"
         if (Physics.Raycast(ray, out hit))
         {
+            Debug.Log("sending raycast");
+            Debug.Log("i Hit " + hit.collider.gameObject.name);
+            
             if (hit.collider.CompareTag("TrackableObject"))
             {
                 string objectName = hit.transform.name;
-                Debug.Log("Hit " + hit.collider.gameObject.name);
+                Debug.Log("Hit <3 " + hit.collider.gameObject.name);
+
                 // Update hits count
                 if (hitsCount.ContainsKey(objectName))
                 {

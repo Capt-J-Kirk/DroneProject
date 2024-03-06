@@ -6545,6 +6545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96433f3f4ae0c445bdd12c93050956f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 193063884}
   rightHandController: {fileID: 0}
   layerToDetect:
     serializedVersion: 2
@@ -21705,7 +21706,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!54 &2124728578
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -39594,7 +39595,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &3741704752555093750
 MeshRenderer:
   m_ObjectHideFlags: 0

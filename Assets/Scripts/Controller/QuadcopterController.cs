@@ -96,7 +96,7 @@ public class QuadcopterController: MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.maxAngularVelocity = maxAngularVelocity;
-        baseAltitude
+        //baseAltitude;
         desiredPosition.y = transform.position.y;
 
       
@@ -174,11 +174,11 @@ public class QuadcopterController: MonoBehaviour
 
         // Clamp the control signal. 
         float throttle2 = Mathf.Clamp(lift2, 0f, maxVelocity);
-        Debug.Log("throttle: " + lift2);
+        //Debug.Log("throttle: " + lift2);
         // Throttle, the upward force
         Vector3 lift = Vector3.up * throttle2;
         //Vector3 lift = transform.up * throttle2 *2;
-        Debug.Log("lift: " + lift);
+        //Debug.Log("lift: " + lift);
         //rb.AddForce(lift, ForceMode.Acceleration);
         rb.AddForce(lift, ForceMode.VelocityChange);
 
