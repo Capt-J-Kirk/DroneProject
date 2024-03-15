@@ -128,8 +128,10 @@ public class RaycastCounter : MonoBehaviour
 void PerformRaycast()
     {
         // gp væk fra screenPointToRay
-        Ray ray = camera.ScreenPointToRay(camera.transform.position);
-        Debug.Log("mouse" + Input.mousePosition);
+        //Ray ray = camera.ScreenPointToRay(camera.transform.position);
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+
+        //Debug.Log("mouse" + Input.mousePosition);
         Debug.DrawRay(camera.transform.position, camera.transform.forward*30, Color.green);
         // "TrackableObject"
         if (Physics.Raycast(ray, out hit))
@@ -140,7 +142,7 @@ void PerformRaycast()
             if (hit.collider.CompareTag("TrackableObject"))
             {
                 string objectName = hit.transform.name;
-                Debug.Log("Hit <3 " + hit.collider.gameObject.name);
+                //Debug.Log("Hit <3 " + hit.collider.gameObject.name);
 
                 // Update hits count
                 if (hitsCount.ContainsKey(objectName))
@@ -152,7 +154,7 @@ void PerformRaycast()
                     hitsCount.Add(objectName, 1);
                 }
 
-                // Check and record object transition
+                // Check and record object transition55
                 if (lastHitObject != null && lastHitObject.name != objectName)
                 {
                     string transition = $"{lastHitObject.name} to {objectName}";

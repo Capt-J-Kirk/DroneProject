@@ -14,6 +14,7 @@ public class ObjectTransform: MonoBehaviour
 
     // Reference to the second GameObject
     public GameObject Quadcopter_secondary;
+    public QuadcopterController_sec ControlInput;
 
     // Transformation matrix for rotation and translation
     private Matrix4x4 transformationMatrix;
@@ -22,8 +23,24 @@ public class ObjectTransform: MonoBehaviour
     private Vector3 translationVector =  new Vector3(0.0f, 0.0f, 0.0f); 
     private Vector3 rotationVector =  new Vector3(0.0f, 0.0f, 0.0f); 
 
+    public float fixedDistance = 10.0f; // desired distance offset 
+    // Fixed angles
+    public float fixedYawDegrees = 20; // Fixed left-right angle
+    public float fixedPitchDegrees = 20; // Fixed up-down angle
+    private Vector3 direction; 
+
+    public int ControlScheme = 0;
+
+    private Vector3 main_position = new Vector3.zero;
+    private Quaternion main_rotation = new Quaternion.zero;
+
+    private Vector3 sec_position = new Vector3.zero;
+    private Quaternion sec_rotation = new Quaternion.zero
+
     void Start()
     {
+        // find the script for the secondary drone
+        ControlInput = FindFirstObjectByType<QuadcopterController_sec>();
         // assigning drone objects
         Quadcopter_main = GameObject.Find("Washing Drone");
         Quadcopter_secondary = GameObject.Find(obsDroneName);
@@ -34,43 +51,103 @@ public class ObjectTransform: MonoBehaviour
             Debug.LogError("Please assign the drones in the inspector!");
             return;
         }
+    }
 
+
+    void FixedUpdate()
+    {
+        GetPoses();
+        if (ControlScheme == 0)
+        {
+            Debug.Log("Changing to control scheme 1");
+            Scheme_1();
+        }
+        if (ControlScheme == 1)
+        {
+            Debug.Log("Changing to control scheme 2");
+            Scheme_2();
+        }
+
+    }
+    void GetPoses()
+    {
         // Get the pose of the Quadcopter_main
-        Vector3 position1 = Quadcopter_main.transform.position;
-        Quaternion rotation1 = Quadcopter_main.transform.rotation;
+        main_position = Quadcopter_main.transform.position;
+        main_rotation = Quadcopter_main.transform.rotation;
 
-        // Create a transformation matrix for the Quadcopter_main
-        Matrix4x4 poseMatrix1 = Matrix4x4.TRS(position1, rotation1, Vector3.one);
+        // Get the pose of the Quadcopter_secondary
+        sec_position = Quadcopter_secondary.transform.position;
+        sec_rotation = Quadcopter_secondary.transform.rotation;
+    }
+    void Scheme_1()
+    {
 
-        // Create the transformation matrix from the desired offset
-        Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(rotationVector));
-        Matrix4x4 translationMatrix = Matrix4x4.Translate(translationVector);
+        // calc direction from the sec drone to the main drone
+        direction = (main_position - sec_position).normalized;
 
-        // Combine rotation and translation matrices
-        transformationMatrix = translationMatrix * rotationMatrix;
+        // calc new position for Quadcopter_secondary
+        Vector3 newPosition = sec_position - direction * distance;
 
-        // Apply the transformation to get the pose of the second object
-        Matrix4x4 poseMatrix2 = transformationMatrix * poseMatrix1;
+        // calc the orintation (Quick FIX TO NOT GET ERROR) 
+        Vector3 newRotation = new Vector3.zero;
 
-        // Extract position and rotation from the resulting matrix
-        Vector3 position2 = poseMatrix2.GetColumn(3);
-        Quaternion rotation2 = Quaternion.LookRotation(poseMatrix2.GetColumn(2), poseMatrix2.GetColumn(1));
+        ApplyNewPose(newPosition, newRotation);
+
+        // // Create a transformation matrix for the Quadcopter_main
+        // Matrix4x4 poseMatrix1 = Matrix4x4.TRS(main_position, main_rotation, Vector3.one);
+
+        // // Create the transformation matrix from the desired offset
+        // Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(rotationVector));
+        // Matrix4x4 translationMatrix = Matrix4x4.Translate(translationVector);
+
+        // // Combine rotation and translation matrices
+        // transformationMatrix = translationMatrix * rotationMatrix;
+
+        // // Apply the transformation to get the pose of the second object
+        // Matrix4x4 poseMatrix2 = transformationMatrix * poseMatrix1;
+
+        // // Extract position and rotation from the resulting matrix
+        // Vector3 position2 = poseMatrix2.GetColumn(3);
+        // Quaternion rotation2 = Quaternion.LookRotation(poseMatrix2.GetColumn(2), poseMatrix2.GetColumn(1));
 
         // Find the QuadcopterController for the second drone
         //QuadcopterController_sec quadcopterController_2 = Quadcopter_secondary.GetComponent<QuadcopterController_sec>();
-        QuadcopterController_sec quadcopterController_2 = Quadcopter_secondary.GetComponent<QuadcopterController_sec>();
-
-        // Check if the script is attached
-        if (quadcopterController_2 != null)
-        {
-            // Call the method to set desired position and rotation
-            quadcopterController_2.SetQuadcopterPose(position2, rotation2);
-        }
-        else
-        {
-            Debug.LogError("QuadcopterController_sec script not found on the Quadcopter_secondary!");
-        }
+        //QuadcopterController_sec quadcopterController_2 = Quadcopter_secondary.GetComponent<QuadcopterController_sec>();       
     }
+
+    void Scheme_2(float yaw, float pitch)
+    {
+        float orbitYawDegrees = yaw; // Actual orbit left-right angle
+        float orbitPitchDegrees = pitch; // Actual orbit up-down angle
+
+        // Convert orbit angles from degrees to radians for Unity calculations
+        float orbitYawRadians = orbitYawDegrees * Mathf.Deg2Rad;
+        float orbitPitchRadians = orbitPitchDegrees * Mathf.Deg2Rad;
+
+        // Calculate new position for the secondary drone based on orbit angles and fixed distance
+        Vector3 newPosition = new Vector3(
+            fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Cos(orbitYawRadians),
+            fixedDistance * Mathf.Cos(orbitPitchRadians),
+            fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Sin(orbitYawRadians)
+        ) + main_position;
+
+        // calc the rotation facing direction using the fixed angles
+        Quaternion newfixedRotation = Quaternion.Euler(fixedPitchDegrees, fixedYawDegrees, 0);
+
+        // Set the secondary drone's new pose
+        ApplyNewPose(newPosition,newfixedRotation);
+         
+    }
+
+
+    void ApplyNewPose(Vector3 pos, Quaternion rot)
+    {
+   
+        // Call the method to set desired position and rotation
+        GetComponent<QuadcopterController_sec>().SetQuadcopterPose(pos, rot);
+     
+    }
+
     public Vector3 GetRotationVector()
     {
         return rotationVector;
@@ -80,7 +157,10 @@ public class ObjectTransform: MonoBehaviour
     {
         return translationVector;
     }
-
+    public void SetControlScheme(int val)
+    {
+        ControlScheme = val;
+    }
     public void SetTransformationParameters(Vector3 rotation, Vector3 translation)
     {
         translationVector = translation;

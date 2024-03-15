@@ -11,6 +11,7 @@ public class UserInput : MonoBehaviour
 
     //
     private QuadcopterController quadcopterController;
+    private ObjectTransform Sec_quadcopterController;
     //
 
     [SerializeField] private ParticleSystem droneSpray;
@@ -25,6 +26,15 @@ public class UserInput : MonoBehaviour
     float maxSpeed = 2;                // Units per second.
     public float maxAngularSpeed = 90;  // Degrees per second.
     public float maxDegPitchRoll = 30;  // Maximum degrees pitch/roll.
+
+    /// <Secondary drone>
+    public bool AdjustOffsetParameter = false; // adjust the offset betwwen main and seondary drone
+    public Vector2 Sec_throttleYawVector = Vector2.zero;
+    public Vector2 Sec_throttleYawVector_prev = Vector2.zero;
+    public Vector2 Sec_pitchRollVector = Vector2.zero;
+    /// </Secondary drone>
+    
+
 
     private void Awake()
     {
@@ -103,6 +113,8 @@ public class UserInput : MonoBehaviour
     void Start()
     {
         quadcopterController = FindFirstObjectByType<QuadcopterController>();
+        Sec_quadcopterController = FindFirstObjectByType<ObjectTransform>();
+
     }
 
     void Update()
@@ -113,7 +125,10 @@ public class UserInput : MonoBehaviour
     void HandleInput()
     {
         // user input from UnityEngine.InputSystem
-       
+
+        //Check that adjust offset is NOT active.
+       if (!AdjustOffsetParameter)
+       {
         // apply to main drone
         if (quadcopterController != null)
         {   // ApplyUserInput(float roll, float pitch, float yaw, float throttle)
@@ -126,6 +141,26 @@ public class UserInput : MonoBehaviour
             // set custom parameter offsets for secondary drone
            
         }
+       }
+       else
+       {
+        // apply to sec drone 
+        if (Sec_quadcopterController != null)
+        {   
+            // make the 
+            GetComponent<ObjectTransform>().SetTransformationParameters();
+        }
+        else
+        {
+            Debug.LogError("UserInputController: ObjectTransform reference is null.");
+            // set custom parameter offsets for secondary drone
+           
+        }
+       }
+      
+
+
+
     }
 
         // ########## Left stick callbacks ##########
@@ -162,6 +197,11 @@ public class UserInput : MonoBehaviour
         if (newX == 0 && newY == 0) pitchRollVector = Vector2.zero;
     }
 
- 
+    // ########## Sec Drone parameter adjuster callbacks ##########
+    private void OnXXXClick(InputAction.CallbackContext value)
+    {
+        // enable the adjustment of the secondary drones offset parameters
+
+    }
 
 }

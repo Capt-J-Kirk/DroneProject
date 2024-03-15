@@ -11,3 +11,6 @@
 
 
 
+""Secondary Drone
+1. apply same step method from ontop. 
+2. make a new function call in the userInput script 
