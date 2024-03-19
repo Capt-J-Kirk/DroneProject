@@ -31,11 +31,11 @@ public class ObjectTransform: MonoBehaviour
 
     public int ControlScheme = 0;
 
-    private Vector3 main_position = new Vector3.zero;
-    private Quaternion main_rotation = new Quaternion.zero;
+    private Vector3 main_position =  new Vector3(0.0f, 0.0f, 0.0f);
+    private Quaternion main_rotation = new Quaternion.Euler(0.0f, 0.0f, 0.0f);
 
-    private Vector3 sec_position = new Vector3.zero;
-    private Quaternion sec_rotation = new Quaternion.zero
+    private Vector3 sec_position =  new Vector3(0.0f, 0.0f, 0.0f);
+    private Quaternion sec_rotation = new Quaternion.Euler(0.0f, 0.0f, 0.0f);
 
     void Start()
     {
