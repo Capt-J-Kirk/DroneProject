@@ -31,12 +31,20 @@ public class ObjectTransform: MonoBehaviour
 
     public int ControlScheme = 0;
 
-    private Vector3 main_position =  new Vector3(0.0f, 0.0f, 0.0f);
-    private Quaternion main_rotation = new Quaternion.Euler(0.0f, 0.0f, 0.0f);
+    private Vector3 main_position; //=  new Vector3(0.0f, 0.0f, 0.0f);
+    private Quaternion main_rotation; // = new Quaternion.EulerAngels(0.0f, 0.0f, 0.0f);
 
-    private Vector3 sec_position =  new Vector3(0.0f, 0.0f, 0.0f);
-    private Quaternion sec_rotation = new Quaternion.Euler(0.0f, 0.0f, 0.0f);
+    private Vector3 sec_position; // =  new Vector3(0.0f, 0.0f, 0.0f);
+    private Quaternion sec_rotation; // = new Quaternion.Euler(0.0f, 0.0f, 0.0f);
 
+    private float yaw2;
+    private float pitch2;
+    private float roll2;
+    private float throttle2; // used to set the distance 
+    private bool SettingParameterValues = false;
+    private bool settingDistance = false;
+    private bool settingYaw = false;
+    private bool settingPitch = false;
     void Start()
     {
         // find the script for the secondary drone
@@ -53,20 +61,25 @@ public class ObjectTransform: MonoBehaviour
         }
     }
 
-
+    // Update/fixedUpdate is the main loop
     void FixedUpdate()
     {
         GetPoses();
-        if (ControlScheme == 0)
+        GetParameterUpdate();
+        if (!SettingParameterValues)
         {
-            Debug.Log("Changing to control scheme 1");
-            Scheme_1();
+            if (ControlScheme == 0)
+            {
+                Debug.Log("Changing to control scheme 1");
+                Scheme_1();
+            }
+            if (ControlScheme == 1)
+            {
+                Debug.Log("Changing to control scheme 2");
+                Scheme_2(yaw2,pitch2);
+            }
         }
-        if (ControlScheme == 1)
-        {
-            Debug.Log("Changing to control scheme 2");
-            Scheme_2();
-        }
+       
 
     }
     void GetPoses()
@@ -79,6 +92,47 @@ public class ObjectTransform: MonoBehaviour
         sec_position = Quadcopter_secondary.transform.position;
         sec_rotation = Quadcopter_secondary.transform.rotation;
     }
+    void GetParameterUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            settingDistance = !settingDistance;
+            Debug.Log("Updating fixedDistance");
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            settingYaw = !settingYaw;
+             Debug.Log("Updating fixedYaw");
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            settingPitch = !settingPitch;
+            Debug.Log("Updating fixedPitch");
+        }
+
+        if (settingDistance == true || settingPitch == true || settingYaw == true)
+        {
+            SettingParameterValues = true;
+        }
+        else
+        {
+            SettingParameterValues = false;
+        }
+
+        if (settingDistance)
+        {
+            UpdateFixedDistance();
+        }
+        if (settingPitch)
+        {
+            UpdatefixedPitchDegrees();
+        }
+        if (settingYaw)
+        {
+            UpdatefixedYawDegrees();
+        }
+
+    }
     void Scheme_1()
     {
 
@@ -86,12 +140,12 @@ public class ObjectTransform: MonoBehaviour
         direction = (main_position - sec_position).normalized;
 
         // calc new position for Quadcopter_secondary
-        Vector3 newPosition = sec_position - direction * distance;
+        Vector3 newPosition = sec_position - direction * fixedDistance;
 
         // calc the orintation (Quick FIX TO NOT GET ERROR) 
-        Vector3 newRotation = new Vector3.zero;
+       // Vector3 newRotation = new Vector3.zero;
 
-        ApplyNewPose(newPosition, newRotation);
+        //ApplyNewPose(newPosition, newRotation);
 
         // // Create a transformation matrix for the Quadcopter_main
         // Matrix4x4 poseMatrix1 = Matrix4x4.TRS(main_position, main_rotation, Vector3.one);
@@ -147,7 +201,18 @@ public class ObjectTransform: MonoBehaviour
         GetComponent<QuadcopterController_sec>().SetQuadcopterPose(pos, rot);
      
     }
-
+    private void UpdateFixedDistance()
+    {
+        fixedDistance = throttle2;
+    }
+    private void UpdatefixedYawDegrees()
+    {
+        fixedYawDegrees = yaw2;
+    }
+    private void UpdatefixedPitchDegrees()
+    {
+        fixedPitchDegrees = pitch2;
+    }
     public Vector3 GetRotationVector()
     {
         return rotationVector;
@@ -165,5 +230,13 @@ public class ObjectTransform: MonoBehaviour
     {
         translationVector = translation;
         rotationVector = rotation;
+    }
+    public void SetUserInput(float roll, float pitch, float yaw, float throttle)
+    {
+        // not actually used for such, but remapped
+        yaw2 = yaw;
+        pitch2 = pitch;
+        throttle2 = throttle;
+        roll2 = roll;
     }
 }

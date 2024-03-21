@@ -9,6 +9,7 @@ TagManager:
   - VanHosePoint
   - WindTurbine
   - TrackableObject
+  - Tile
   layers:
   - Default
   - TransparentFX

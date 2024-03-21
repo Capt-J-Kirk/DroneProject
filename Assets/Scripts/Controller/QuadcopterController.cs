@@ -13,9 +13,12 @@ public class QuadcopterController: MonoBehaviour
     public float maxAngularAcceleration = 2f; // Maximum angular acceleration
     //public Vector3 thrustForce = new Vector3(0f, 5f, 0f); // Thrust force
     public float speed = 5.0f;
-    public float maxYaw = 50.0f;
-    public float maxRoll = 50.0f;
-    public float maxPitch = 50.0f; 
+    public float maxYaw = 80.0f;
+    public float maxVelYaw = 20.0f;
+    public float maxRoll = 10.0f;
+    public float maxVelRoll = 20.0f;
+    public float maxPitch = 10.0f; 
+    public float maxVelPitch = 20.0f; 
 
     public float PitchValue = 0f;
     public float RollValue = 0f;
@@ -36,7 +39,7 @@ public class QuadcopterController: MonoBehaviour
     public float rollKp = 3.0f, rollKi = 0.1f, rollKd = 0.01f;
     public float pitchKp = 3.0f, pitchKi = 0.1f, pitchKd = 0.01f;
     public float yawKp = 3.0f, yawKi = 0.1f, yawKd = 0.01f;
-    public float altitudeKp = 1.0f, altitudeKi = 0.1f, altitudeKd = 0.01f;    
+    public float altitudeKp = 3.0f, altitudeKi = 0.1f, altitudeKd = 0.01f;    
 
     // desired pose
     public Vector3 desiredPosition;
@@ -64,10 +67,12 @@ public class QuadcopterController: MonoBehaviour
         Vector3 currentEulerAngles = currentOrientation.eulerAngles;
         Vector3 newEulerAngles = new Vector3(
             currentEulerAngles.x + (pitchChange * pitchSensitivity * throttleChange),
-            currentEulerAngles.y + (yawChange * yawSensitivity * throttleChange),
+            currentEulerAngles.y + (yawChange * yawSensitivity),  //* throttleChange),
             currentEulerAngles.z + (rollChange * rollSensitivity * throttleChange)
         );
         desiredOrientation = Quaternion.Euler(newEulerAngles);
+
+
 
 
         // current position should be the desired position, as its the starting position. 
@@ -155,14 +160,21 @@ public class QuadcopterController: MonoBehaviour
         // baseAltitude is not used!!! in the pid !!!!!!!!! FIX THIS thats way the hover function is not working. 
 
 
+        //clamp desired parameters values.
+        desired_Orien_Roll = Mathf.Clamp(RollValue, -maxRoll, maxRoll);
+        desired_Orien_Pitch = Mathf.Clamp(PitchValue, -maxPitch, maxPitch);
+        //desired_Orien_Roll = Mathf.Clamp(desiredOrientation.eulerAngles.z, -maxRoll, maxRoll);
+        //desired_Orien_Pitch = Mathf.Clamp(desiredOrientation.eulerAngles.x, -maxPitch, maxPitch);
+        desired_Orien_Yaw = Mathf.Clamp(desiredOrientation.eulerAngles.y, -maxYaw, maxYaw);
+
         // don't calculate the desired orientation. the ones we get from the userInput is the desired!
         // keep desiredYaw. as its the rotation around z-axis.
-        float rollControlInput = rollPID.UpdateAA(desiredOrientation.eulerAngles.z, currentEulerAngles.x, deltaTime);
+        float rollControlInput = rollPID.UpdateAA(desired_Orien_Roll, currentEulerAngles.z, deltaTime);
         //float rollControlInput = rollPID.UpdateAA(RollValue, currentEulerAngles.x, deltaTime);
-        float pitchControlInput = PitchPID.UpdateAA(desiredOrientation.eulerAngles.x, currentEulerAngles.y, deltaTime);
+        float pitchControlInput = PitchPID.UpdateAA(desired_Orien_Pitch, currentEulerAngles.x, deltaTime);
         //float pitchControlInput = PitchPID.UpdateAA(PitchValue, currentEulerAngles.y, deltaTime);
-        float yawControlInput = YawPID.UpdateAA(desiredOrientation.eulerAngles.y, currentEulerAngles.z, deltaTime);
-        float altitudeControlInput = AltitudePID.UpdateAA(desiredPosition.y, currentPosition.y, deltaTime);
+        float yawControlInput = YawPID.UpdateAA(desiredOrientation.eulerAngles.y, currentEulerAngles.y, deltaTime);
+        float altitudeControlInput = AltitudePID.UpdateAA(desired_Orien_Yaw, currentPosition.y, deltaTime);
 
         // Apply control input 
         ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput);
@@ -172,7 +184,7 @@ public class QuadcopterController: MonoBehaviour
     void ControlMotors(float roll, float pitch, float yaw, float lift2)
     {
 
-        // Clamp the control signal. 
+        // Apply Clamp to simulate actuators, that limits the control signal. 
         float throttle2 = Mathf.Clamp(lift2, 0f, maxVelocity);
         //Debug.Log("throttle: " + lift2);
         // Throttle, the upward force
@@ -183,18 +195,18 @@ public class QuadcopterController: MonoBehaviour
         rb.AddForce(lift, ForceMode.VelocityChange);
 
         // pitch, forward and backward
-        float clampPitch = Mathf.Clamp(pitch, -maxPitch, maxPitch);
-        //rb.AddTorque(transform.right * clampPitch, ForceMode.Acceleration);
-        //rb.AddTorque(transform.right * clampPitch * throttle, ForceMode.VelocityChange);
+        float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
+        rb.AddTorque(transform.right * clampPitch, ForceMode.Acceleration);
+        // rb.AddTorque(transform.right * clampPitch * throttle, ForceMode.VelocityChange);
 
         // roll, left and right
-        float clampRoll = Mathf.Clamp(roll, -maxRoll, maxRoll);
-        //rb.AddTorque(-transform.forward * clampRoll, ForceMode.Acceleration);
+        float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
+        rb.AddTorque(-transform.forward * clampRoll, ForceMode.Acceleration);
         //rb.AddTorque(-transform.forward * clampRoll * throttle, ForceMode.VelocityChange);
 
         // yaw, left and right
-        float clampYaw = Mathf.Clamp(yaw, -maxYaw, maxYaw);
-        //rb.AddTorque(transform.up * clampYaw, ForceMode.Acceleration);
+        float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
+        rb.AddTorque(transform.up * clampYaw, ForceMode.Acceleration);
         //rb.AddTorque(transform.up * clampYaw * throttle, ForceMode.VelocityChange);
 
         // Debug.Log("Drone pos: " + rb.position);

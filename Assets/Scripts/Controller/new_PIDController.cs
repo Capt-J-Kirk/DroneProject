@@ -17,6 +17,8 @@ public class PIDController
 
     public float UpdateAA(float setPoint, float actualValue, float timeFrame)
     {
+        if (timeFrame <= 0f) timeFrame = 0.01f;  // Prevent division by zero or negative time
+
         float error = setPoint - actualValue;
 
         // Proportional term

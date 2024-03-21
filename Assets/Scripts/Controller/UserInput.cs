@@ -110,16 +110,28 @@ public class UserInput : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         quadcopterController = FindFirstObjectByType<QuadcopterController>();
         Sec_quadcopterController = FindFirstObjectByType<ObjectTransform>();
+    }
+    void Start()
+    {
+        //quadcopterController = FindFirstObjectByType<QuadcopterController>();
+        //Sec_quadcopterController = FindFirstObjectByType<ObjectTransform>();
+        //sec_ControlInput = FindFirstObjectByType<QuadcopterController_sec>();
 
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            AdjustOffsetParameter = !AdjustOffsetParameter;
+        }
         HandleInput();
+
+
     }
 
     void HandleInput()
@@ -147,8 +159,9 @@ public class UserInput : MonoBehaviour
         // apply to sec drone 
         if (Sec_quadcopterController != null)
         {   
-            // make the 
-            GetComponent<ObjectTransform>().SetTransformationParameters();
+            // INSERT the rot and pos
+            //GetComponent<ObjectTransform>().SetTransformationParameters();
+            Sec_quadcopterController.SetUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
         }
         else
         {
