@@ -48,7 +48,7 @@ public class ObjectTransform: MonoBehaviour
     void Start()
     {
         // find the script for the secondary drone
-        ControlInput = FindFirstObjectByType<QuadcopterController_sec>();
+        //ControlInput = FindFirstObjectByType<QuadcopterController_sec>();
         // assigning drone objects
         Quadcopter_main = GameObject.Find("Washing Drone");
         Quadcopter_secondary = GameObject.Find(obsDroneName);
@@ -70,7 +70,7 @@ public class ObjectTransform: MonoBehaviour
         {
             if (ControlScheme == 0)
             {
-                Debug.Log("Changing to control scheme 1");
+                //Debug.Log("Changing to control scheme 1");
                 Scheme_1();
             }
             if (ControlScheme == 1)

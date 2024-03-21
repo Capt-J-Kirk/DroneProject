@@ -9612,8 +9612,11 @@ MonoBehaviour:
   maxAngularAcceleration: 2
   speed: 5
   maxYaw: 10
+  maxVelYaw: 20
   maxRoll: 10
+  maxVelRoll: 20
   maxPitch: 10
+  maxVelPitch: 20
   PitchValue: 0
   RollValue: 0
   YawValue: 0
@@ -21942,7 +21945,7 @@ MonoBehaviour:
   YawValue: 0
   baseAltitude: 0
   altitudeChangeRate: 10
-  rb: {fileID: 0}
+  rb: {fileID: 2124728578}
   inputController: {fileID: 0}
   rollKp: 3
   rollKi: 0.1
@@ -21971,7 +21974,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124728577}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82386c12fac32044ab1e56a034f639b0, type: 3}
   m_Name: 

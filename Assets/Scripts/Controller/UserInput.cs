@@ -110,15 +110,11 @@ public class UserInput : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Awake()
+ 
+    void Start()
     {
         quadcopterController = FindFirstObjectByType<QuadcopterController>();
         Sec_quadcopterController = FindFirstObjectByType<ObjectTransform>();
-    }
-    void Start()
-    {
-        //quadcopterController = FindFirstObjectByType<QuadcopterController>();
-        //Sec_quadcopterController = FindFirstObjectByType<ObjectTransform>();
         //sec_ControlInput = FindFirstObjectByType<QuadcopterController_sec>();
 
     }
