@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,8 @@ public class DroneControl: MonoBehaviour
     public float maxAngularSpeed = 90;  // Degrees per second.
     public float maxDegPitchRoll = 30;  // Maximum degrees pitch/roll.
 
+
+
     private void Awake()
     {
         inputDPad = new DPad_Control();
@@ -28,6 +31,7 @@ public class DroneControl: MonoBehaviour
         var main = droneSpray.main;
         main.loop = true;
     }
+
 
     // Subscribe
     private void OnEnable()
@@ -103,6 +107,13 @@ public class DroneControl: MonoBehaviour
         Rotate();
         ChangeVelocity();
         ApplyDrag();
+    }
+
+
+
+    private void SpawnSpheres()
+    { 
+    
     }
 
     private void Rotate()
