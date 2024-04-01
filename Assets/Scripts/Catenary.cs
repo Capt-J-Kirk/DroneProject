@@ -11,7 +11,7 @@ public static class Catenary
         float ropeLength = Vector3.Distance(lowerEndPoint, upperEndPoint);
 
         // Parameters 'a' for catenary equation (concerns rope slack).
-        float a = 0.5f * (ropeLength / Mathf.PI);
+        float a = 0.75f * (ropeLength / Mathf.PI);
 
         // The increment length
         float incrementLength = ropeLength / resolution;

@@ -33,7 +33,7 @@ public class CheckForGround : MonoBehaviour
         droneHoseGO = GameObject.FindGameObjectWithTag("DroneHosePoint");
         droneHosePoint = droneHoseGO.transform.position;
         hoseSegments = new();
-        Physics.queriesHitBackfaces = true;
+        //Physics.queriesHitBackfaces = true;
     }
 
     private void Start()
@@ -84,7 +84,7 @@ public class CheckForGround : MonoBehaviour
             segment.transform.up = new Vector3(segmentVector.x, segmentVector.y, segmentVector.z);
             segment.transform.localScale = new Vector3(segment.transform.localScale.x, segmentVector.magnitude * 0.5f, segment.transform.localScale.z);
 
-            segment.transform.position = Check(segment);
+            //segment.transform.position = Check(segment);
         }
     }
 
