@@ -3648,7 +3648,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -3660,7 +3660,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 319071624}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -3760,6 +3760,9 @@ MonoBehaviour:
   Sec_throttleYawVector: {x: 0, y: 0}
   Sec_throttleYawVector_prev: {x: 0, y: 0}
   Sec_pitchRollVector: {x: 0, y: 0}
+  ManualControl: 0
+  togglesecondarDrone: 0
+  secDrone: {fileID: 0}
 --- !u!4 &325843545
 Transform:
   m_ObjectHideFlags: 0
@@ -9499,8 +9502,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1015122123}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 5
+  m_Drag: 0.1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -9545,7 +9548,7 @@ Transform:
   m_GameObject: {fileID: 1015122123}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 411.18, y: 77.65, z: 616.52}
+  m_LocalPosition: {x: 411.18, y: 80, z: 616.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9604,40 +9607,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0538c7ead94efeb4884b09ee53f6045d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 10
-  maxAcceleration: 5
-  drag: 0.5
-  mass: 5
-  maxAngularVelocity: 5
-  maxAngularAcceleration: 2
-  speed: 5
-  maxYaw: 10
-  maxVelYaw: 20
+  maxYaw: 20
   maxRoll: 10
-  maxVelRoll: 20
   maxPitch: 10
-  maxVelPitch: 20
-  PitchValue: 0
-  RollValue: 0
-  YawValue: 0
-  throttleValue: 0
-  baseAltitude: 0
-  altitudeChangeRate: 10
+  toggleDebug: 0
   rb: {fileID: 1015122124}
-  inputController: {fileID: 0}
-  rollKp: 1
-  rollKi: 0.1
-  rollKd: 0.01
-  pitchKp: 1
-  pitchKi: 0.1
-  pitchKd: 0.01
-  yawKp: 1
-  yawKi: 0.1
-  yawKd: 0.01
-  altitudeKp: 1
-  altitudeKi: 0.1
-  altitudeKd: 0.01
+  inputController: {fileID: 325843544}
   desiredPosition: {x: 0, y: 0, z: 0}
+  desiredEulerAngles: {x: 0, y: 0, z: 0}
   desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &1015122129
 MonoBehaviour:
@@ -9664,6 +9641,9 @@ MonoBehaviour:
   Sec_throttleYawVector: {x: 0, y: 0}
   Sec_throttleYawVector_prev: {x: 0, y: 0}
   Sec_pitchRollVector: {x: 0, y: 0}
+  ManualControl: 0
+  togglesecondarDrone: 0
+  secDrone: {fileID: 2124728577}
 --- !u!1 &1027646507
 GameObject:
   m_ObjectHideFlags: 0
@@ -21849,7 +21829,6 @@ GameObject:
   - component: {fileID: 2124728578}
   - component: {fileID: 2124728581}
   - component: {fileID: 2124728583}
-  - component: {fileID: 2124728582}
   m_Layer: 0
   m_Name: Observing Drone
   m_TagString: Untagged
@@ -21865,8 +21844,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124728577}
   serializedVersion: 4
-  m_Mass: 20
-  m_Drag: 0
+  m_Mass: 5
+  m_Drag: 0.1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -21911,7 +21890,7 @@ Transform:
   m_GameObject: {fileID: 2124728577}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 399.01, y: 77.43, z: 616.58}
+  m_LocalPosition: {x: 399.01, y: 80, z: 616.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -21925,73 +21904,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124728577}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38fd640e60650c74f845acac8aae917d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 10
-  maxAcceleration: 5
-  drag: 0.5
-  mass: 5
-  maxAngularVelocity: 5
-  maxAngularAcceleration: 2
-  speed: 5
-  maxYaw: 50
-  maxRoll: 50
-  maxPitch: 50
-  PitchValue: 0
-  RollValue: 0
-  YawValue: 0
-  baseAltitude: 0
-  altitudeChangeRate: 10
+  maxYaw: 20
+  maxRoll: 10
+  maxPitch: 10
+  toggleDebug: 0
   rb: {fileID: 2124728578}
-  inputController: {fileID: 0}
-  rollKp: 3
-  rollKi: 0.1
-  rollKd: 0.01
-  pitchKp: 3
-  pitchKi: 0.1
-  pitchKd: 0.01
-  yawKp: 3
-  yawKi: 0.1
-  yawKd: 0.01
-  altitudeKp: 1
-  altitudeKi: 0.1
-  altitudeKd: 0.01
-  xKp: 1
-  xKi: 0.1
-  xKd: 0.01
-  zKp: 1
-  zKi: 0.1
-  zKd: 0.01
+  inputController: {fileID: 325843544}
   desiredPosition: {x: 0, y: 0, z: 0}
-  desiredOrientation: {x: 0, y: 0, z: 0}
---- !u!114 &2124728582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124728577}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82386c12fac32044ab1e56a034f639b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  droneSpray: {fileID: 0}
-  isSpraying: 0
-  throttleYawVector: {x: 0, y: 0}
-  throttleYawVector_prev: {x: 0, y: 0}
-  pitchRollVector: {x: 0, y: 0}
-  speedTimer: 0
-  rotateTimer: 0
-  maxAngularSpeed: 90
-  maxDegPitchRoll: 30
-  AdjustOffsetParameter: 0
-  Sec_throttleYawVector: {x: 0, y: 0}
-  Sec_throttleYawVector_prev: {x: 0, y: 0}
-  Sec_pitchRollVector: {x: 0, y: 0}
+  desiredEulerAngles: {x: 0, y: 0, z: 0}
+  desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &2124728583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22011,6 +21937,7 @@ MonoBehaviour:
   fixedYawDegrees: 20
   fixedPitchDegrees: 20
   ControlScheme: 0
+  toggleDebug: 0
 --- !u!1 &2126477472
 GameObject:
   m_ObjectHideFlags: 0

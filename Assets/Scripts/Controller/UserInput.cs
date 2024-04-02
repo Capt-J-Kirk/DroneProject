@@ -23,7 +23,7 @@ public class UserInput : MonoBehaviour
     public float speedTimer = 0;
     public float rotateTimer = 0;
 
-    float maxSpeed = 2;                // Units per second.
+    float maxSpeed = 2;                 // Units per second.
     public float maxAngularSpeed = 90;  // Degrees per second.
     public float maxDegPitchRoll = 30;  // Maximum degrees pitch/roll.
 
@@ -34,7 +34,13 @@ public class UserInput : MonoBehaviour
     public Vector2 Sec_pitchRollVector = Vector2.zero;
     /// </Secondary drone>
     
+    public bool ManualControl = false;
+    public bool togglesecondarDrone = false;
 
+
+    public GameObject secDrone;
+    ObjectTransform transformAdjustment;
+    QuadcopterController_sec quadcopterController_sec;
 
     private void Awake()
     {
@@ -114,8 +120,21 @@ public class UserInput : MonoBehaviour
     void Start()
     {
         quadcopterController = FindFirstObjectByType<QuadcopterController>();
-        Sec_quadcopterController = FindFirstObjectByType<ObjectTransform>();
+        //QuadcopterController_sec quadcopterController_sec = secDrone.GetComponent<QuadcopterController_sec>();
+        //ObjectTransform transformAdjustment = secDrone.GetComponent<ObjectTransform>();
+        
+        //quadcopterController_sec = FindFirstObjectByType<QuadcopterController_sec>();
+        //transformAdjustment = FindFirstObjectByType<ObjectTransform>();
         //sec_ControlInput = FindFirstObjectByType<QuadcopterController_sec>();
+        if (secDrone != null)
+        {
+            quadcopterController_sec = secDrone.GetComponent<QuadcopterController_sec>();
+            transformAdjustment = secDrone.GetComponent<ObjectTransform>();
+        }
+        else
+        {
+            Debug.Log("didn't work: ");
+        }
 
     }
 
@@ -123,48 +142,82 @@ public class UserInput : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            AdjustOffsetParameter = !AdjustOffsetParameter;
+            // Switch between Main and Secondary drone
+            togglesecondarDrone = !togglesecondarDrone;
+            Debug.Log("toggled secondarDrone: " + togglesecondarDrone);
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            // switch between manual or transform control
+            ManualControl = !ManualControl;
+            Debug.Log("Manual control secondarDrone: " + ManualControl);
+        }
+
         HandleInput();
-
-
     }
 
     void HandleInput()
     {
         // user input from UnityEngine.InputSystem
 
-        //Check that adjust offset is NOT active.
-       if (!AdjustOffsetParameter)
+        //if togglesecondarDrone is NOT active. pass userinput to main drone
+       if (!togglesecondarDrone)
        {
-        // apply to main drone
-        if (quadcopterController != null)
-        {   // ApplyUserInput(float roll, float pitch, float yaw, float throttle)
-            //quadcopterController.ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
-            GetComponent<QuadcopterController>().ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
-        }
-        else
-        {
-            Debug.LogError("UserInputController: QuadcopterController reference is null.");
-            // set custom parameter offsets for secondary drone
-           
-        }
+            // apply to main drone
+            if (quadcopterController != null)
+            {   // ApplyUserInput(float roll, float pitch, float yaw, float throttle)
+                //quadcopterController.ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+                GetComponent<QuadcopterController>().ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+            }
+            else
+            {
+                Debug.LogError("UserInputController: QuadcopterController reference is null.");
+                // set custom parameter offsets for secondary drone
+            }
        }
        else
        {
-        // apply to sec drone 
-        if (Sec_quadcopterController != null)
-        {   
-            // INSERT the rot and pos
-            //GetComponent<ObjectTransform>().SetTransformationParameters();
-            Sec_quadcopterController.SetUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
-        }
-        else
-        {
-            Debug.LogError("UserInputController: ObjectTransform reference is null.");
-            // set custom parameter offsets for secondary drone
+            // if manual control is active, control the secondary drone directly
+            if (ManualControl)
+            {
+                if (quadcopterController_sec != null)
+                {
+                    quadcopterController_sec.ApplyUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+                }
+                else
+                {
+                    Debug.LogError("UserInputController: QuadcopterController_sec reference is null.");
+                }
+            }
+            else
+            {   
+                // if not active, adjust control scheme parameter
+                if (transformAdjustment != null)
+                {
+                    transformAdjustment.SetUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+                }
+                else
+                {
+                    Debug.LogError("UserInputController: transformAdjustment reference is null.");
+                }
+            }
+
+
+
+        // // apply to sec drone 
+        // if (Sec_quadcopterController != null)
+        // {   
+        //     // INSERT the rot and pos
+        //     //GetComponent<ObjectTransform>().SetTransformationParameters();
+        //     Sec_quadcopterController.SetUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+        // }
+        // else
+        // {
+        //     Debug.LogError("UserInputController: ObjectTransform reference is null.");
+        //     // set custom parameter offsets for secondary drone
            
-        }
+        //}
        }
       
 

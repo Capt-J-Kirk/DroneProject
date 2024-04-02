@@ -45,6 +45,8 @@ public class ObjectTransform: MonoBehaviour
     private bool settingDistance = false;
     private bool settingYaw = false;
     private bool settingPitch = false;
+    public bool toggleDebug = false;
+
     void Start()
     {
         // find the script for the secondary drone
@@ -198,6 +200,8 @@ public class ObjectTransform: MonoBehaviour
     {
    
         // Call the method to set desired position and rotation
+        Debug.Log("pos to sec drone: " + pos);
+        Debug.Log("rot to sec drone: " + rot);
         GetComponent<QuadcopterController_sec>().SetQuadcopterPose(pos, rot);
      
     }
@@ -238,5 +242,13 @@ public class ObjectTransform: MonoBehaviour
         pitch2 = pitch;
         throttle2 = throttle;
         roll2 = roll;
+
+        if (toggleDebug)
+        {
+            Debug.Log("yaw transform: " + yaw);
+            Debug.Log("pitch transform: " + pitch);
+            Debug.Log("throttle transform: " + throttle);
+            Debug.Log("roll transform: " + roll);
+        }
     }
 }
