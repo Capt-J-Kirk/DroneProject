@@ -34,6 +34,9 @@ public class QuadcopterController_sec: MonoBehaviour
     private PIDController pitchPIDQuaternion;
     private PIDController yawPIDQuaternion;
 
+    private PIDController xPID;
+    private PIDController zPID;
+
     public UserInput inputController;
     
     // Tested to be good values
@@ -41,6 +44,9 @@ public class QuadcopterController_sec: MonoBehaviour
     private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
     private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f;
     private float altitudeKp = 5.0f, altitudeKi = 0.3f, altitudeKd = 4f; 
+
+    private float xKp = 5.0f, xKi = 0.3f, xKd = 0.08f; 
+    private float zKp = 5.0f, zKi = 0.3f, zKd = 0.08f; 
     // // needs fine tuning! 
     // public float rollKp = 1.0f, rollKi = 0.1f, rollKd = 0.01f;
     // public float pitchKp = 1.0f, pitchKi = 0.1f, pitchKd = 0.01f;
@@ -195,6 +201,9 @@ public class QuadcopterController_sec: MonoBehaviour
         rollPIDQuaternion = new PIDController(rollKp, rollKi, rollKd);
         pitchPIDQuaternion = new PIDController(pitchKp, pitchKi, pitchKd);
         yawPIDQuaternion = new PIDController(yawKp, yawKi, yawKd);
+
+        xPID = new PIDController(xKp, xKi, xKd);
+        zPID = new PIDController(zKp, zKi, zKd);
     }
 
     void Start()
@@ -202,7 +211,7 @@ public class QuadcopterController_sec: MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.maxAngularVelocity = maxAngularVelocity;
         // starting baseAltitude;
-        desiredPosition.y = transform.position.y;
+        desiredPosition = transform.position;
         neutralOrientation = transform.rotation;
         desiredOrientation = transform.rotation;
         gravityComp = Mathf.Abs(Physics.gravity.y) * rb.mass;
@@ -263,12 +272,13 @@ public class QuadcopterController_sec: MonoBehaviour
     
        
         float altitudeError = AltitudePID.UpdateAA(desiredPosition.y, currentPosition.y, deltaTime);
-        
+        float xControlInput = xPID.UpdateAA(desiredPosition.x, currentPosition.x, deltaTime);
+        float zControlInput = zPID.UpdateAA(desiredPosition.z, currentPosition.z, deltaTime);
         // Gravity compensation 
         float altitudeControlInput = altitudeError + gravityComp;
 
         // Apply control input 
-        ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput);
+        ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput, xControlInput, zControlInput);
  
     }
 
@@ -281,8 +291,14 @@ public class QuadcopterController_sec: MonoBehaviour
         return angularVelocity;
     }
 
-    void ControlMotors(float roll, float pitch, float yaw, float lift2)
+    void ControlMotors(float roll, float pitch, float yaw, float lift2, float x, float z)
     {
+
+        float xforce = Mathf.Clamp(x, -maxVelocity, maxVelocity);
+        rb.AddForce(transform.right * xforce, ForceMode.Force);
+
+        float zforce = Mathf.Clamp(z, -maxVelocity, maxVelocity);
+        rb.AddForce(transform.forward * zforce, ForceMode.Force);
 
         // Apply Clamp to simulate actuators that limits the control signal. 
         float throttle2 = Mathf.Clamp(lift2, -maxVelocity, maxVelocity);

@@ -29,7 +29,7 @@ public class ObjectTransform: MonoBehaviour
     public float fixedPitchDegrees = 20; // Fixed up-down angle
     private Vector3 direction; 
 
-    public int ControlScheme = 0;
+    public int ControlScheme = 1;
 
     private Vector3 main_position; //=  new Vector3(0.0f, 0.0f, 0.0f);
     private Quaternion main_rotation; // = new Quaternion.EulerAngels(0.0f, 0.0f, 0.0f);
@@ -46,6 +46,12 @@ public class ObjectTransform: MonoBehaviour
     private bool settingYaw = false;
     private bool settingPitch = false;
     public bool toggleDebug = false;
+
+    // Used for control scheme 1
+    public float radius = 10f; // Sphere's radius
+    public float theta = 0f; // Horizontal angle
+    public float phi = Mathf.PI / 2; // Vertical angle, starting vertically upwards
+    private float prewYaw = 0f;
 
     void Start()
     {
@@ -67,21 +73,15 @@ public class ObjectTransform: MonoBehaviour
     void FixedUpdate()
     {
         GetPoses();
-        GetParameterUpdate();
-        if (!SettingParameterValues)
+        ChangeControlScheme();
+        if (ControlScheme == 1)
         {
-            if (ControlScheme == 0)
-            {
-                //Debug.Log("Changing to control scheme 1");
-                Scheme_1();
-            }
-            if (ControlScheme == 1)
-            {
-                Debug.Log("Changing to control scheme 2");
-                Scheme_2(yaw2,pitch2);
-            }
+            Scheme_1(pitch2, yaw2, roll2, throttle2);
         }
-       
+        if (ControlScheme == 2)
+        {
+            Scheme_2(yaw2,pitch2);
+        }
 
     }
     void GetPoses()
@@ -93,6 +93,21 @@ public class ObjectTransform: MonoBehaviour
         // Get the pose of the Quadcopter_secondary
         sec_position = Quadcopter_secondary.transform.position;
         sec_rotation = Quadcopter_secondary.transform.rotation;
+    }
+    void ChangeControlScheme()
+    {
+        // key: 1
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("Changing to control scheme 1");
+            ControlScheme = 1;
+        }
+        // key: 2
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Changing to control scheme 2");
+            ControlScheme = 2;
+        }
     }
     void GetParameterUpdate()
     {
@@ -135,40 +150,37 @@ public class ObjectTransform: MonoBehaviour
         }
 
     }
-    void Scheme_1()
+    float WrapAngle(float angle)
     {
+        while (angle > 180) angle -= 360;
+        while (angle < -180) angle += 360;
+        return angle;
+    }
 
-        // calc direction from the sec drone to the main drone
-        direction = (main_position - sec_position).normalized;
+    void Scheme_1(float pitch, float yaw, float roll, float throttle)
+    {
+        // Spherical Orbit control 
+        float thetaSensitivity = 2.0f;
+        float phiSensitivity = 2.0f;
+        float radiusSensitivity = 2.0f;
 
-        // calc new position for Quadcopter_secondary
-        Vector3 newPosition = sec_position - direction * fixedDistance;
+        theta += roll * thetaSensitivity // horizontal movement
+        phi += pitch * phiSensitivity // vertical movement
+        radius += throttle * radiusSensitivity // change radius 
 
-        // calc the orintation (Quick FIX TO NOT GET ERROR) 
-       // Vector3 newRotation = new Vector3.zero;
+        // Calculate desired position
+        float x = main_position.x + radius * Mathf.Sin(phi) * Mathf.Cos(theta);
+        float y = main_position.y + radius * Mathf.Sin(phi) * Mathf.Sin(theta);
+        float z = main_position.z + radius * Mathf.Cos(phi);
+        Vector3 targetPosition = new Vector3(x, y, z);
 
-        //ApplyNewPose(newPosition, newRotation);
+        float yawSensitivity = 5.0f;
+        float newYaw = sec_rotation.eulerAngles.y; + (yaw * yawSensitivity); // yaw can freely move
+        newYaw = WrapAngle(newYaw);
+        Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
+        // Apply to drone controller
+        ApplyNewPose(targetPosition, targetOrientation);
 
-        // // Create a transformation matrix for the Quadcopter_main
-        // Matrix4x4 poseMatrix1 = Matrix4x4.TRS(main_position, main_rotation, Vector3.one);
-
-        // // Create the transformation matrix from the desired offset
-        // Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(rotationVector));
-        // Matrix4x4 translationMatrix = Matrix4x4.Translate(translationVector);
-
-        // // Combine rotation and translation matrices
-        // transformationMatrix = translationMatrix * rotationMatrix;
-
-        // // Apply the transformation to get the pose of the second object
-        // Matrix4x4 poseMatrix2 = transformationMatrix * poseMatrix1;
-
-        // // Extract position and rotation from the resulting matrix
-        // Vector3 position2 = poseMatrix2.GetColumn(3);
-        // Quaternion rotation2 = Quaternion.LookRotation(poseMatrix2.GetColumn(2), poseMatrix2.GetColumn(1));
-
-        // Find the QuadcopterController for the second drone
-        //QuadcopterController_sec quadcopterController_2 = Quadcopter_secondary.GetComponent<QuadcopterController_sec>();
-        //QuadcopterController_sec quadcopterController_2 = Quadcopter_secondary.GetComponent<QuadcopterController_sec>();       
     }
 
     void Scheme_2(float yaw, float pitch)
