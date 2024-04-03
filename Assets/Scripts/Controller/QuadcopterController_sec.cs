@@ -119,6 +119,9 @@ public class QuadcopterController_sec: MonoBehaviour
         {
             // No input detected, set desiredOrientation to neutralOrientation
             newPitch = neutralOrientation.eulerAngles.x;
+            // To cancel out the forward momentum, make a Impuls for a counter momentum 
+            Vector3 counterTorque = new Vector3(0,0,-1*rb.angularVelocity.z);
+            ApplyCounterTorque(counterTorque);
         }
         else
         {
@@ -131,6 +134,9 @@ public class QuadcopterController_sec: MonoBehaviour
         if (rollChange == 0)
         {
             newRoll = neutralOrientation.eulerAngles.z;
+            // To cancel out the left/right momentum, make a Impuls for a counter momentum 
+            Vector3 counterTorque = new Vector3(0,0,-1*rb.angularVelocity.z);
+            ApplyCounterTorque(counterTorque);
         }
         else
         {
@@ -355,5 +361,9 @@ public class QuadcopterController_sec: MonoBehaviour
         Debug.Log("rot modtaget: " + rot);
     }
 
+    private void ApplyCounterTorque(Vector3 counterTorque)
+    {
+        rb.AddTorque(counterTorque, Forcemode.Impuls);
+    }
 
 }

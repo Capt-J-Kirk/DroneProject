@@ -195,7 +195,7 @@ public class UserInput : MonoBehaviour
                 // if not active, adjust control scheme parameter
                 if (transformAdjustment != null)
                 {
-                    transformAdjustment.SetUserInput(pitchRollVector.y, pitchRollVector.x, throttleYawVector.y, throttleYawVector.x);
+                    transformAdjustment.SetUserInput(pitchRollVector.x, pitchRollVector.y, throttleYawVector.x, throttleYawVector.y);
                 }
                 else
                 {
