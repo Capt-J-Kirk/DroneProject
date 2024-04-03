@@ -119,6 +119,7 @@ public class QuadcopterController: MonoBehaviour
         {
             // No input detected, set desiredOrientation to neutralOrientation
             newPitch = neutralOrientation.eulerAngles.x;
+
             // To cancel out the forward momentum, make a Impuls for a counter momentum 
             Vector3 counterTorque = new Vector3(-1*rb.angularVelocity.x,0,0);
             ApplyCounterTorque(counterTorque);
@@ -226,7 +227,7 @@ public class QuadcopterController: MonoBehaviour
         //Vector3 currentEulerAngles = transform.eulerAngles;
 
         // Quaternion-based PID control
-        Quaternion currentOrientation = transform.rotation; // current world orientation
+        Quaternion currentOrientation = transform.rotation; // current orientation
         //Quaternion currentOrientation = transform.localRotation;
         //Quaternion desiredOrientation = Quaternion.Euler(desiredEulerAngles);
         
@@ -249,9 +250,9 @@ public class QuadcopterController: MonoBehaviour
             Debug.Log("currentOrientation: " + currentOrientation);
             Debug.Log("orientationDelta: " + orientationDelta);
             Debug.Log("angularVelocityError: " + angularVelocityError);
-            Debug.DrawRay(transform.position, angularVelocityError * 200, Color.yellow);
+            //Debug.DrawRay(transform.position, angularVelocityError * 200, Color.yellow);
             Debug.Log("currentAngularVelocity: " + currentAngularVelocity);
-            Debug.DrawRay(transform.position, rb.angularVelocity * 200, Color.black);
+            //Debug.DrawRay(transform.position, rb.angularVelocity * 200, Color.black);
         }
        
 
@@ -325,18 +326,18 @@ public class QuadcopterController: MonoBehaviour
         if (toggleDebug)
         {
             //Debug.Log("lift: " + lift2);
-            //Debug.Log("clamplift: " + throttle2);
+            Debug.Log("clamplift: " + throttle2);
             //Debug.Log("Pitch: " + pitch);
-            //Debug.Log("clampPitch: " + clampPitch);
+            Debug.Log("clampPitch: " + clampPitch);
             //Debug.Log("Roll: " + roll);
-            //Debug.Log("clampRoll: " + clampRoll);
+            Debug.Log("clampRoll: " + clampRoll);
             //Debug.Log("Yaw: " + yaw);
-            //Debug.Log("clampYaw: " + clampYaw);
+            Debug.Log("clampYaw: " + clampYaw);
 
             // Debug.Log("Drone pos: " + rb.position);
-            // Debug.Log("Drone vel: " + rb.velocity);
+            Debug.Log("Drone vel: " + rb.velocity);
             // Debug.Log("Drone rot: " + rb.transform.rotation);
-            //Debug.Log("Drone ang: " + rb.angularVelocity);
+            Debug.Log("Drone ang: " + rb.angularVelocity);
             // Debug.Log("throttle: " + throttle);
         }
        
@@ -373,6 +374,7 @@ public class QuadcopterController: MonoBehaviour
 
     private void ApplyCounterTorque(Vector3 counterTorque)
     {
-        rb.AddTorque(counterTorque, ForceMode.Impulse);
+        Debug.Log("counterTorque: " + counterTorque);
+        //rb.AddTorque(counterTorque, ForceMode.Impulse);
     }
 }

@@ -373,13 +373,17 @@ public class QuadcopterController_sec: MonoBehaviour
         // Already calc by the transform script, for follow behaviour.
         desiredOrientation = rot;
         desiredPosition = pos;
-        Debug.Log("pos modtaget: " + pos);
-        Debug.Log("rot modtaget: " + rot);
+        if (toggleDebug)
+        {
+            Debug.Log("pos modtaget: " + pos);
+            Debug.Log("rot modtaget: " + rot);
+        }
+        
     }
 
     private void ApplyCounterTorque(Vector3 counterTorque)
     {
-        rb.AddTorque(counterTorque, ForceMode.Impulse);
+        //rb.AddTorque(counterTorque, ForceMode.Impulse);
     }
 
 }

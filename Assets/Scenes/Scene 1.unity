@@ -9610,7 +9610,7 @@ MonoBehaviour:
   maxYaw: 20
   maxRoll: 10
   maxPitch: 10
-  toggleDebug: 0
+  toggleDebug: 1
   rb: {fileID: 1015122124}
   inputController: {fileID: 325843544}
   desiredPosition: {x: 0, y: 0, z: 0}
@@ -21904,7 +21904,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124728577}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38fd640e60650c74f845acac8aae917d, type: 3}
   m_Name: 
@@ -21938,6 +21938,9 @@ MonoBehaviour:
   fixedPitchDegrees: 20
   ControlScheme: 0
   toggleDebug: 0
+  radius: 5
+  theta: 0
+  phi: 1.5707964
 --- !u!1 &2126477472
 GameObject:
   m_ObjectHideFlags: 0

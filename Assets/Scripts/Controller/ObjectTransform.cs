@@ -52,6 +52,7 @@ public class ObjectTransform: MonoBehaviour
     public float theta = 0f; // Horizontal angle
     public float phi = Mathf.PI / 2; // Vertical angle, starting vertically upwards
     private float prewYaw = 0f;
+    private float yaw3 = 0f;
 
     void Start()
     {
@@ -156,8 +157,7 @@ public class ObjectTransform: MonoBehaviour
         while (angle < -180) angle += 360;
         return angle;
     }
-
-    void Scheme_1(float pitch, float yaw, float roll, float throttle)
+    void updateScheme1(float roll, float pitch, float throttle, float yaw)
     {
         // Spherical Orbit control 
         float thetaSensitivity = 2.0f;
@@ -168,6 +168,23 @@ public class ObjectTransform: MonoBehaviour
         phi += pitch * phiSensitivity; // vertical movement
         radius += throttle * radiusSensitivity; // change radius 
 
+        yaw3 = yaw;
+    }
+    void Scheme_1(float pitch, float yaw, float roll, float throttle)
+    {
+        // fejl fundet. fixed  yaw, so it dosn't rotate all the time. fixed it to nuatral point
+        
+
+
+        // Spherical Orbit control 
+        // float thetaSensitivity = 2.0f;
+        // float phiSensitivity = 2.0f;
+        // float radiusSensitivity = 2.0f;
+
+        // theta += roll * thetaSensitivity; // horizontal movement
+        // phi += pitch * phiSensitivity; // vertical movement
+        // radius += throttle * radiusSensitivity; // change radius 
+
         // Calculate desired positions
         float x = main_position.x + radius * Mathf.Sin(phi) * Mathf.Cos(theta);
         float y = main_position.y + radius * Mathf.Sin(phi) * Mathf.Sin(theta);
@@ -176,7 +193,7 @@ public class ObjectTransform: MonoBehaviour
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
-        float newYaw = sec_rotation.eulerAngles.y + (yaw * yawSensitivity); // yaw can freely move
+        float newYaw = sec_rotation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
         newYaw = WrapAngle(newYaw);
         Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
@@ -213,8 +230,11 @@ public class ObjectTransform: MonoBehaviour
     {
    
         // Call the method to set desired position and rotation
-        Debug.Log("pos to sec drone: " + pos);
-        Debug.Log("rot to sec drone: " + rot);
+        if (false)
+        {
+            Debug.Log("pos to sec drone: " + pos);
+            Debug.Log("rot to sec drone: " + rot);
+        }
         GetComponent<QuadcopterController_sec>().SetQuadcopterPose(pos, rot);
      
     }
@@ -255,6 +275,8 @@ public class ObjectTransform: MonoBehaviour
         pitch2 = pitch;
         throttle2 = throttle;
         roll2 = roll;
+
+        updateScheme1(roll, pitch, throttle, yaw);
 
         if (toggleDebug)
         {
