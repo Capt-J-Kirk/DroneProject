@@ -48,7 +48,7 @@ public class ObjectTransform: MonoBehaviour
     public bool toggleDebug = false;
 
     // Used for control scheme 1
-    public float radius = 10f; // Sphere's radius
+    public float radius = 5f; // Sphere's radius
     public float theta = 0f; // Horizontal angle
     public float phi = Mathf.PI / 2; // Vertical angle, starting vertically upwards
     private float prewYaw = 0f;
@@ -174,13 +174,14 @@ public class ObjectTransform: MonoBehaviour
         float z = main_position.z + radius * Mathf.Cos(phi);
         Vector3 targetPosition = new Vector3(x, y, z);
 
+        // Calculate desired orientation
         float yawSensitivity = 5.0f;
         float newYaw = sec_rotation.eulerAngles.y; + (yaw * yawSensitivity); // yaw can freely move
         newYaw = WrapAngle(newYaw);
         Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
+        
         // Apply to drone controller
         ApplyNewPose(targetPosition, targetOrientation);
-
     }
 
     void Scheme_2(float yaw, float pitch)
