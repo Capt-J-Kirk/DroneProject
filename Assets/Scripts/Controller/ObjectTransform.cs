@@ -30,7 +30,7 @@ public class ObjectTransform: MonoBehaviour
     private Vector3 direction; 
 
     public int ControlScheme = 1;
-
+    
     private Vector3 main_position; //=  new Vector3(0.0f, 0.0f, 0.0f);
     private Quaternion main_rotation; // = new Quaternion.EulerAngels(0.0f, 0.0f, 0.0f);
 
@@ -174,8 +174,6 @@ public class ObjectTransform: MonoBehaviour
     {
         // fejl fundet. fixed  yaw, so it dosn't rotate all the time. fixed it to nuatral point
         
-
-
         // Spherical Orbit control 
         // float thetaSensitivity = 2.0f;
         // float phiSensitivity = 2.0f;
@@ -192,6 +190,7 @@ public class ObjectTransform: MonoBehaviour
         Vector3 targetPosition = new Vector3(x, y, z);
 
         // Calculate desired orientation
+        // fejl fundet skal selvfølgelig være et neutral points ellers spinner den out of control i yaw 
         float yawSensitivity = 5.0f;
         float newYaw = sec_rotation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
         newYaw = WrapAngle(newYaw);

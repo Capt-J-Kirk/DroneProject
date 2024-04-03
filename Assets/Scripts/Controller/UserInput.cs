@@ -11,7 +11,7 @@ public class UserInput : MonoBehaviour
 
     //
     private QuadcopterController quadcopterController;
-    private ObjectTransform Sec_quadcopterController;
+   //private ObjectTransform Sec_quadcopterController;
     //
 
     [SerializeField] private ParticleSystem droneSpray;
@@ -47,7 +47,7 @@ public class UserInput : MonoBehaviour
         inputDPad = new DPad_Control();
         inputXRI = new XRI_Control();
 
-        GCInstance = this;
+        //GCInstance = this;
      
     }
 

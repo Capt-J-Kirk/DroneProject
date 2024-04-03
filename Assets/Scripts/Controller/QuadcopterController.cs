@@ -145,11 +145,15 @@ public class QuadcopterController: MonoBehaviour
             //float newRoll = Mathf.Clamp(rollChange * rollSensitivity, -maxRoll, maxRoll);
             newRoll = WrapAngle(newRoll);
         }
+
+
+        // 270 
         
         // may need to be the current orientation of the drone, to be able to spin 360
-        float newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity); // yaw can freely move
+        //float newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity); // yaw can freely move
+        float newYaw = transform.rotation.eulerAngles.y + (yawChange * yawSensitivity); // yaw can freely move
         //float newYaw = yawChange * yawSensitivity; // yaw can freely move
-        newYaw = WrapAngle(newYaw);
+        //newYaw = WrapAngle(newYaw);
           
         if (toggleDebug)
         {
@@ -164,7 +168,7 @@ public class QuadcopterController: MonoBehaviour
 
         //Update desired orientation
         desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
-
+        Debug.Log("desiredOrientation euler: " + desiredOrientation.eulerAngles);
     
         // current position should be the desired position, as its the starting position. 
 
@@ -230,7 +234,7 @@ public class QuadcopterController: MonoBehaviour
         Quaternion currentOrientation = transform.rotation; // current orientation
         //Quaternion currentOrientation = transform.localRotation;
         //Quaternion desiredOrientation = Quaternion.Euler(desiredEulerAngles);
-        
+        Debug.Log("desiredOrientation euler current: " + currentOrientation.eulerAngles);
         // Calc orientation delta
         Quaternion orientationDelta = Quaternion.Inverse(currentOrientation) * desiredOrientation;
 
@@ -316,7 +320,7 @@ public class QuadcopterController: MonoBehaviour
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
-        rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
+        rb.AddTorque(transform.forward * clampRoll, ForceMode.Force); // might need to invert roll. 
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
@@ -340,8 +344,7 @@ public class QuadcopterController: MonoBehaviour
             Debug.Log("Drone ang: " + rb.angularVelocity);
             // Debug.Log("throttle: " + throttle);
         }
-       
-
+    
     }
 
     public void ApplyUserInput(float roll, float pitch, float yaw, float throttle)
