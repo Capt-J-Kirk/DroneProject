@@ -164,11 +164,11 @@ public class ObjectTransform: MonoBehaviour
         float phiSensitivity = 2.0f;
         float radiusSensitivity = 2.0f;
 
-        theta += roll * thetaSensitivity // horizontal movement
-        phi += pitch * phiSensitivity // vertical movement
-        radius += throttle * radiusSensitivity // change radius 
+        theta += roll * thetaSensitivity; // horizontal movement
+        phi += pitch * phiSensitivity; // vertical movement
+        radius += throttle * radiusSensitivity; // change radius 
 
-        // Calculate desired position
+        // Calculate desired positions
         float x = main_position.x + radius * Mathf.Sin(phi) * Mathf.Cos(theta);
         float y = main_position.y + radius * Mathf.Sin(phi) * Mathf.Sin(theta);
         float z = main_position.z + radius * Mathf.Cos(phi);
@@ -176,7 +176,7 @@ public class ObjectTransform: MonoBehaviour
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
-        float newYaw = sec_rotation.eulerAngles.y; + (yaw * yawSensitivity); // yaw can freely move
+        float newYaw = sec_rotation.eulerAngles.y + (yaw * yawSensitivity); // yaw can freely move
         newYaw = WrapAngle(newYaw);
         Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
