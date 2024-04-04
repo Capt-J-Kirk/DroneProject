@@ -6,7 +6,7 @@ public class PIDController
     private float derivativeGain;
 
     private float integral = 0f; 
-    private float minIntegral = 5f;
+    private float minIntegral = -5f;
     private float maxIntegral = 5f;
     private float previousError = 0f;
     private float previousActualValue = 0f;
@@ -31,8 +31,8 @@ public class PIDController
         
         // Integral term
         //integral += error * Time.fixedDeltaTime;
-        integral += error * timeFrame;
-        //integral = Mathf.Clamp(integral + error * timeFrame, minIntegral, maxIntegral);
+        //integral += error * timeFrame;
+        integral = Mathf.Clamp(integral + error * timeFrame, minIntegral, maxIntegral);
         float integralTerm = integralGain * integral;
         
         // Derivative term
