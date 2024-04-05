@@ -158,11 +158,11 @@ public class QuadcopterController: MonoBehaviour
         if (toggleDebug)
         {
             Debug.Log("DesiredPitch: " + newPitch);
-            Debug.Log("currentPitch: " + transform.rotation.eulerAngles.x);
+            Debug.Log("currentPitch: " + rb.transform.rotation.eulerAngles.x);
             Debug.Log("DesiredYaw: " + newYaw);
             // Debug.Log("PrewYaw: " + prewYaw);
             Debug.Log("DesiredRoll: " + newRoll);
-            Debug.Log("currentRoll: " + transform.rotation.eulerAngles.z);
+            Debug.Log("currentRoll: " + rb.transform.rotation.eulerAngles.z);
         }
 
         // update prewious Yew
@@ -208,11 +208,12 @@ public class QuadcopterController: MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.centerOfMass = Vector3.zero;
         rb.maxAngularVelocity = maxAngularVelocity;
         // starting baseAltitude;
-        desiredPosition.y = transform.position.y;
-        neutralOrientation = transform.rotation;
-        desiredOrientation = transform.rotation;
+        desiredPosition.y = rb.transform.position.y;
+        neutralOrientation = rb.transform.rotation;
+        desiredOrientation = rb.transform.rotation;
         gravityComp = Mathf.Abs(Physics.gravity.y) * rb.mass;
       
     }
@@ -221,6 +222,7 @@ public class QuadcopterController: MonoBehaviour
     {
         //TestingDesiredPose();
         UpdatePID();
+        Debug.DrawRay(rb.transform.position, Vector3.up, Color.red, duration: 5f);
     }
 
     void UpdatePID()
@@ -230,11 +232,11 @@ public class QuadcopterController: MonoBehaviour
         float deltaTime = Time.fixedDeltaTime;
 
         // Get current state from sensors 
-        Vector3 currentPosition = transform.position;        
+        Vector3 currentPosition = rb.transform.position;        
         //Vector3 currentEulerAngles = transform.eulerAngles;
 
         // Quaternion-based PID control
-        Quaternion currentOrientation = transform.rotation; // current orientation
+        Quaternion currentOrientation = rb.transform.rotation; // current orientation
         //Quaternion currentOrientation = transform.localRotation;
         //Quaternion desiredOrientation = Quaternion.Euler(desiredEulerAngles);
         
@@ -408,7 +410,7 @@ public class QuadcopterController: MonoBehaviour
     public Vector3 AngularVelocities(Quaternion q1, Quaternion q2, float dt)
     {
         // Method to calculate angular velocity from two quaternions
-        // equation formula found:
+        // Equation formula:
         // https://mariogc.com/post/angular-velocity-quaternions/?fbclid=IwAR1kXM70dvSfZLy7gwaALP_S9maYRiPM4jL5rcdO7ZJHg0Cu9uKEnkuepvE_aem_AStzX-28bYkrUS3ynU9xCW2W4pF7QOhyzEcDJQgidg3DdW5VZSaeVHdQyTHC2RA-b1oOOO4zi-uEjznNvuVJsFAI
         // converted from python to c#
         Vector3 angularVelocity = new Vector3(
