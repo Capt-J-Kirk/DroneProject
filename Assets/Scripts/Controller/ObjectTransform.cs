@@ -36,6 +36,7 @@ public class ObjectTransform: MonoBehaviour
 
     private Vector3 sec_position; // =  new Vector3(0.0f, 0.0f, 0.0f);
     private Quaternion sec_rotation; // = new Quaternion.Euler(0.0f, 0.0f, 0.0f);
+    private Quaternion Sec_nuetralOrientation; 
 
     private float yaw2;
     private float pitch2;
@@ -54,6 +55,12 @@ public class ObjectTransform: MonoBehaviour
     private float prewYaw = 0f;
     private float yaw3 = 0f;
 
+    public bool toggleFollow = true;
+
+    private bool changeInPosition = false;
+    private int point = 0;
+  
+
     void Start()
     {
         // find the script for the secondary drone
@@ -68,6 +75,8 @@ public class ObjectTransform: MonoBehaviour
             Debug.LogError("Please assign the drones in the inspector!");
             return;
         }
+
+        Sec_nuetralOrientation = Quadcopter_secondary.getneutralOrientation();
     }
 
     // Update/fixedUpdate is the main loop
@@ -75,16 +84,21 @@ public class ObjectTransform: MonoBehaviour
     {
         GetPoses();
         ChangeControlScheme();
-        if (ControlScheme == 1)
+        if (toggleFollow)
         {
-            Scheme_1(pitch2, yaw2, roll2, throttle2);
+            if (ControlScheme == 1)
+            {
+                // Spherical full control 
+                Scheme_1();
+            }
+            if (ControlScheme == 2)
+            {
+                // predefined spherical location, with varying radius and yaw for control
+                Scheme_2();
+            }
         }
-        if (ControlScheme == 2)
-        {
-            Scheme_2(yaw2,pitch2);
-        }
-
     }
+
     void GetPoses()
     {
         // Get the pose of the Quadcopter_main
@@ -109,55 +123,82 @@ public class ObjectTransform: MonoBehaviour
             Debug.Log("Changing to control scheme 2");
             ControlScheme = 2;
         }
-    }
-    void GetParameterUpdate()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            settingDistance = !settingDistance;
-            Debug.Log("Updating fixedDistance");
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            settingYaw = !settingYaw;
-             Debug.Log("Updating fixedYaw");
-        }
+        // key: L
         if (Input.GetKeyDown(KeyCode.L))
         {
-            settingPitch = !settingPitch;
-            Debug.Log("Updating fixedPitch");
+            toggleFollow = !toggleFollow;
+            if (toggleFollow)
+            {
+                Debug.Log("Drone: following!");
+            }
+            else
+            {
+                Debug.Log("Drone: NOT following!");
+            }
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            changeInPosition = true;
+            Debug.Log("changing pose " + changeInPosition);
 
-        if (settingDistance == true || settingPitch == true || settingYaw == true)
-        {
-            SettingParameterValues = true;
+            if (point == 0)
+            {
+                point = 1;
+            }
+            else
+            {
+                point = 0;
+            }
         }
-        else
-        {
-            SettingParameterValues = false;
-        }
-
-        if (settingDistance)
-        {
-            UpdateFixedDistance();
-        }
-        if (settingPitch)
-        {
-            UpdatefixedPitchDegrees();
-        }
-        if (settingYaw)
-        {
-            UpdatefixedYawDegrees();
-        }
-
     }
-    float WrapAngle(float angle)
-    {
-        while (angle > 180) angle -= 360;
-        while (angle < -180) angle += 360;
-        return angle;
-    }
-    void updateScheme1(float roll, float pitch, float throttle, float yaw)
+    // void GetParameterUpdate()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.J))
+    //     {
+    //         settingDistance = !settingDistance;
+    //         Debug.Log("Updating fixedDistance");
+    //     }
+    //     if (Input.GetKeyDown(KeyCode.K))
+    //     {
+    //         settingYaw = !settingYaw;
+    //          Debug.Log("Updating fixedYaw");
+    //     }
+    //     if (Input.GetKeyDown(KeyCode.L))
+    //     {
+    //         settingPitch = !settingPitch;
+    //         Debug.Log("Updating fixedPitch");
+    //     }
+
+    //     if (settingDistance == true || settingPitch == true || settingYaw == true)
+    //     {
+    //         SettingParameterValues = true;
+    //     }
+    //     else
+    //     {
+    //         SettingParameterValues = false;
+    //     }
+
+    //     if (settingDistance)
+    //     {
+    //         UpdateFixedDistance();
+    //     }
+    //     if (settingPitch)
+    //     {
+    //         UpdatefixedPitchDegrees();
+    //     }
+    //     if (settingYaw)
+    //     {
+    //         UpdatefixedYawDegrees();
+    //     }
+
+    // }
+    // float WrapAngle(float angle)
+    // {
+    //     while (angle > 180) angle -= 360;
+    //     while (angle < -180) angle += 360;
+    //     return angle;
+    // }
+    void updateSphericalParameters(float roll, float pitch, float throttle, float yaw)
     {
         // Spherical Orbit control 
         float thetaSensitivity = 2.0f;
@@ -170,7 +211,7 @@ public class ObjectTransform: MonoBehaviour
 
         yaw3 = yaw;
     }
-    void Scheme_1(float pitch, float yaw, float roll, float throttle)
+    void Scheme_1()
     {
         // fejl fundet. fixed  yaw, so it dosn't rotate all the time. fixed it to nuatral point
         
@@ -190,38 +231,135 @@ public class ObjectTransform: MonoBehaviour
         Vector3 targetPosition = new Vector3(x, y, z);
 
         // Calculate desired orientation
-        // fejl fundet skal selvfølgelig være et neutral points ellers spinner den out of control i yaw 
         float yawSensitivity = 5.0f;
-        float newYaw = sec_rotation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
-        newYaw = WrapAngle(newYaw);
+        float newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        //newYaw = WrapAngle(newYaw);
         Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
         // Apply to drone controller
         ApplyNewPose(targetPosition, targetOrientation);
     }
 
-    void Scheme_2(float yaw, float pitch)
-    {
-        float orbitYawDegrees = yaw; // Actual orbit left-right angle
-        float orbitPitchDegrees = pitch; // Actual orbit up-down angle
+    // void Scheme_2(float yaw, float pitch)
+    // {
+    //     float orbitYawDegrees = yaw; // Actual orbit left-right angle
+    //     float orbitPitchDegrees = pitch; // Actual orbit up-down angle
 
-        // Convert orbit angles from degrees to radians for Unity calculations
-        float orbitYawRadians = orbitYawDegrees * Mathf.Deg2Rad;
-        float orbitPitchRadians = orbitPitchDegrees * Mathf.Deg2Rad;
+    //     // Convert orbit angles from degrees to radians for Unity calculations
+    //     float orbitYawRadians = orbitYawDegrees * Mathf.Deg2Rad;
+    //     float orbitPitchRadians = orbitPitchDegrees * Mathf.Deg2Rad;
 
-        // Calculate new position for the secondary drone based on orbit angles and fixed distance
-        Vector3 newPosition = new Vector3(
-            fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Cos(orbitYawRadians),
-            fixedDistance * Mathf.Cos(orbitPitchRadians),
-            fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Sin(orbitYawRadians)
-        ) + main_position;
+    //     // Calculate new position for the secondary drone based on orbit angles and fixed distance
+    //     Vector3 newPosition = new Vector3(
+    //         fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Cos(orbitYawRadians),
+    //         fixedDistance * Mathf.Cos(orbitPitchRadians),
+    //         fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Sin(orbitYawRadians)
+    //     ) + main_position;
 
-        // calc the rotation facing direction using the fixed angles
-        Quaternion newfixedRotation = Quaternion.Euler(fixedPitchDegrees, fixedYawDegrees, 0);
+    //     // calc the rotation facing direction using the fixed angles
+    //     Quaternion newfixedRotation = Quaternion.Euler(fixedPitchDegrees, fixedYawDegrees, 0);
 
-        // Set the secondary drone's new pose
-        ApplyNewPose(newPosition,newfixedRotation);
+    //     // Set the secondary drone's new pose
+    //     ApplyNewPose(newPosition,newfixedRotation);
          
+    // }
+
+    void Scheme_2(int pose)
+    {
+        // {theta, phi}
+        Vector2 leftPoint = new Vector2(40, 20);
+        Vector2 rightPoint = new Vector2(-40, 20);
+
+        float phiFixed = 0;
+        float thetaFixed = 0;
+
+        if(point == 0)
+        {
+            phiFixed = leftPoint.y;
+            thetaFixed = leftPoint.x;
+        }
+        else
+        {
+            phiFixed = rightPoint.y;
+            thetaFixed = rightPoint.x;
+        }
+
+        if (changeInPosition)
+        {
+            // using slerp to interpolate between the two points
+            if (point == 0)
+            {
+                // Calculate desired positions
+                float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
+                float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
+                float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+                Vector3 newPosition = new Vector3(x, y, z);
+
+
+                // Calculate old positions
+                float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
+                float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
+                float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+                Vector3 oldPosition = new Vector3(x, y, z);
+
+
+            }
+            if (point == 1)
+            {
+                // Calculate desired positions
+                float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
+                float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
+                float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+                Vector3 newPosition new Vector3(x, y, z);
+
+                // Calculate old positions
+                float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
+                float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
+                float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+                Vector3 oldPosition = new Vector3(x, y, z);
+            }
+
+            Vector3 targetPosition = StartCoroutine(InterpolatePositionOverTime(oldPosition, newPosition, 5f));
+
+        }
+        else
+        {
+            // THEN NOT CHANGING POINT
+            // Calculate desired positions
+            float x = main_position.x + radius * Mathf.Sin(phiFixed) * Mathf.Cos(thetaFixed);
+            float y = main_position.y + radius * Mathf.Sin(phiFixed) * Mathf.Sin(thetaFixed);
+            float z = main_position.z + radius * Mathf.Cos(phiFixed);
+            Vector3 targetPosition = new Vector3(x, y, z);
+        }
+        
+
+        // Calculate desired orientation
+        float yawSensitivity = 5.0f;
+        float newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        //newYaw = WrapAngle(newYaw);
+        Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
+        
+        // Apply to drone controller
+        ApplyNewPose(targetPosition, targetOrientation);
+
+    }
+
+    IEnumerator InterpolatePositionOverTime(Vector3 start, Vector3 end, float duration)
+        {
+            float elapsed = 0f;
+
+            if (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                elapsed += Time.deltaTime;
+                return  Vector3.slerp(start, end, t);
+            }
+            else
+            {
+                // can first change position after the transsition is done
+                changeInPosition = false;
+            }
+        }
     }
 
 
@@ -237,27 +375,27 @@ public class ObjectTransform: MonoBehaviour
         GetComponent<QuadcopterController_sec>().SetQuadcopterPose(pos, rot);
      
     }
-    private void UpdateFixedDistance()
-    {
-        fixedDistance = throttle2;
-    }
-    private void UpdatefixedYawDegrees()
-    {
-        fixedYawDegrees = yaw2;
-    }
-    private void UpdatefixedPitchDegrees()
-    {
-        fixedPitchDegrees = pitch2;
-    }
-    public Vector3 GetRotationVector()
-    {
-        return rotationVector;
-    }
+    // private void UpdateFixedDistance()
+    // {
+    //     fixedDistance = throttle2;
+    // }
+    // private void UpdatefixedYawDegrees()
+    // {
+    //     fixedYawDegrees = yaw2;
+    // }
+    // private void UpdatefixedPitchDegrees()
+    // {
+    //     fixedPitchDegrees = pitch2;
+    // }
+    // public Vector3 GetRotationVector()
+    // {
+    //     return rotationVector;
+    // }
 
-    public Vector3 GetTranslationVector()
-    {
-        return translationVector;
-    }
+    // public Vector3 GetTranslationVector()
+    // {
+    //     return translationVector;
+    // }
     public void SetControlScheme(int val)
     {
         ControlScheme = val;
@@ -275,7 +413,7 @@ public class ObjectTransform: MonoBehaviour
         throttle2 = throttle;
         roll2 = roll;
 
-        updateScheme1(roll, pitch, throttle, yaw);
+        updateSphericalParameters(roll, pitch, throttle, yaw);
 
         if (toggleDebug)
         {

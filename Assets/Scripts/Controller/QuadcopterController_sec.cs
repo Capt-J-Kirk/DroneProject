@@ -63,6 +63,38 @@ public class QuadcopterController_sec: MonoBehaviour
 
     int delay = 0;
     // calc desired pose
+    public Quaternion getneutralOrientation()
+    {
+        return neutralOrientation;
+    }
+
+    void MoveTowardsTarget(Vector3 targetPosition)
+    {
+             
+        // pitch should be x
+        // roll = z
+        // they should be controlling the horizontale plane movement
+        // altitude is z 
+
+        Vector3 directionToTarget = (targetPosition - transform.position).normalized;
+        float horizontalDistance = new Vector3(directionToTarget.x, 0, directionToTarget.z).magnitude;
+
+        directionToTarget = directionToTarget / horizontalDistance; // Normalize horizontal component
+
+        // Calculate pitch and roll based on the target's direction
+        float targetPitch = Mathf.Asin(directionToTarget.y) * Mathf.Rad2Deg; // Asin gives the angle in radians, convert to degrees
+        float targetRoll = Mathf.Atan2(directionToTarget.x, directionToTarget.z) * Mathf.Rad2Deg;
+
+        // clamp pitch and roll 
+        targetPitch = Mathf.Clamp(targetPitch, -maxPitch, maxPitch);
+        targetRoll = Mathf.Clamp(targetRoll, -maxRoll, maxRoll);
+
+        // Apply desired orientation and position
+        desiredOrientation = Quaternion.Euler(targetPitch, 0, targetRoll);
+        desiredPosition = targetPosition;
+       
+    }
+
     private void TestingDesiredPose()
     {
         // used for PID tuning! 
