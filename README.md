@@ -7,6 +7,7 @@ Installment guide:
 
 Download and install blender
 - reason: the meshes are rendered by blender.
+- if they are still not showing. right-click on the project folder in and find the action called, re-import ... 
 
 Before launching the unity project.
 - start oculus, and connect the VR-headset
