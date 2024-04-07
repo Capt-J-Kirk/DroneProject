@@ -68,7 +68,7 @@ public class QuadcopterController_sec: MonoBehaviour
         return neutralOrientation;
     }
 
-    void MoveTowardsTarget(Vector3 targetPosition)
+    void MoveTowardsTarget(Vector3 targetPosition, Quaternion rot)
     {
              
         // pitch should be x
@@ -90,7 +90,7 @@ public class QuadcopterController_sec: MonoBehaviour
         targetRoll = Mathf.Clamp(targetRoll, -maxRoll, maxRoll);
 
         // Apply desired orientation and position
-        desiredOrientation = Quaternion.Euler(targetPitch, 0, targetRoll);
+        desiredOrientation = Quaternion.Euler(targetPitch, rot.y, targetRoll);
         desiredPosition = targetPosition;
        
     }
