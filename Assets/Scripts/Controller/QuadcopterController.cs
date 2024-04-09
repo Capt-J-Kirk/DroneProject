@@ -57,6 +57,9 @@ public class QuadcopterController: MonoBehaviour
 
     int delay = 0;
     // calc desired pose
+
+    public GameObject Visual_Quadcopter_main;
+    
     private void TestingDesiredPose()
     {
         // used for PID tuning! 
@@ -215,14 +218,21 @@ public class QuadcopterController: MonoBehaviour
         neutralOrientation = rb.transform.rotation;
         desiredOrientation = rb.transform.rotation;
         gravityComp = Mathf.Abs(Physics.gravity.y) * rb.mass;
+
+        Visual_Quadcopter_main = GameObject.Find("Washing Drone");
       
     }
 
     void FixedUpdate()
     {
+        // visual update the washing drones location
+        Visual_Quadcopter_main.transform.position = transform.position;
+        Visual_Quadcopter_main.transform.rotation = transform.rotation;
         //TestingDesiredPose();
         UpdatePID();
         Debug.DrawRay(rb.transform.position, Vector3.up, Color.red, duration: 5f);
+
+      
     }
 
     void UpdatePID()

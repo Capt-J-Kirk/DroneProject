@@ -59,7 +59,8 @@ public class ObjectTransform: MonoBehaviour
 
     private bool changeInPosition = false;
     private int point = 0;
-  
+    private float starttime =0;
+    private int count = 0;
 
     void Start()
     {
@@ -75,8 +76,8 @@ public class ObjectTransform: MonoBehaviour
             Debug.LogError("Please assign the drones in the inspector!");
             return;
         }
-
-        Sec_nuetralOrientation = Quadcopter_secondary.getneutralOrientation();
+        Sec_nuetralOrientation = GetComponent<QuadcopterController_sec>().getneutralOrientation();
+        // Sec_nuetralOrientation = Quadcopter_secondary.getneutralOrientation();
     }
 
     // Update/fixedUpdate is the main loop
@@ -139,6 +140,8 @@ public class ObjectTransform: MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             changeInPosition = true;
+            starttime = Time.deltaTime;
+            count = 0;
             Debug.Log("changing pose " + changeInPosition);
 
             if (point == 0)
@@ -264,14 +267,19 @@ public class ObjectTransform: MonoBehaviour
          
     // }
 
-    void Scheme_2(int pose)
+    void Scheme_2()
     {
         // {theta, phi}
-        Vector2 leftPoint = new Vector2(40, 20);
-        Vector2 rightPoint = new Vector2(-40, 20);
+        Vector2 leftPoint = new Vector2(45, 20);
+        Vector2 rightPoint = new Vector2(-45, 20);
 
         float phiFixed = 0;
         float thetaFixed = 0;
+
+        int[] ThetaAngles = {45, -85, -120, -160, 160, 120, 85, 45};
+
+        Vector3 targetPosition = new Vector3(0, 0, 0);
+;
 
         if(point == 0)
         {
@@ -289,37 +297,68 @@ public class ObjectTransform: MonoBehaviour
             // using slerp to interpolate between the two points
             if (point == 0)
             {
-                // Calculate desired positions
-                float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
-                float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
-                float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
-                Vector3 newPosition = new Vector3(x, y, z);
+                // // Calculate desired positions
+                // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
+                // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
+                // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+                // Vector3 newPosition = new Vector3(x, y, z);
 
 
-                // Calculate old positions
-                float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
-                float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
-                float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
-                Vector3 oldPosition = new Vector3(x, y, z);
+                // // Calculate old positions
+                // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
+                // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
+                // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+                // Vector3 oldPosition = new Vector3(x, y, z);
+                if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
+                {
+                    float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(ThetaAngles[7 - count]);
+                    float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(ThetaAngles[7 - count]);
+                    float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+                    targetPosition = new Vector3(x, y, z);
 
+                    count +=1;
+                    starttime = Time.deltaTime;
+
+                    if (count == 8)
+                    {
+                        changeInPosition = false;
+                    }
+                }
 
             }
             if (point == 1)
             {
-                // Calculate desired positions
-                float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
-                float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
-                float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
-                Vector3 newPosition new Vector3(x, y, z);
+                // // Calculate desired positions
+                // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
+                // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
+                // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+                // Vector3 newPosition new Vector3(x, y, z);
 
-                // Calculate old positions
-                float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
-                float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
-                float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
-                Vector3 oldPosition = new Vector3(x, y, z);
+                // // Calculate old positions
+                // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
+                // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
+                // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+                // Vector3 oldPosition = new Vector3(x, y, z);
+
+                 if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
+                {
+                    float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(ThetaAngles[count]);
+                    float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(ThetaAngles[count]);
+                    float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+                    targetPosition = new Vector3(x, y, z);
+
+                    count +=1;
+                    starttime = Time.deltaTime;
+
+                    if (count == 8)
+                    {
+                        changeInPosition = false;
+                    }
+                }
             }
 
-            Vector3 targetPosition = StartCoroutine(InterpolatePositionOverTime(oldPosition, newPosition, 5f));
+            
+            //Vector3 targetPosition = StartCoroutine(InterpolatePositionOverTime(oldPosition, newPosition, 5f));
 
         }
         else
@@ -329,7 +368,7 @@ public class ObjectTransform: MonoBehaviour
             float x = main_position.x + radius * Mathf.Sin(phiFixed) * Mathf.Cos(thetaFixed);
             float y = main_position.y + radius * Mathf.Sin(phiFixed) * Mathf.Sin(thetaFixed);
             float z = main_position.z + radius * Mathf.Cos(phiFixed);
-            Vector3 targetPosition = new Vector3(x, y, z);
+            targetPosition = new Vector3(x, y, z);
         }
         
 
@@ -341,29 +380,28 @@ public class ObjectTransform: MonoBehaviour
         
         // Apply to drone controller
         ApplyNewPose(targetPosition, targetOrientation);
-
     }
 
-    IEnumerator InterpolatePositionOverTime(Vector3 start, Vector3 end, float duration)
-        {
-            float elapsed = 0f;
+    // IEnumerator InterpolatePositionOverTime(Vector3 start, Vector3 end, float duration)
+    //     {
+    //         float elapsed = 0f;
 
-            if (elapsed < duration)
-            {
-                float t = elapsed / duration;
-                elapsed += Time.deltaTime;
-                return  Vector3.slerp(start, end, t);
-            }
-            else
-            {
-                // can first change position after the transsition is done
-                changeInPosition = false;
-            }
-        }
-    }
+    //         if (elapsed < duration)
+    //         {
+    //             float t = elapsed / duration;
+    //             elapsed += Time.deltaTime;
+    //             return  Vector3.slerp(start, end, t);
+    //         }
+    //         else
+    //         {
+    //             // can first change position after the transsition is done
+    //             changeInPosition = false;
+    //         }
+    //     }
+    // }
 
 
-    void ApplyNewPose(Vector3 pos, Quaternion rot)
+    private void ApplyNewPose(Vector3 pos, Quaternion rot)
     {
    
         // Call the method to set desired position and rotation

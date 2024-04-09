@@ -62,6 +62,11 @@ public class QuadcopterController_sec: MonoBehaviour
 
 
     int delay = 0;
+
+
+
+    public GameObject Visual_Quadcopter_secondary;
+
     // calc desired pose
     public Quaternion getneutralOrientation()
     {
@@ -247,12 +252,16 @@ public class QuadcopterController_sec: MonoBehaviour
         neutralOrientation = transform.rotation;
         desiredOrientation = transform.rotation;
         gravityComp = Mathf.Abs(Physics.gravity.y) * rb.mass;
-      
+
+        Visual_Quadcopter_secondary = GameObject.Find("Observing Drone");
     }
 
     void FixedUpdate()
     {
         //TestingDesiredPose();
+        Visual_Quadcopter_secondary.transform.position = transform.position;
+        Visual_Quadcopter_secondary.transform.rotation = transform.rotation;
+        
         UpdatePID();
     }
 
