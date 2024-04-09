@@ -63,7 +63,8 @@ public class QuadcopterController_sec: MonoBehaviour
 
     int delay = 0;
 
-
+    Vector3 targetPositionTEST;
+    Quaternion rotTEST;
 
     public GameObject Visual_Quadcopter_secondary;
 
@@ -71,6 +72,41 @@ public class QuadcopterController_sec: MonoBehaviour
     public Quaternion getneutralOrientation()
     {
         return neutralOrientation;
+    }
+
+    void MoveTowardsTarget2(Vector3 targetPosition, Quaternion rot)
+    {
+        float speed = 0.5f;
+        float turnSpeed = 0.5f;
+        Vector3 currentPosition = transform.position;
+        Vector3 directionToTarget = (targetPosition - currentPosition).normalized;
+
+        // Calculate pitch. No changes needed here as your approach was correct.
+        float targetPitch = Mathf.Asin(directionToTarget.x) * Mathf.Rad2Deg;
+
+        // Extract yaw from the given rotation 'rot'.
+        float targetYaw = rot.eulerAngles.y;
+
+        // Roll might not be directly calculable in the context of just moving towards a point without more context
+        // (e.g., desired bank angle during a turn, which would involve the object's current velocity and desired turn rate).
+        // For a basic implementation that orients towards a target, roll is typically not adjusted based on target position.
+        // Here, we'll set roll to zero for simplicity unless you have a specific use case requiring it.
+        float targetRoll = 0f;
+
+        // Clamp pitch values within allowed limits.
+        targetPitch = Mathf.Clamp(targetPitch, -maxPitch, maxPitch);
+
+        // For this implementation, we're assuming roll is not influenced by the target position, so it's not clamped.
+        targetRoll = Mathf.Clamp(targetRoll, -maxRoll, maxRoll); // Uncomment if roll is determined differently.
+
+        // Apply the calculated orientation and the target position.
+        // Here, we set the object's orientation directly, but for smooth movement, consider using Quaternion.Lerp or Quaternion.Slerp.
+        Quaternion desiredOrientation2 = Quaternion.Euler(targetPitch, targetYaw, targetRoll);
+        Vector3 desiredPosition2 = targetPosition;
+
+        // To apply the orientation, you might do something like this in Update or FixedUpdate:
+        transform.position = Vector3.MoveTowards(transform.position, desiredPosition2, speed * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, desiredOrientation2, turnSpeed * Time.deltaTime);
     }
 
     void MoveTowardsTarget(Vector3 targetPosition, Quaternion rot)
@@ -83,9 +119,11 @@ public class QuadcopterController_sec: MonoBehaviour
 
         Vector3 directionToTarget = (targetPosition - transform.position).normalized;
         float horizontalDistance = new Vector3(directionToTarget.x, 0, directionToTarget.z).magnitude;
+        Debug.Log("directionToTarget: " + directionToTarget);
+        Debug.Log("horizontalDistance: " + horizontalDistance);
 
         directionToTarget = directionToTarget / horizontalDistance; // Normalize horizontal component
-
+        Debug.Log("directionToTarget: " + directionToTarget);
         // Calculate pitch and roll based on the target's direction
         float targetPitch = Mathf.Asin(directionToTarget.y) * Mathf.Rad2Deg; // Asin gives the angle in radians, convert to degrees
         float targetRoll = Mathf.Atan2(directionToTarget.x, directionToTarget.z) * Mathf.Rad2Deg;
@@ -93,6 +131,8 @@ public class QuadcopterController_sec: MonoBehaviour
         // clamp pitch and roll 
         targetPitch = Mathf.Clamp(targetPitch, -maxPitch, maxPitch);
         targetRoll = Mathf.Clamp(targetRoll, -maxRoll, maxRoll);
+        Debug.Log("targetPitch: " + targetPitch);
+        Debug.Log("targetRoll: " + targetRoll);
 
         // Apply desired orientation and position
         desiredOrientation = Quaternion.Euler(targetPitch, rot.y, targetRoll);
@@ -261,7 +301,8 @@ public class QuadcopterController_sec: MonoBehaviour
         //TestingDesiredPose();
         Visual_Quadcopter_secondary.transform.position = transform.position;
         Visual_Quadcopter_secondary.transform.rotation = transform.rotation;
-        
+
+        //MoveTowardsTarget2(targetPositionTEST, rotTEST);
         UpdatePID();
     }
 
@@ -292,16 +333,16 @@ public class QuadcopterController_sec: MonoBehaviour
         Vector3 currentAngularVelocity = rb.angularVelocity;
 
 
-        if (toggleDebug)
+        if (true)
         {
             //Debug.Log("UpdatePID called");
             Debug.Log("desiredOrientation: " + desiredOrientation);
             Debug.Log("currentOrientation: " + currentOrientation);
             Debug.Log("orientationDelta: " + orientationDelta);
             Debug.Log("angularVelocityError: " + angularVelocityError);
-            Debug.DrawRay(transform.position, angularVelocityError * 200, Color.yellow);
+            //Debug.DrawRay(transform.position, angularVelocityError * 200, Color.yellow);
             Debug.Log("currentAngularVelocity: " + currentAngularVelocity);
-            Debug.DrawRay(transform.position, rb.angularVelocity * 200, Color.black);
+            //Debug.DrawRay(transform.position, rb.angularVelocity * 200, Color.black);
         }
        
 
@@ -358,7 +399,8 @@ public class QuadcopterController_sec: MonoBehaviour
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
         rb.AddTorque(transform.up * clampYaw, ForceMode.Force);
-      
+        Debug.Log("lift: " + lift2);
+        Debug.Log("clamplift: " + throttle2);
 
         if (toggleDebug)
         {
@@ -411,6 +453,9 @@ public class QuadcopterController_sec: MonoBehaviour
 
     public void SetQuadcopterPose(Vector3 pos, Quaternion rot)
     {
+        // transform.position = pos;
+        // transform.rotation = rot;
+        //MoveTowardsTarget(pos, rot);
         // Already calc by the transform script, for follow behaviour.
         desiredOrientation = rot;
         desiredPosition = pos;

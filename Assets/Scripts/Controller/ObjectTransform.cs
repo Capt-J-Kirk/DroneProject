@@ -227,11 +227,13 @@ public class ObjectTransform: MonoBehaviour
         // phi += pitch * phiSensitivity; // vertical movement
         // radius += throttle * radiusSensitivity; // change radius 
 
-        // Calculate desired positions
-        float x = main_position.x + radius * Mathf.Sin(phi) * Mathf.Cos(theta);
-        float y = main_position.y + radius * Mathf.Sin(phi) * Mathf.Sin(theta);
-        float z = main_position.z + radius * Mathf.Cos(phi);
+        // Calculate desired positions on sphere
+        float x = main_position.x + radius * Mathf.Sin(phi * Mathf.Deg2Rad) * Mathf.Cos(theta * Mathf.Deg2Rad);
+        float y = main_position.y + radius * Mathf.Sin(phi * Mathf.Deg2Rad) * Mathf.Sin(theta * Mathf.Deg2Rad);
+        float z = main_position.z + radius * Mathf.Cos(phi * Mathf.Deg2Rad);
         Vector3 targetPosition = new Vector3(x, y, z);
+        Debug.Log("targetPosition: " + targetPosition); 
+        Debug.Log("actual pos: " + sec_position);
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
@@ -270,26 +272,27 @@ public class ObjectTransform: MonoBehaviour
     void Scheme_2()
     {
         // {theta, phi}
-        Vector2 leftPoint = new Vector2(45, 20);
-        Vector2 rightPoint = new Vector2(-45, 20);
+        Vector2 leftPoint = new Vector2(-10,-100);//Vector2(45, 20);
+        Vector2 rightPoint = new Vector2(10, 100);//Vector2(-45, 20);
 
         float phiFixed = 0;
         float thetaFixed = 0;
 
-        int[] ThetaAngles = {45, -85, -120, -160, 160, 120, 85, 45};
-
+        int[] ThetaAngles = {-100, -155, 155, 100};//{45, -85, -120, -160, 160, 120, 85, 45};
+        int[] phiAngles = {-10, -10, 10, 10};
+        int i = 4;
         Vector3 targetPosition = new Vector3(0, 0, 0);
 ;
 
         if(point == 0)
         {
-            phiFixed = leftPoint.y;
-            thetaFixed = leftPoint.x;
+            phiFixed = leftPoint.y * Mathf.Deg2Rad;
+            thetaFixed = leftPoint.x * Mathf.Deg2Rad;
         }
         else
         {
-            phiFixed = rightPoint.y;
-            thetaFixed = rightPoint.x;
+            phiFixed = rightPoint.y * Mathf.Deg2Rad;
+            thetaFixed = rightPoint.x * Mathf.Deg2Rad;
         }
 
         if (changeInPosition)
@@ -311,9 +314,9 @@ public class ObjectTransform: MonoBehaviour
                 // Vector3 oldPosition = new Vector3(x, y, z);
                 if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
                 {
-                    float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(ThetaAngles[7 - count]);
-                    float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(ThetaAngles[7 - count]);
-                    float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+                    float x = main_position.x + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[i - count] * Mathf.Deg2Rad);
+                    float y = main_position.y + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[i - count] * Mathf.Deg2Rad);
+                    float z = main_position.z + radius * Mathf.Cos(phiAngles[i -count] * Mathf.Deg2Rad);
                     targetPosition = new Vector3(x, y, z);
 
                     count +=1;
@@ -342,9 +345,9 @@ public class ObjectTransform: MonoBehaviour
 
                  if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
                 {
-                    float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(ThetaAngles[count]);
-                    float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(ThetaAngles[count]);
-                    float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+                    float x = main_position.x + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[count] * Mathf.Deg2Rad);
+                    float y = main_position.y + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[count] * Mathf.Deg2Rad);
+                    float z = main_position.z + radius * Mathf.Cos(phiAngles[count] * Mathf.Deg2Rad);
                     targetPosition = new Vector3(x, y, z);
 
                     count +=1;
