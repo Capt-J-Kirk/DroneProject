@@ -61,6 +61,8 @@ public class ObjectTransform: MonoBehaviour
     private int point = 0;
     private float starttime =0;
     private int count = 0;
+    private float minRadius = 1.5f;
+    private float maxRadius = 8f;
 
     void Start()
     {
@@ -211,6 +213,8 @@ public class ObjectTransform: MonoBehaviour
         theta += roll * thetaSensitivity; // horizontal movement
         phi += pitch * phiSensitivity; // vertical movement
         radius += throttle * radiusSensitivity; // change radius 
+
+        radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
         yaw3 = yaw;
     }
