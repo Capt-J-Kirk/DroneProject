@@ -80,6 +80,8 @@ public class UserInput : MonoBehaviour
             // Right trigger (spray)
             //inputXRI.XRIRightHandInteraction.Activate.performed += OnSprayPerformed;
             //inputXRI.XRIRightHandInteraction.Activate.canceled += OnSprayCancelled;
+            inputXRI.XRIRightHandInteraction.A.performed += OnAClick;
+
         }
 
     }
@@ -271,10 +273,10 @@ public class UserInput : MonoBehaviour
     }
 
     // ########## Sec Drone parameter adjuster callbacks ##########
-    private void OnXXXClick(InputAction.CallbackContext value)
+    private void OnAClick(InputAction.CallbackContext value)
     {
         // enable the adjustment of the secondary drones offset parameters
-
+        Debug.Log("A CLICKED!!!!");
     }
 
 }
