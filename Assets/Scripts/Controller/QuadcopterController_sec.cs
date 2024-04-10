@@ -333,7 +333,7 @@ public class QuadcopterController_sec: MonoBehaviour
         Vector3 currentAngularVelocity = rb.angularVelocity;
 
 
-        if (true)
+        if (toggleDebug)
         {
             //Debug.Log("UpdatePID called");
             Debug.Log("desiredOrientation: " + desiredOrientation);
@@ -399,8 +399,8 @@ public class QuadcopterController_sec: MonoBehaviour
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
         rb.AddTorque(transform.up * clampYaw, ForceMode.Force);
-        Debug.Log("lift: " + lift2);
-        Debug.Log("clamplift: " + throttle2);
+        //Debug.Log("lift: " + lift2);
+        //Debug.Log("clamplift: " + throttle2);
 
         if (toggleDebug)
         {

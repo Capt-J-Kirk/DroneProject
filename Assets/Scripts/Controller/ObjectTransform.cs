@@ -236,8 +236,8 @@ public class ObjectTransform: MonoBehaviour
         float y = main_position.y + radius * Mathf.Sin(phi * Mathf.Deg2Rad) * Mathf.Sin(theta * Mathf.Deg2Rad);
         float z = main_position.z + radius * Mathf.Cos(phi * Mathf.Deg2Rad);
         Vector3 targetPosition = new Vector3(x, y, z);
-        Debug.Log("targetPosition: " + targetPosition); 
-        Debug.Log("actual pos: " + sec_position);
+        //Debug.Log("targetPosition: " + targetPosition); 
+        //Debug.Log("actual pos: " + sec_position);
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
@@ -299,7 +299,7 @@ public class ObjectTransform: MonoBehaviour
             thetaFixed = rightPoint.x * Mathf.Deg2Rad;
         }
 
-        if (changeInPosition)
+        if (false)//changeInPosition)
         {
             // using slerp to interpolate between the two points
             if (point == 0)

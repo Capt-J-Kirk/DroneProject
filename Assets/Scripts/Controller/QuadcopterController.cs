@@ -526,9 +526,4 @@ public class QuadcopterController: MonoBehaviour
          
     }
 
-    private void ApplyCounterTorque(Vector3 counterTorque)
-    {
-        Debug.Log("counterTorque: " + counterTorque);
-        rb.AddTorque(counterTorque*2, ForceMode.Impulse);
-    }
 }

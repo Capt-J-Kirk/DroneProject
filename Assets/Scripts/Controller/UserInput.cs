@@ -39,6 +39,7 @@ public class UserInput : MonoBehaviour
 
 
     public GameObject secDrone;
+    public GameObject mainDrone;
     ObjectTransform transformAdjustment;
     QuadcopterController_sec quadcopterController_sec;
 
@@ -67,7 +68,7 @@ public class UserInput : MonoBehaviour
             //inputDPad.DPadContol.Spray.performed += OnSprayPerformed;
             //inputDPad.DPadContol.Spray.canceled += OnSprayCancelled;
         }
-        if (name == "Washing Drone")
+        if ((name == "Washing Drone") || (name == "drone_main"))
         {
             inputXRI.Enable();
             // Left stick
@@ -119,13 +120,23 @@ public class UserInput : MonoBehaviour
  
     void Start()
     {
-        quadcopterController = FindFirstObjectByType<QuadcopterController>();
+        //quadcopterController = FindFirstObjectByType<QuadcopterController>();
         //QuadcopterController_sec quadcopterController_sec = secDrone.GetComponent<QuadcopterController_sec>();
         //ObjectTransform transformAdjustment = secDrone.GetComponent<ObjectTransform>();
         
         //quadcopterController_sec = FindFirstObjectByType<QuadcopterController_sec>();
         //transformAdjustment = FindFirstObjectByType<ObjectTransform>();
         //sec_ControlInput = FindFirstObjectByType<QuadcopterController_sec>();
+        if (mainDrone != null)
+        {
+            quadcopterController = mainDrone.GetComponent<QuadcopterController>();
+            
+        }
+        else
+        {
+            Debug.Log("set ref to main Drone: ");
+        }
+
         if (secDrone != null)
         {
             quadcopterController_sec = secDrone.GetComponent<QuadcopterController_sec>();
