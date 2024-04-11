@@ -45,6 +45,12 @@ public class UserInput : MonoBehaviour
     ObjectTransform transformAdjustment;
     QuadcopterController_sec quadcopterController_sec;
 
+    public GamwObject ScreenTWO;
+    public GameObject ScreenONE;
+    bool switchScren = true;
+
+    public string screen1 = ""; 
+
     private void Awake()
     {
         inputDPad = new DPad_Control();
@@ -281,15 +287,19 @@ public class UserInput : MonoBehaviour
     private void OnAClick(InputAction.CallbackContext value)
     {
         // enable the adjustment of the secondary drones offset parameters
-        if (transformAdjustment.point == 0)
+        if (togglesecondarDrone)
         {
-            transformAdjustment.point = 1;
+            if (transformAdjustment.point == 0)
+            {
+                transformAdjustment.point = 1;
+            }
+            else
+            {
+                transformAdjustment.point = 0;
+            }
+            Debug.Log("changed position: " +  transformAdjustment.point);
         }
-        else
-        {
-            transformAdjustment.point = 0;
-        }
-        Debug.Log("changed position: " +  transformAdjustment.point);
+     
         Debug.Log("A CLICKED!!!!");
     }
 
@@ -306,21 +316,33 @@ public class UserInput : MonoBehaviour
     {
         // should be used to toggle between screens
         // enable the adjustment of the secondary drones offset parameters
+        switchScren = !switchScren;
+        //SetActive()
+        if(screen1 == "1screen")
+        {
+            ScreenTWO.SetActive(switchScren);
+            ScreenONE.SetActive(!switchScren);
+        }
+        
         Debug.Log("X CLICKED!!!!");
     }
 
     private void OnYClick(InputAction.CallbackContext value)
     {
-        transformAdjustment.followMode = !transformAdjustment.followMode; 
-        // enable the adjustment of the secondary drones offset parameters
-        if (transformAdjustment.toggleFollow)
+        if(togglesecondarDrone)
         {
-            Debug.Log("Drone: following!");
+            transformAdjustment.followMode = !transformAdjustment.followMode; 
+            // enable the adjustment of the secondary drones offset parameters
+            if (transformAdjustment.toggleFollow)
+            {
+                Debug.Log("Drone: following!");
+            }
+            else
+            {
+                Debug.Log("Drone: NOT following!");
+            }
         }
-        else
-        {
-            Debug.Log("Drone: NOT following!");
-        }
+        
         Debug.Log("Y CLICKED!!!!");
     }
 }
