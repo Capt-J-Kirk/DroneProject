@@ -83,6 +83,9 @@ public class UserInput : MonoBehaviour
             //inputXRI.XRIRightHandInteraction.Activate.performed += OnSprayPerformed;
             //inputXRI.XRIRightHandInteraction.Activate.canceled += OnSprayCancelled;
             inputXRI.XRIRightHandInteraction.A.performed += OnAClick;
+            inputXRI.XRIRightHandInteraction.A.performed += OnBClick;
+            inputXRI.XRIRightHandInteraction.A.performed += OnXClick;
+            inputXRI.XRIRightHandInteraction.A.performed += OnYClick;
 
         }
 
@@ -278,7 +281,46 @@ public class UserInput : MonoBehaviour
     private void OnAClick(InputAction.CallbackContext value)
     {
         // enable the adjustment of the secondary drones offset parameters
+        if (transformAdjustment.point == 0)
+        {
+            transformAdjustment.point = 1;
+        }
+        else
+        {
+            transformAdjustment.point = 0;
+        }
+        Debug.Log("changed position: " +  transformAdjustment.point);
         Debug.Log("A CLICKED!!!!");
     }
 
+    private void OnBClick(InputAction.CallbackContext value)
+    {
+        // Switch between Main and Secondary drone
+        togglesecondarDrone = !togglesecondarDrone;
+        Debug.Log("toggled secondarDrone: " + togglesecondarDrone);
+
+        Debug.Log("B CLICKED!!!!");
+    }
+
+    private void OnXClick(InputAction.CallbackContext value)
+    {
+        // should be used to toggle between screens
+        // enable the adjustment of the secondary drones offset parameters
+        Debug.Log("X CLICKED!!!!");
+    }
+
+    private void OnYClick(InputAction.CallbackContext value)
+    {
+        transformAdjustment.followMode = !transformAdjustment.followMode; 
+        // enable the adjustment of the secondary drones offset parameters
+        if (transformAdjustment.toggleFollow)
+        {
+            Debug.Log("Drone: following!");
+        }
+        else
+        {
+            Debug.Log("Drone: NOT following!");
+        }
+        Debug.Log("Y CLICKED!!!!");
+    }
 }

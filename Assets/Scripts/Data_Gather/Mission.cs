@@ -28,6 +28,10 @@ public class MissionManager : MonoBehaviour
     // tracking script needs its own function for data collection
     public RaycastCounter raycastCounter;
 
+    public GameObject grid;
+
+    public GamwObject TwoScreen;
+    public GameObject OneScreen;
 
     // init the datacollector
     private DataCollector dataCollectionIntance = new DataCollector();
@@ -56,17 +60,22 @@ public class MissionManager : MonoBehaviour
     
     private List<int> usedCombinations = new List<int>();
 
+
+    // timer 
+    private float timer = 0.0f;
+    // target time, 3 minutes = 180 sec
+    private float targetTime = 180.0f; 
+
     void Start()
     {
         dataCollectionIntance.type = mission;
         Invoke("DataUpdate", 0.05f); // call 1/20 a sec 
         
-        
-        
     }
-   private List<int> usedCombinations = new List<int>();
+   
     void FixedUpdate()
     {
+        // user push button then ready for new mission, before that selects mission type
         if (selectCombination)
         {
 
@@ -113,34 +122,80 @@ public class MissionManager : MonoBehaviour
             selectCombination = false;
         }
 
-
+        // then the system have found the next combination, the user cliks on startMission
         // run through once
         if (startMission)
         {
             if (mission == "controller")
             {
-                selectControlCombination();
+                selectControlCombination(missionCombination);
             }
             if (mission == "userInterface")
             {
-                selectUserInterfaceCombination();
+                selectUserInterfaceCombination(missionCombination);
 
             }
-            missionActive = true;
+
             startMission = false;
 
             // load the config
+            loadConfig()
 
-            
+            // setActive() the userinterface 
+            if(userInterface == "2screen")
+            {
+                TwoScreen.SetActive(true);
+                OneScreen.SetActive(false);
+            }
+            if(userInterface == "1screen")
+            {
+                TwoScreen.SetActive(false);
+                OneScreen.SetActive(true);
+            }
 
+            if(controlScheme = "scheme0")
+            {
+                userInput.ManualControl = true;
+                objectTransform.ControlScheme = 0;
+            }
+            if(controlScheme = "scheme1")
+            {
+                userInput.ManualControl = false;
+                objectTransform.ControlScheme = 1;
+            }
+            if(controlScheme = "scheme2")
+            {
+                userInput.ManualControl = false;
+                objectTransform.ControlScheme = 2;
+            }
+
+            missionActive = true;
         }
         
-
-        
-
-
         // start the timer, and finish the run then it runs out
-      
+        timer += Time.fixedDeltaTime;
+
+        if(timer >= targetTime)
+        {
+            missionActive = false;
+            Debug.Log("3 minutes have passed.");
+            dataCollectionIntance.SaveDataToCSV();
+            dataCollectionIntance.ClearDataList();
+            // missing tracking
+
+            // missing performance
+        }
+        
+        // resets the current mission 
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Mission is reset: " + missionCombination);
+            timer = 0.0f;
+            missionActive = false;
+            startMission = true;
+            dataCollectionIntance.ClearDataList();
+            // add for tracking and performance
+        }
 
     }
 
@@ -342,5 +397,75 @@ public class MissionManager : MonoBehaviour
                 userInterface = "1screen";
                 break; 
         }
+    }
+
+    [Serializable]
+    public class DroneTransform {
+        public Vector3 position;
+        public Quaternion rotation;
+    }
+
+    [Serializable]
+    public class StartPositions {
+        public DroneTransform main_drone;
+        public DroneTransform sec_drone;
+    }
+
+    [Serializable]
+    public class GridPositions {
+        public DroneTransform windblade;
+    }
+
+    [Serializable]
+    public class LevelConfigurations {
+        public StartPositions start1;
+        public StartPositions start2;
+        public GridPositions grid1;
+        public GridPositions grid2;
+    }
+
+    private void loadConfig()
+    {
+        string filePath = Path.Combine(Application.dataPath, "gameConfiguration.json");
+        if(File.Exists(filePath)) 
+        {
+            string jsonContent = File.ReadAllText(filePath);
+            LevelConfigurations levelConfigs = JsonUtility.FromJson<LevelConfigurations>(jsonContent);
+
+            if(startPose == "start1")
+            {
+                ApplyDroneTransform(levelConfigs.start1);
+            }
+            if(startPose == "start2")
+            {
+                ApplyDroneTransform(levelConfigs.start2);
+            }
+            if(gridLocation == "grid1")
+            {
+                ApplyWindbladeTransform(levelConfigs.grid1);
+            }
+             if(gridLocation == "grid2")
+            {
+                ApplyWindbladeTransform(levelConfigs.grid2);
+            }
+
+        } else {
+            Debug.LogError("Cannot find JSON file!");
+        }
+    }
+
+    private void ApplyDroneTransform(StartPositions startPos) 
+    {
+        main_drone.transform.position = startPos.main_drone.position;
+        main_drone.transform.rotation = startPos.main_drone.rotation;
+
+        sec_drone.transform.position = startPos.sec_drone.position;
+        sec_drone.transform.rotation = startPos.sec_drone.rotation;
+    }
+
+    private void ApplyWindbladeTransform(GridPositions gridPos)
+    {
+        grid.transform.position = gridPos.windblade.position;
+        grid.transform.rotation = gridPos.windblade.rotation;
     }
 }

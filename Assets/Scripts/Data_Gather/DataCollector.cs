@@ -14,7 +14,7 @@ public class DataCollector : MonoBehaviour
     private int Duration  = 240; // 4 minuts (buffer) total planned mission time
     private int expectedSize = frequency * Duration;
     // Lists to hold data
-    private List<DroneData> datalist = new List<DroneData>(expectedSize);
+    private List<DroneData> dataList = new List<DroneData>(expectedSize);
 
 
 
@@ -93,4 +93,9 @@ public class DataCollector : MonoBehaviour
         Debug.Log($"Data saved to {filePath}");
     }
 
+    public void ClearDataList()
+    {
+        dataList.Clear();
+        Debug.Log("Data list cleared.");
+    }
 }
