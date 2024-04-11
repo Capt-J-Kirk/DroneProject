@@ -206,9 +206,24 @@ public class MissionManager : MonoBehaviour
             missionActive = true;
             isRecording = true;
 
+            // parse the combination to raycaster
+            raycastCounter.type = mission;
+            raycastCounter.name = name;
+            raycastCounter.controlScheme = controlScheme;
+            raycastCounter.startPose = startPose;
+            raycastCounter.gridLocation = gridLocation;
+            raycastCounter.userInterface = userInterface;
+
+            // parse the combination to performance
+            performanceCleaning.type = mission;
+            performanceCleaning.name = name;
+            performanceCleaning.controlScheme = controlScheme;
+            performanceCleaning.startPose = startPose;
+            performanceCleaning.gridLocation = gridLocation;
+            performanceCleaning.userInterface = userInterface;
         }
         
-        // start the timer, and finish the run then it runs out
+        // start the timer, and finish the mission then it runs out
         timer += Time.fixedDeltaTime;
 
         if(timer >= targetTime)

@@ -10,6 +10,12 @@ public class PerformanceCleaning: MonoBehaviour
 
     // data class!
 
+    public string type;
+    public string name;
+    public string controlScheme;
+    public string startPose;
+    public string gridLocation;
+    public string userInterface;
 
 
     // public summet values for datacollector

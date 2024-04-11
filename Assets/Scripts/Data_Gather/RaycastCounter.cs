@@ -39,7 +39,7 @@ public class RaycastCounter : MonoBehaviour
 
     public string type;
     public string name;
-    public string ControlScheme;
+    public string controlScheme;
     public string startPose;
     public string gridLocation;
     public string userInterface;
