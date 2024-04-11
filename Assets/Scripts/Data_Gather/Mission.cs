@@ -13,6 +13,31 @@ using UnityEngine.UI;
 
 public class MissionManager : MonoBehaviour
 {
+    [Serializable]
+    public class DroneTransform {
+        public Vector3 position;
+        public Quaternion rotation;
+    }
+
+    [Serializable]
+    public class StartPositions {
+        public DroneTransform main_drone;
+        public DroneTransform sec_drone;
+    }
+
+    [Serializable]
+    public class GridPositions {
+        public DroneTransform windblade;
+    }
+
+    [Serializable]
+    public class LevelConfigurations {
+        public StartPositions start1;
+        public StartPositions start2;
+        public GridPositions grid1;
+        public GridPositions grid2;
+    }
+
     // Objects and Scripts the data should be collected from
     public GameObject main_drone;
     public QuadcopterController quadcopterController;
@@ -28,13 +53,19 @@ public class MissionManager : MonoBehaviour
     // tracking script needs its own function for data collection
     public RaycastCounter raycastCounter;
 
+    // grid gameobject here
     public GameObject grid;
 
+    // screen 
     public GamwObject TwoScreen;
     public GameObject OneScreen;
 
     // init the datacollector
     private DataCollector dataCollectionIntance = new DataCollector();
+    // init the raycaster for tracking
+    private RaycastCounter raycastCounter = new RaycastCounter();
+
+
 
     // still need to pass the data to the datacollector!
     public string name = "sofie";
@@ -53,6 +84,7 @@ public class MissionManager : MonoBehaviour
     public bool selectCombination = true;
 
     //
+    public bool isRecording = false;
     public bool missionActive = false;
     public bool selectCombination = true;
 
@@ -70,6 +102,8 @@ public class MissionManager : MonoBehaviour
     {
         dataCollectionIntance.type = mission;
         Invoke("DataUpdate", 0.05f); // call 1/20 a sec 
+        Invoke("TrackingUpdate", 0.05f); // call 1/20 a sec 
+        Invoke("PerformanceUpdate", 0.05f); // call 1/20 a sec 
         
     }
    
@@ -170,6 +204,8 @@ public class MissionManager : MonoBehaviour
             }
 
             missionActive = true;
+            isRecording = true;
+
         }
         
         // start the timer, and finish the run then it runs out
@@ -178,11 +214,14 @@ public class MissionManager : MonoBehaviour
         if(timer >= targetTime)
         {
             missionActive = false;
+            isRecording = false;
             Debug.Log("3 minutes have passed.");
+            // data 
             dataCollectionIntance.SaveDataToCSV();
             dataCollectionIntance.ClearDataList();
-            // missing tracking
-
+            // tracking
+            raycastCounter.SaveHitRecords();
+            raycastCounter.ClearhitRecords();
             // missing performance
         }
         
@@ -193,8 +232,10 @@ public class MissionManager : MonoBehaviour
             timer = 0.0f;
             missionActive = false;
             startMission = true;
+            isRecording = false;
             dataCollectionIntance.ClearDataList();
-            // add for tracking and performance
+            raycastCounter.ClearhitRecords();
+            // add performance
         }
 
     }
@@ -263,6 +304,19 @@ public class MissionManager : MonoBehaviour
                      controlMainDrone, switchCamFeed, isSpraying, distanceToObject1, distanceToObject2);
         }
         
+    }
+
+    private void TrackingUpdate()
+    {
+        if(isRecording)
+        {
+            raycastCounter.PerformRaycast();
+        }
+    }
+
+    private void PerformanceUpdate()
+    {
+        // missing 
     }
 
     private void selectControlCombination(int combi)
@@ -399,30 +453,6 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    [Serializable]
-    public class DroneTransform {
-        public Vector3 position;
-        public Quaternion rotation;
-    }
-
-    [Serializable]
-    public class StartPositions {
-        public DroneTransform main_drone;
-        public DroneTransform sec_drone;
-    }
-
-    [Serializable]
-    public class GridPositions {
-        public DroneTransform windblade;
-    }
-
-    [Serializable]
-    public class LevelConfigurations {
-        public StartPositions start1;
-        public StartPositions start2;
-        public GridPositions grid1;
-        public GridPositions grid2;
-    }
 
     private void loadConfig()
     {
