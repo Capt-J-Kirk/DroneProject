@@ -244,6 +244,10 @@ public class QuadcopterController_sec: MonoBehaviour
         // update prewious Yew
         prewYaw = newYaw;
 
+        // only used for datacollector
+        desiredEulerAngles = new Vector3(newPitch, newYaw, newRoll);
+        //
+
         //Update desired orientation
         desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
 

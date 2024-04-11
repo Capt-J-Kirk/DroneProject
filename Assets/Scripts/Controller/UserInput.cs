@@ -37,6 +37,8 @@ public class UserInput : MonoBehaviour
     public bool ManualControl = false;
     public bool togglesecondarDrone = false;
 
+    // defauld is scren 1 (main drone)
+    public bool switchCamFeed = false;
 
     public GameObject secDrone;
     public GameObject mainDrone;
