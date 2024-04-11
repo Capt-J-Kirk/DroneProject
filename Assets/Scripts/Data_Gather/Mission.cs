@@ -43,25 +43,104 @@ public class MissionManager : MonoBehaviour
     public bool inFlight = true;
     public bool inCleaning = false;
 
-    public bool ready = false;
+    // menu toggle options
     private string mission = "controller";
+    public bool startMission = false;
+    public bool selectCombination = true;
+
+    //
+    public bool missionActive = false;
+    public bool selectCombination = true;
+
+    private int missionCombination = 0;
+    
+    private List<int> usedCombinations = new List<int>();
 
     void Start()
     {
         dataCollectionIntance.type = mission;
-        if (ready)
-        {
-            Invoke("DataUpdate", 0.05f); // call 1/20 a sec 
-        }
+        Invoke("DataUpdate", 0.05f); // call 1/20 a sec 
+        
         
         
     }
-
-    void Update()
+   private List<int> usedCombinations = new List<int>();
+    void FixedUpdate()
     {
-        // toggle the ready state here
+        if (selectCombination)
+        {
 
-        // setting the mission type here
+            if (mission == "controller")
+            {
+                // total combination
+                // 3 schemes
+                // 2 start poses
+                // 2 grid location
+                // 1 userinterfaces
+                // total = 12
+                bool selctVALIDCombo = true;
+                while(selctVALIDCombo)
+                {
+                    missionCombination = Random.Range(1,13);
+                    if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
+                    {
+                        usedCombinations.Add(missionCombination); // Add the new unique number to the list
+                        selectVALIDCombo = false; // Break the loop
+                    }
+                }
+                
+            }
+            if (mission == "userInterface")
+            {
+                // total combination
+                // 1 schemes
+                // 2 start poses
+                // 2 grid location
+                // 2 userinterfaces
+                // total = 8
+                bool selctVALIDCombo = true;
+                while(selctVALIDCombo)
+                {
+                    missionCombination = Random.Range(1,9);
+                    if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
+                    {
+                        usedCombinations.Add(missionCombination); // Add the new unique number to the list
+                        selectVALIDCombo = false; // Break the loop
+                    }
+                }
+            }
+
+            selectCombination = false;
+        }
+
+
+        // run through once
+        if (startMission)
+        {
+            if (mission == "controller")
+            {
+                selectControlCombination();
+            }
+            if (mission == "userInterface")
+            {
+                selectUserInterfaceCombination();
+
+            }
+            missionActive = true;
+            startMission = false;
+
+            // load the config
+
+            
+
+        }
+        
+
+        
+
+
+        // start the timer, and finish the run then it runs out
+      
 
     }
 
@@ -98,9 +177,9 @@ public class MissionManager : MonoBehaviour
         private float roll1 = quadcopterController.desiredEulerAngles.z;
 
         private float throttle2 = quadcopterController_Sec.desiredPosition.y;
-        private float pitch2 = quadcopterController.desiredEulerAngles.x;
-        private float yaw2 = quadcopterController.desiredEulerAngles.y;
-        private float roll2 = quadcopterController.desiredEulerAngles.z;
+        private float pitch2 = quadcopterController_Sec.desiredEulerAngles.x;
+        private float yaw2 = quadcopterController_Sec.desiredEulerAngles.y;
+        private float roll2 = quadcopterController_Sec.desiredEulerAngles.z;
 
         // Spherical user input
         private float radius = objectTransform.radius;
@@ -115,16 +194,153 @@ public class MissionManager : MonoBehaviour
         private bool isSpraying = userInput.isSpraying;
 
         // Avoidance
-        private float distanceToObject1 = 0;
-        private float distanceToObject2 = 0;
+        private float distanceToObject1 = quadcopterController.distanceToObject;
+        private float distanceToObject2 = quadcopterController_Sec.distanceToObject;
 
-        dataCollectionIntance.CollectData(name, controlScheme, startPose, gridLocation, userInterface,
+        if (missionActive)
+        {
+            dataCollectionIntance.CollectData(name, controlScheme, startPose, gridLocation, userInterface,
                      main_pos, main_rot, sec_pos, sec_rot,
                      inFlight, inCleaning, cleaningPercent, maxCleanValuePossible,
                      currentCleanValue, cleaningPerSecond, throttle1, pitch1, yaw1, 
                      roll1, throttle2, pitch2, yaw2, 
                      roll2, radius, theta, phi, followMode, switchDrone, 
                      controlMainDrone, switchCamFeed, isSpraying, distanceToObject1, distanceToObject2);
+        }
+        
+    }
+
+    private void selectControlCombination(int combi)
+    {
+        switch (combi)
+        {
+            case 1:
+                controlScheme = "scheme0";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 2:
+                controlScheme = "scheme0";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 3:
+                controlScheme = "scheme0";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 4:
+                controlScheme = "scheme0";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 5:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 6:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 7:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 8:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 9:
+                controlScheme = "scheme2";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 10:
+                controlScheme = "scheme2";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 11:
+                controlScheme = "scheme2";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 12:
+                controlScheme = "scheme2";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;   
+        }
     }
     
+    private void selectUserInterfaceCombination(int combi)
+    {
+         switch (combi)
+        {
+            case 1:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 2:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 3:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 4:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 5:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "1screen";
+                break;
+            case 6:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "1screen";
+                break;
+            case 7:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "1screen";
+                break;
+            case 8:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "1screen";
+                break; 
+        }
+    }
 }

@@ -68,6 +68,17 @@ public class QuadcopterController_sec: MonoBehaviour
 
     public GameObject Visual_Quadcopter_secondary;
 
+
+    // object avoidance
+
+    // remenber to set the windblade in the inspector!
+    public Transform windblade;
+    private Collider targetCollider; // Collider of the target object
+    private string currentState = "No Danger";
+    public float distanceToObject = 0;
+
+
+
     // calc desired pose
     public Quaternion getneutralOrientation()
     {
@@ -298,6 +309,20 @@ public class QuadcopterController_sec: MonoBehaviour
         gravityComp = Mathf.Abs(Physics.gravity.y) * rb.mass;
 
         Visual_Quadcopter_secondary = GameObject.Find("Observing Drone");
+
+        // object avoidance
+        if(windblade != null)
+        {
+            targetCollider = windblade.GetComponent<Collider>();
+            if (targetCollider == null)
+            {
+                Debug.LogError("windblade does not have a Collider!");
+            }
+        }
+        else
+        {
+            Debug.LogError("windblade is not assigned!");
+        }
     }
 
     void FixedUpdate()
@@ -308,6 +333,48 @@ public class QuadcopterController_sec: MonoBehaviour
 
         //MoveTowardsTarget2(targetPositionTEST, rotTEST);
         UpdatePID();
+
+        if (targetCollider != null)
+        {
+            // Use ClosestPoint to get the closest point on the target's surface to this GameObject
+            Vector3 closestPoint = targetCollider.ClosestPoint(transform.position);
+            // Calculate the distance from this GameObject's position to the closest point
+            distanceToObject = Vector3.Distance(transform.position, closestPoint);
+
+            // Update the state based on the distance
+            if (distanceToObject < 1f)
+            {
+                currentState = "Extreme Close";
+            }
+            else if (distanceToObject < 3f)
+            {
+                currentState = "Close";
+            }
+            else
+            {
+                currentState = "No Danger";
+            }
+
+            // Optional: Perform actions based on the current state
+            HandleState(currentState);
+        }
+    }
+
+    private void HandleState(string state)
+    {
+        // Implementation of state-specific behaviors
+        switch (state)
+        {
+            case "No Danger":
+                // Handle 'No Danger' state
+                break;
+            case "Close":
+                // Handle 'Close' state
+                break;
+            case "Extreme Close":
+                // Handle 'Extreme Close' state
+                break;
+        }
     }
 
     void UpdatePID()
