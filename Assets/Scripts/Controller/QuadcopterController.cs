@@ -237,7 +237,8 @@ public class QuadcopterController: MonoBehaviour
         // object avoidance
         if(windblade != null)
         {
-            targetCollider = windblade.GetComponent<Collider>();
+            targetCollider = windblade.GetComponent<MeshCollider>();
+            //targetCollider.Convex = true;
             if (targetCollider == null)
             {
                 Debug.LogError("windblade does not have a Collider!");

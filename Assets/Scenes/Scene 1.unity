@@ -5778,7 +5778,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8202049001068824585, guid: 71a6834905250a44c8e625a74678fb4c, type: 3}
 --- !u!23 &514512100
@@ -7087,12 +7087,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96433f3f4ae0c445bdd12c93050956f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 193063884}
-  rightHandController: {fileID: 0}
-  layerToDetect:
-    serializedVersion: 2
-    m_Bits: 64
-  maxDistance: 20
 --- !u!1 &627770580
 GameObject:
   m_ObjectHideFlags: 0
@@ -22419,7 +22413,7 @@ MonoBehaviour:
   userInterface: 2screen
   inFlight: 1
   inCleaning: 0
-  startMission: 0
+  startMission: 1
   selectCombination: 1
   isRecording: 0
   missionActive: 0
