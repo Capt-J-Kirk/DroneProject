@@ -92,7 +92,7 @@ public class DroneData
         this.controlMainDrone = controlMainDrone;
         this.switchCamFeed = switchCamFeed;
         this.isSpraying = isSpraying;
-        this.distanceToObject = distanceToObject1;
-        this.distanceToObject = distanceToObject2;
+        this.distanceToObject1 = distanceToObject1;
+        this.distanceToObject2 = distanceToObject2;
     }
 }

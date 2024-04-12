@@ -45,7 +45,7 @@ public class UserInput : MonoBehaviour
     ObjectTransform transformAdjustment;
     QuadcopterController_sec quadcopterController_sec;
 
-    public GamwObject ScreenTWO;
+    public GameObject ScreenTWO;
     public GameObject ScreenONE;
     bool switchScren = true;
 
@@ -331,7 +331,7 @@ public class UserInput : MonoBehaviour
     {
         if(togglesecondarDrone)
         {
-            transformAdjustment.followMode = !transformAdjustment.followMode; 
+            transformAdjustment.toggleFollow = !transformAdjustment.toggleFollow; 
             // enable the adjustment of the secondary drones offset parameters
             if (transformAdjustment.toggleFollow)
             {

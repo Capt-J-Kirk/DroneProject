@@ -10,11 +10,11 @@ public class DataCollector : MonoBehaviour
     public bool startDataCollection = false;
 
     // allocation of each list, limit memory reallocation during testing. 
-    private int frequency = 20; // how often is the data logged
-    private int Duration  = 240; // 4 minuts (buffer) total planned mission time
-    private int expectedSize = frequency * Duration;
+    //private int frequency = 20; // how often is the data logged
+    //private int Duration  = 240; // 4 minuts (buffer) total planned mission time
+    private int expectedSize = 20 * 240;
     // Lists to hold data
-    private List<DroneData> dataList = new List<DroneData>(expectedSize);
+    private List<DroneData> dataList = new List<DroneData>(20*240);
 
 
 
@@ -53,7 +53,7 @@ public class DataCollector : MonoBehaviour
             return;
         }
 
-        string fileNamePart = type + "_" dataList[0].name + "_" + dataList[0].controlScheme + "_"  dataList[0].startPose + "_" dataList[0].gridLocation + "_" dataList[0].userInterface; // Customize as needed
+        string fileNamePart = type + "_" + dataList[0].name + "_" + dataList[0].controlScheme + "_" + dataList[0].startPose + "_" + dataList[0].gridLocation + "_" + dataList[0].userInterface; // Customize as needed
         string fileName = $"{fileNamePart}_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
 

@@ -57,8 +57,8 @@ public class ObjectTransform: MonoBehaviour
 
     public bool toggleFollow = true;
 
-    private bool changeInPosition = false;
-    private int point = 0;
+    public bool changeInPosition = false;
+    public int point = 0;
     private float starttime =0;
     private int count = 0;
     private float minRadius = 1.5f;

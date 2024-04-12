@@ -1,5 +1,7 @@
 using System.IO;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,24 +15,24 @@ using UnityEngine.UI;
 
 public class MissionManager : MonoBehaviour
 {
-    [Serializable]
+    //[Serializable]
     public class DroneTransform {
         public Vector3 position;
         public Quaternion rotation;
     }
 
-    [Serializable]
+    //[Serializable]
     public class StartPositions {
         public DroneTransform main_drone;
         public DroneTransform sec_drone;
     }
 
-    [Serializable]
+    //[Serializable]
     public class GridPositions {
         public DroneTransform windblade;
     }
 
-    [Serializable]
+    //[Serializable]
     public class LevelConfigurations {
         public StartPositions start1;
         public StartPositions start2;
@@ -51,19 +53,19 @@ public class MissionManager : MonoBehaviour
     public UserInput userInput;
     
     // tracking script needs its own function for data collection
-    public RaycastCounter raycastCounter;
+    //public RaycastCounter raycastCounter;
 
     // grid gameobject here
     public GameObject grid;
 
     // screen 
-    public GamwObject TwoScreen;
-    public GameObject OneScreen;
+    public GameObject  TwoScreen;
+    public GameObject  OneScreen;
 
     // init the datacollector
-    private DataCollector dataCollectionIntance = new DataCollector();
+    public DataCollector dataCollectionIntance = new DataCollector();
     // init the raycaster for tracking
-    private RaycastCounter raycastCounter = new RaycastCounter();
+    public RaycastCounter raycastCounter = new RaycastCounter();
 
 
 
@@ -86,7 +88,7 @@ public class MissionManager : MonoBehaviour
     //
     public bool isRecording = false;
     public bool missionActive = false;
-    public bool selectCombination = true;
+   
 
     private int missionCombination = 0;
     
@@ -95,6 +97,7 @@ public class MissionManager : MonoBehaviour
 
     // timer 
     private float timer = 0.0f;
+
     // target time, 3 minutes = 180 sec
     private float targetTime = 180.0f; 
 
@@ -121,8 +124,8 @@ public class MissionManager : MonoBehaviour
                 // 2 grid location
                 // 1 userinterfaces
                 // total = 12
-                bool selctVALIDCombo = true;
-                while(selctVALIDCombo)
+                bool selectVALIDCombo = true;
+                while(selectVALIDCombo)
                 {
                     missionCombination = Random.Range(1,13);
                     if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
@@ -141,8 +144,8 @@ public class MissionManager : MonoBehaviour
                 // 2 grid location
                 // 2 userinterfaces
                 // total = 8
-                bool selctVALIDCombo = true;
-                while(selctVALIDCombo)
+                bool selectVALIDCombo = true;
+                while(selectVALIDCombo)
                 {
                     missionCombination = Random.Range(1,9);
                     if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
@@ -173,7 +176,7 @@ public class MissionManager : MonoBehaviour
             startMission = false;
 
             // load the config
-            loadConfig()
+            loadConfig();
 
             // setActive() the userinterface 
             if(userInterface == "2screen")
@@ -187,17 +190,17 @@ public class MissionManager : MonoBehaviour
                 OneScreen.SetActive(true);
             }
 
-            if(controlScheme = "scheme0")
+            if(controlScheme == "scheme0")
             {
                 userInput.ManualControl = true;
                 objectTransform.ControlScheme = 0;
             }
-            if(controlScheme = "scheme1")
+            if(controlScheme == "scheme1")
             {
                 userInput.ManualControl = false;
                 objectTransform.ControlScheme = 1;
             }
-            if(controlScheme = "scheme2")
+            if(controlScheme == "scheme2")
             {
                 userInput.ManualControl = false;
                 objectTransform.ControlScheme = 2;
@@ -205,6 +208,7 @@ public class MissionManager : MonoBehaviour
 
             missionActive = true;
             isRecording = true;
+            timer = 0.0f;
 
             // parse the combination to raycaster
             raycastCounter.type = mission;
@@ -270,43 +274,43 @@ public class MissionManager : MonoBehaviour
     void DataUpdate()
     {
         // Positions and rotations
-        private Vector3 main_pos = main_drone.transform.position;
-        private Quaternion main_rot = main_drone.transform.rotation;
-        private Vector3 sec_pos = sec_drone.transform.position;
-        private Quaternion sec_rot = sec_drone.transform.rotation;
+        Vector3 main_pos = main_drone.transform.position;
+        Quaternion main_rot = main_drone.transform.rotation;
+        Vector3 sec_pos = sec_drone.transform.position;
+        Quaternion sec_rot = sec_drone.transform.rotation;
 
         // Cleaning data
-        private float cleaningPercent = performanceCleaning.cleaningPercent;
-        private float maxCleanValuePossible = performanceCleaning.maxCleanValuePossible;
-        private float currentCleanValue = performanceCleaning.currentCleanValue;
-        private float cleaningPerSecond = performanceCleaning.cleaningPerSecond;
+        float cleaningPercent = performanceCleaning.cleaningPercent;
+        float maxCleanValuePossible = performanceCleaning.maxCleanValuePossible;
+        float currentCleanValue = performanceCleaning.currentCleanValue;
+        float cleaningPerSecond = performanceCleaning.cleaningPerSecond;
 
         // User input for drone control
-        private float throttle1 = quadcopterController.desiredPosition.y;
-        private float pitch1 = quadcopterController.desiredEulerAngles.x;
-        private float yaw1 = quadcopterController.desiredEulerAngles.y;
-        private float roll1 = quadcopterController.desiredEulerAngles.z;
+        float throttle1 = quadcopterController.desiredPosition.y;
+        float pitch1 = quadcopterController.desiredEulerAngles.x;
+        float yaw1 = quadcopterController.desiredEulerAngles.y;
+        float roll1 = quadcopterController.desiredEulerAngles.z;
 
-        private float throttle2 = quadcopterController_Sec.desiredPosition.y;
-        private float pitch2 = quadcopterController_Sec.desiredEulerAngles.x;
-        private float yaw2 = quadcopterController_Sec.desiredEulerAngles.y;
-        private float roll2 = quadcopterController_Sec.desiredEulerAngles.z;
+        float throttle2 = quadcopterController_Sec.desiredPosition.y;
+        float pitch2 = quadcopterController_Sec.desiredEulerAngles.x;
+        float yaw2 = quadcopterController_Sec.desiredEulerAngles.y;
+        float roll2 = quadcopterController_Sec.desiredEulerAngles.z;
 
         // Spherical user input
-        private float radius = objectTransform.radius;
-        private float theta = objectTransform.theta;
-        private float phi = objectTransform.phi;
+        float radius = objectTransform.radius;
+        float theta = objectTransform.theta;
+        float phi = objectTransform.phi;
 
         // User button clicks
-        private bool followMode = objectTransform.toggleFollow;
-        private bool switchDrone = userInput.togglesecondarDrone;
-        private bool controlMainDrone = !userInput.togglesecondarDrone;
-        private bool switchCamFeed = userInput.switchCamFeed;
-        private bool isSpraying = userInput.isSpraying;
+        bool followMode = objectTransform.toggleFollow;
+        bool switchDrone = userInput.togglesecondarDrone;
+        bool controlMainDrone = !userInput.togglesecondarDrone;
+        bool switchCamFeed = userInput.switchCamFeed;
+        bool isSpraying = userInput.isSpraying;
 
         // Avoidance
-        private float distanceToObject1 = quadcopterController.distanceToObject;
-        private float distanceToObject2 = quadcopterController_Sec.distanceToObject;
+        float distanceToObject1 = quadcopterController.distanceToObject;
+        float distanceToObject2 = quadcopterController_Sec.distanceToObject;
 
         if (missionActive)
         {
@@ -321,7 +325,7 @@ public class MissionManager : MonoBehaviour
         
     }
 
-    private void TrackingUpdate()
+    void TrackingUpdate()
     {
         if(isRecording)
         {
@@ -329,7 +333,7 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    private void PerformanceUpdate()
+    void PerformanceUpdate()
     {
         // missing 
     }
@@ -499,7 +503,7 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    private void ApplyDroneTransform(StartPositions startPos) 
+    void ApplyDroneTransform(StartPositions startPos) 
     {
         main_drone.transform.position = startPos.main_drone.position;
         main_drone.transform.rotation = startPos.main_drone.rotation;
@@ -508,7 +512,7 @@ public class MissionManager : MonoBehaviour
         sec_drone.transform.rotation = startPos.sec_drone.rotation;
     }
 
-    private void ApplyWindbladeTransform(GridPositions gridPos)
+    void ApplyWindbladeTransform(GridPositions gridPos)
     {
         grid.transform.position = gridPos.windblade.position;
         grid.transform.rotation = gridPos.windblade.rotation;

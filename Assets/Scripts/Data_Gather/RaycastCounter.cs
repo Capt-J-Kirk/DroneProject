@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using UnityEngine;
+using System.Text;
 using System.IO;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 // This script should be attached to the player/camera that are casting the ray
@@ -20,7 +21,7 @@ public class RaycastCounter : MonoBehaviour
     public bool isRecording = false; // Flag, recording state
     private bool wasButtonPressed = false;
     private RaycastHit hit; // Declare this at the class level
-    private GameObject lastHitObject = null; // To keep track of the last hit object
+    //private GameObject lastHitObject = null; // To keep track of the last hit object
     private List<string> objectTransitions = new List<string>(); // To track transitions
     public XRController rightHandController; // Assign this in the inspector
     public LayerMask layerToDetect;
@@ -190,7 +191,7 @@ public class RaycastCounter : MonoBehaviour
     }
 
     // new
-    void PerformRaycast()
+    public void PerformRaycast()
     {
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         RaycastHit hit;
@@ -220,24 +221,23 @@ public class RaycastCounter : MonoBehaviour
             hitRecords.Add(record);
         }
     }
-
     string PrepareRecord(string hitObject, string transition, bool flag)
     {
         string time = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        return $"{time},{hitObject},{transition},{flag}";
+        string test = time + "},{" + hitObject + "},{" + transition + "},{" + flag;
+       // return $"{time},{hitObject},{transition},{flag}";
+        return  $"{test}";
     }
-
-
     public void SaveHitRecords()
     {
 
-         if (hitRecords.Count == 0)
+        if (hitRecords.Count == 0)
         {
             Debug.LogError("hitRecords list is empty. No data to save.");
             return;
         }
 
-        string fileNamePart = "HitTracking" + "_" type + "_" name + "_" + controlScheme + "_"  startPose + "_" gridLocation + "_" userInterface; // Customize as needed
+        string fileNamePart = ("HitTracking" + "_" + type + "_" + name + "_" + controlScheme + "_" + startPose + "_" + gridLocation + "_" + userInterface); // Customize as needed
         string fileName = $"{fileNamePart}_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
 
@@ -246,7 +246,7 @@ public class RaycastCounter : MonoBehaviour
 
         foreach (var record in hitRecords)
         {
-            string csvLine = = $"{record.time},{record.hitObject},{record.transition},{record.flag}";
+            string csvLine = record;//$"{record.time},{record.hitObject},{record.transition},{record.flag}";
             csvContent.AppendLine(csvLine);
         }
         // Write to file
