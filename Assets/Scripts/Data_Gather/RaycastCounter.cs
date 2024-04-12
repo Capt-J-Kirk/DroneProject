@@ -198,31 +198,66 @@ public class RaycastCounter : MonoBehaviour
 
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 30, Color.green);
 
-        if (Physics.Raycast(ray, out hit) && hit.collider.CompareTag("TrackableObject"))
+        if (Physics.Raycast(ray, out hit))
         {
-            string objectName = hit.transform.name;
 
-            string transition = "No transition";
-            if (lastHitObject != null && lastHitObject.name != objectName)
+             // Debug.Log("sending raycast");
+            // Debug.Log("i Hit " + hit.collider.gameObject.name);
+
+            // // testing
+            // string objectName = hit.transform.name;
+
+            // string transition = "No transition";
+            // if (lastHitObject != null && lastHitObject.name != objectName)
+            // {
+            //     transition = $"{lastHitObject.name} to {objectName}";
+            //     hasTransitioned = true;
+            // }
+            // else
+            // {
+            //     hasTransitioned = false;
+            // }
+
+            // lastHitObject = hit.collider.gameObject; // Update last hit object
+
+            // // Prepare the record string
+            // string record = PrepareRecord(objectName, transition, hasTransitioned);
+            // // Add the record to the list
+            // Debug.Log("record: " + record);
+            // hitRecords.Add(record);
+
+            //
+
+            if(hit.collider.CompareTag("TrackableObject"))
             {
-                transition = $"{lastHitObject.name} to {objectName}";
-                hasTransitioned = true;
-            }
-            else
-            {
-                hasTransitioned = false;
-            }
+                Debug.Log("i Hit " + hit.collider.gameObject.name);
+                string objectName = hit.transform.name;
 
-            lastHitObject = hit.collider.gameObject; // Update last hit object
+                string transition = "No transition";
+                if (lastHitObject != null && lastHitObject.name != objectName)
+                {
+                    transition = $"{lastHitObject.name} to {objectName}";
+                    hasTransitioned = true;
+                }
+                else
+                {
+                    hasTransitioned = false;
+                }
 
-            // Prepare the record string
-            string record = PrepareRecord(objectName, transition, hasTransitioned);
-            // Add the record to the list
-            hitRecords.Add(record);
+                lastHitObject = hit.collider.gameObject; // Update last hit object
+
+                // Prepare the record string
+                string record = PrepareRecord(objectName, transition, hasTransitioned);
+                // Add the record to the list
+                Debug.Log("record: " + record);
+                hitRecords.Add(record);
+            }
         }
     }
     string PrepareRecord(string hitObject, string transition, bool flag)
     {
+        Debug.Log("PrepareRecord ");
+
         string time = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         string test = time + "},{" + hitObject + "},{" + transition + "},{" + flag;
        // return $"{time},{hitObject},{transition},{flag}";

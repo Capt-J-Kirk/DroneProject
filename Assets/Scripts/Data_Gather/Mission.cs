@@ -258,6 +258,12 @@ public class MissionManager : MonoBehaviour
             // add performance
         }
 
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            raycastCounter.SaveHitRecords();
+            raycastCounter.ClearhitRecords();
+        }
+
     }
 
     private void OnTriggerEnter(Collider inChange)
@@ -329,8 +335,9 @@ public class MissionManager : MonoBehaviour
 
     void TrackingUpdate()
     {
-        if(isRecording)
+        if(true)//isRecording)
         {
+            //Debug.Log("TrackingUpdate called");
             raycastCounter.PerformRaycast();
         }
     }
