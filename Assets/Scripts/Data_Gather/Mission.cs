@@ -63,9 +63,9 @@ public class MissionManager : MonoBehaviour
     public GameObject  OneScreen;
 
     // init the datacollector
-    public DataCollector dataCollectionIntance = new DataCollector();
+    private DataCollector dataCollectionIntance = new DataCollector();
     // init the raycaster for tracking
-    public RaycastCounter raycastCounter = new RaycastCounter();
+    private RaycastCounter raycastCounter = new RaycastCounter();
 
 
 
@@ -94,12 +94,12 @@ public class MissionManager : MonoBehaviour
     
     private List<int> usedCombinations = new List<int>();
 
-
+    private bool test = true;
     // timer 
     private float timer = 0.0f;
 
     // target time, 3 minutes = 180 sec
-    private float targetTime = 180.0f; 
+    private float targetTime = 10.0f; 
 
     void Start()
     {
@@ -230,8 +230,9 @@ public class MissionManager : MonoBehaviour
         // start the timer, and finish the mission then it runs out
         timer += Time.fixedDeltaTime;
 
-        if(timer >= targetTime)
+        if(timer >= targetTime && test)
         {
+            test = false;
             missionActive = false;
             isRecording = false;
             Debug.Log("3 minutes have passed.");
@@ -273,6 +274,7 @@ public class MissionManager : MonoBehaviour
     
     void DataUpdate()
     {
+        Debug.Log("DataUpdate called");
         // Positions and rotations
         Vector3 main_pos = main_drone.transform.position;
         Quaternion main_rot = main_drone.transform.rotation;
@@ -312,7 +314,7 @@ public class MissionManager : MonoBehaviour
         float distanceToObject1 = quadcopterController.distanceToObject;
         float distanceToObject2 = quadcopterController_Sec.distanceToObject;
 
-        if (missionActive)
+        if (true)//missionActive)
         {
             dataCollectionIntance.CollectData(name, controlScheme, startPose, gridLocation, userInterface,
                      main_pos, main_rot, sec_pos, sec_rot,

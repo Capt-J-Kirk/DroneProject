@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class DataCollector : MonoBehaviour
@@ -40,6 +41,7 @@ public class DataCollector : MonoBehaviour
                                           distanceToObject1, distanceToObject2);
 
         dataList.Add(newData);
+        Debug.Log("CollectData called");
     }
 
    
@@ -73,18 +75,30 @@ public class DataCollector : MonoBehaviour
         // Convert each DroneData instance to a CSV row and append
         foreach (var data in dataList)
         {
+            // string csvLine = $"{data.name},{data.controlScheme},{data.startPose},{data.gridLocation},{data.userInterface}," +
+            //         $"{data.main_pos.x},{data.main_pos.y},{data.main_pos.z}," +
+            //         $"{data.main_rot.x},{data.main_rot.y},{data.main_rot.z},{data.main_rot.w}," +
+            //         $"{data.sec_pos.x},{data.sec_pos.y},{data.sec_pos.z}," +
+            //         $"{data.sec_rot.x},{data.sec_rot.y},{data.sec_rot.z},{data.sec_rot.w}," +
+            //         $"{data.inFlight},{data.inCleaning}," +
+            //         $"{data.cleaningPercent},{data.maxCleanValuePossible},{data.currentCleanValue},{data.cleaningPerSecond}," +
+            //         $"{data.throttle1},{data.pitch1},{data.yaw1},{data.roll1}," +
+            //         $"{data.throttle2},{data.pitch2},{data.yaw2},{data.roll2}," +
+            //         $"{data.radius},{data.theta},{data.phi}," +
+            //         $"{data.followMode},{data.switchDrone},{data.controlMainDrone},{data.switchCamFeed}," +
+            //         $"{data.isSpraying},{data.distanceToObject1},{data.distanceToObject2}";
             string csvLine = $"{data.name},{data.controlScheme},{data.startPose},{data.gridLocation},{data.userInterface}," +
-                    $"{data.main_pos.x},{data.main_pos.y},{data.main_pos.z}," +
-                    $"{data.main_rot.x},{data.main_rot.y},{data.main_rot.z},{data.main_rot.w}," +
-                    $"{data.sec_pos.x},{data.sec_pos.y},{data.sec_pos.z}," +
-                    $"{data.sec_rot.x},{data.sec_rot.y},{data.sec_rot.z},{data.sec_rot.w}," +
-                    $"{data.inFlight},{data.inCleaning}," +
-                    $"{data.cleaningPercent},{data.maxCleanValuePossible},{data.currentCleanValue},{data.cleaningPerSecond}," +
-                    $"{data.throttle1},{data.pitch1},{data.yaw1},{data.roll1}," +
-                    $"{data.throttle2},{data.pitch2},{data.yaw2},{data.roll2}," +
-                    $"{data.radius},{data.theta},{data.phi}," +
-                    $"{data.followMode},{data.switchDrone},{data.controlMainDrone},{data.switchCamFeed}," +
-                    $"{data.isSpraying},{data.distanceToObject1},{data.distanceToObject2}";
+                        $"{data.main_pos.x.ToString(CultureInfo.InvariantCulture)},{data.main_pos.y.ToString(CultureInfo.InvariantCulture)},{data.main_pos.z.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.main_rot.x.ToString(CultureInfo.InvariantCulture)},{data.main_rot.y.ToString(CultureInfo.InvariantCulture)},{data.main_rot.z.ToString(CultureInfo.InvariantCulture)},{data.main_rot.w.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.sec_pos.x.ToString(CultureInfo.InvariantCulture)},{data.sec_pos.y.ToString(CultureInfo.InvariantCulture)},{data.sec_pos.z.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.sec_rot.x.ToString(CultureInfo.InvariantCulture)},{data.sec_rot.y.ToString(CultureInfo.InvariantCulture)},{data.sec_rot.z.ToString(CultureInfo.InvariantCulture)},{data.sec_rot.w.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.inFlight},{data.inCleaning}," +
+                        $"{data.cleaningPercent.ToString(CultureInfo.InvariantCulture)},{data.maxCleanValuePossible.ToString(CultureInfo.InvariantCulture)},{data.currentCleanValue.ToString(CultureInfo.InvariantCulture)},{data.cleaningPerSecond.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.throttle1.ToString(CultureInfo.InvariantCulture)},{data.pitch1.ToString(CultureInfo.InvariantCulture)},{data.yaw1.ToString(CultureInfo.InvariantCulture)},{data.roll1.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.throttle2.ToString(CultureInfo.InvariantCulture)},{data.pitch2.ToString(CultureInfo.InvariantCulture)},{data.yaw2.ToString(CultureInfo.InvariantCulture)},{data.roll2.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.radius.ToString(CultureInfo.InvariantCulture)},{data.theta.ToString(CultureInfo.InvariantCulture)},{data.phi.ToString(CultureInfo.InvariantCulture)}," +
+                        $"{data.followMode},{data.switchDrone},{data.controlMainDrone},{data.switchCamFeed}," +
+                        $"{data.isSpraying},{data.distanceToObject1.ToString(CultureInfo.InvariantCulture)},{data.distanceToObject2.ToString(CultureInfo.InvariantCulture)}";
             csvContent.AppendLine(csvLine);
         }
 

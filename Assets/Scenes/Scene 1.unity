@@ -5310,8 +5310,12 @@ MonoBehaviour:
   Sec_pitchRollVector: {x: 0, y: 0}
   ManualControl: 0
   togglesecondarDrone: 0
+  switchCamFeed: 0
   secDrone: {fileID: 1324526383}
   mainDrone: {fileID: 478909918}
+  ScreenTWO: {fileID: 545416000}
+  ScreenONE: {fileID: 1305685849}
+  screen1: 
 --- !u!114 &478909920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5334,6 +5338,8 @@ MonoBehaviour:
   desiredEulerAngles: {x: 0, y: 0, z: 0}
   desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
   Visual_Quadcopter_main: {fileID: 1015122123}
+  windblade: {fileID: 514512097}
+  distanceToObject: 0
 --- !u!54 &478909921
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5713,7 +5719,7 @@ GameObject:
   - component: {fileID: 514512099}
   - component: {fileID: 514512098}
   m_Layer: 0
-  m_Name: Blades.002
+  m_Name: Blades2.002
   m_TagString: WindTurbine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6071,6 +6077,11 @@ PrefabInstance:
       addedObject: {fileID: 1419516330}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c383b0224cd7b3a49929a1d46458050d, type: 3}
+--- !u!1 &545416000 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c383b0224cd7b3a49929a1d46458050d, type: 3}
+  m_PrefabInstance: {fileID: 545415999}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &573704973
 GameObject:
   m_ObjectHideFlags: 0
@@ -8244,6 +8255,60 @@ MonoBehaviour:
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
+--- !u!1 &755401778
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 755401780}
+  - component: {fileID: 755401779}
+  m_Layer: 0
+  m_Name: Grid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &755401779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755401778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526b6dd420d73b94983cb7b26c531da4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  name: 
+  controlScheme: 
+  startPose: 
+  gridLocation: 
+  userInterface: 
+  cleaningPercent: 0
+  maxCleanValuePossible: 0
+  currentCleanValue: 0
+  cleaningPerSecond: 0
+--- !u!4 &755401780
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755401778}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 406.77133, y: 93.61, z: 621.84546}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &760638430
 GameObject:
   m_ObjectHideFlags: 0
@@ -10086,6 +10151,8 @@ MonoBehaviour:
   desiredEulerAngles: {x: 0, y: 0, z: 0}
   desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
   Visual_Quadcopter_main: {fileID: 0}
+  windblade: {fileID: 0}
+  distanceToObject: 0
 --- !u!114 &1015122129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10113,8 +10180,12 @@ MonoBehaviour:
   Sec_pitchRollVector: {x: 0, y: 0}
   ManualControl: 0
   togglesecondarDrone: 0
+  switchCamFeed: 0
   secDrone: {fileID: 2124728577}
   mainDrone: {fileID: 0}
+  ScreenTWO: {fileID: 0}
+  ScreenONE: {fileID: 0}
+  screen1: 
 --- !u!1 &1027646507
 GameObject:
   m_ObjectHideFlags: 0
@@ -17881,6 +17952,8 @@ MonoBehaviour:
   theta: 5
   phi: 5
   toggleFollow: 1
+  changeInPosition: 0
+  point: 0
 --- !u!114 &1324526390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17903,6 +17976,8 @@ MonoBehaviour:
   desiredEulerAngles: {x: 0, y: 0, z: 0}
   desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
   Visual_Quadcopter_secondary: {fileID: 2124728577}
+  windblade: {fileID: 514512097}
+  distanceToObject: 0
 --- !u!1 &1340394775
 GameObject:
   m_ObjectHideFlags: 3
@@ -22298,6 +22373,71 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008373955}
   m_Mesh: {fileID: -3661659028209742421, guid: 71a6834905250a44c8e625a74678fb4c, type: 3}
+--- !u!1 &2012274944
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2012274946}
+  - component: {fileID: 2012274945}
+  m_Layer: 0
+  m_Name: Mission
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2012274945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012274944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bf7eccaa01944048b968242ceb0029c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  main_drone: {fileID: 478909918}
+  quadcopterController: {fileID: 478909920}
+  sec_drone: {fileID: 1324526383}
+  quadcopterController_Sec: {fileID: 1324526390}
+  objectTransform: {fileID: 1324526389}
+  performanceCleaning: {fileID: 755401779}
+  userInput: {fileID: 478909919}
+  grid: {fileID: 755401778}
+  TwoScreen: {fileID: 545416000}
+  OneScreen: {fileID: 1305685849}
+  name: sofie
+  controlScheme: scheme 1
+  startPose: start1
+  gridLocation: grid1
+  userInterface: 2screen
+  inFlight: 1
+  inCleaning: 0
+  startMission: 0
+  selectCombination: 1
+  isRecording: 0
+  missionActive: 0
+--- !u!4 &2012274946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012274944}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 404.87946, y: 93.31724, z: 622.34283}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2013494929
 GameObject:
   m_ObjectHideFlags: 0
@@ -23062,6 +23202,8 @@ MonoBehaviour:
   desiredEulerAngles: {x: 0, y: 0, z: 0}
   desiredOrientation: {x: 0, y: 0, z: 0, w: 0}
   Visual_Quadcopter_secondary: {fileID: 0}
+  windblade: {fileID: 0}
+  distanceToObject: 0
 --- !u!114 &2124728583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23086,6 +23228,8 @@ MonoBehaviour:
   theta: 0
   phi: 1.5707964
   toggleFollow: 1
+  changeInPosition: 0
+  point: 0
 --- !u!1 &2126477472
 GameObject:
   m_ObjectHideFlags: 0
@@ -52618,3 +52762,5 @@ SceneRoots:
   - {fileID: 319071628}
   - {fileID: 478909925}
   - {fileID: 1324526387}
+  - {fileID: 2012274946}
+  - {fileID: 755401780}
