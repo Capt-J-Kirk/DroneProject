@@ -164,6 +164,19 @@ public class UserInput : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            switchScren = !switchScren;
+            //SetActive()
+            if(true)
+            {
+                ScreenTWO.SetActive(switchScren);
+                ScreenONE.SetActive(!switchScren);
+            }
+            
+            Debug.Log("C CLICKED!!!!");
+        }
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             // Switch between Main and Secondary drone
