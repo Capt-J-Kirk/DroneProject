@@ -41,7 +41,7 @@ public class DataCollector : MonoBehaviour
                                           distanceToObject1, distanceToObject2);
 
         dataList.Add(newData);
-        Debug.Log("CollectData called");
+        //Debug.Log("CollectData called");
     }
 
    

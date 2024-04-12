@@ -104,9 +104,9 @@ public class MissionManager : MonoBehaviour
     void Start()
     {
         dataCollectionIntance.type = mission;
-        Invoke("DataUpdate", 0.05f); // call 1/20 a sec 
-        Invoke("TrackingUpdate", 0.05f); // call 1/20 a sec 
-        Invoke("PerformanceUpdate", 0.05f); // call 1/20 a sec 
+        InvokeRepeating("DataUpdate", 0.05f, 0.05f); // call 1/20 a sec 
+        InvokeRepeating("TrackingUpdate", 0.05f, 0.05f); // call 1/20 a sec 
+        InvokeRepeating("PerformanceUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         
     }
    
@@ -274,7 +274,7 @@ public class MissionManager : MonoBehaviour
     
     void DataUpdate()
     {
-        Debug.Log("DataUpdate called");
+        //Debug.Log("DataUpdate called");
         // Positions and rotations
         Vector3 main_pos = main_drone.transform.position;
         Quaternion main_rot = main_drone.transform.rotation;
@@ -314,7 +314,7 @@ public class MissionManager : MonoBehaviour
         float distanceToObject1 = quadcopterController.distanceToObject;
         float distanceToObject2 = quadcopterController_Sec.distanceToObject;
 
-        if (true)//missionActive)
+        if (missionActive)
         {
             dataCollectionIntance.CollectData(name, controlScheme, startPose, gridLocation, userInterface,
                      main_pos, main_rot, sec_pos, sec_rot,
