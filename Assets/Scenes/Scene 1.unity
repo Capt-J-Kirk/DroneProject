@@ -9972,9 +9972,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7543056547468943028, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Name
+      value: infodisplay main active
+      objectReference: {fileID: 0}
+    - target: {fileID: -4061183912977848326, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Name
+      value: infodisplay null
+      objectReference: {fileID: 0}
+    - target: {fileID: -3372522033569347474, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Name
+      value: Body
+      objectReference: {fileID: 0}
+    - target: {fileID: -2392270760361838127, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Name
+      value: infodisplay main dist
+      objectReference: {fileID: 0}
+    - target: {fileID: -1841786808339424507, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Name
+      value: infodisplay sec dist
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: TwoScreenController
+      objectReference: {fileID: 0}
+    - target: {fileID: 3135212814184917379, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Name
+      value: infodisplay sec active
+      objectReference: {fileID: 0}
+    - target: {fileID: 6541449792694956596, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Name
+      value: infodisplay follow
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11948,9 +11976,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6914995852326702715, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Name
+      value: infodisplay main dist
+      objectReference: {fileID: 0}
+    - target: {fileID: -4127460620126236395, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Name
+      value: infodisplay sec dist
+      objectReference: {fileID: 0}
+    - target: {fileID: -2201505104300592458, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Name
+      value: infodisplay sec active
+      objectReference: {fileID: 0}
+    - target: {fileID: -97260465219885794, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Name
+      value: infodisplay null
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
       propertyPath: m_Name
       value: OneScreenController
+      objectReference: {fileID: 0}
+    - target: {fileID: 2415596623844378529, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Name
+      value: infodisplay follow
+      objectReference: {fileID: 0}
+    - target: {fileID: 4797885985458961532, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Name
+      value: infodisplay main active
+      objectReference: {fileID: 0}
+    - target: {fileID: 5206738626385693914, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Name
+      value: display
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -25694,6 +25750,7 @@ GameObject:
   - component: {fileID: 1917135720}
   - component: {fileID: 1917135719}
   - component: {fileID: 1917135718}
+  - component: {fileID: 1917135721}
   m_Layer: 6
   m_Name: Canvas_Screen_A ONE
   m_TagString: TrackableObject
@@ -25784,6 +25841,27 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!65 &1917135721
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917135716}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1922107161
 GameObject:
   m_ObjectHideFlags: 0
@@ -27209,6 +27287,7 @@ GameObject:
   - component: {fileID: 2085098935}
   - component: {fileID: 2085098934}
   - component: {fileID: 2085098933}
+  - component: {fileID: 2085098936}
   m_Layer: 6
   m_Name: Canvas_Screen_B ONE
   m_TagString: TrackableObject
@@ -27299,6 +27378,27 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!65 &2085098936
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085098931}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2121382161
 GameObject:
   m_ObjectHideFlags: 0
