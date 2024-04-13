@@ -7,19 +7,45 @@ public class GridManager : MonoBehaviour
 {
     public GameObject boxPrefab;
     public Transform startPosition;
+    public GameObject Nozzle;
     public int width = 10;
     public int height = 10;
     public float boxSize = 0.1f;
 
+
+    
+    // filename data !
+    public string type;
+    public string name;
+    public string controlScheme;
+    public string startPose;
+    public string gridLocation;
+    public string userInterface;
+
+
+    // public summerized values for datacollector
+    public float cleaningPercent = 0;
+    public float maxCleanValuePossible = 0;
+    public float currentCleanValue = 0;
+    public float cleaningPerSecond = 0;
+
+
+
     //private List<BoxData> boxList = new List<BoxData>();
     private List<BoxData> BoxList = new List<BoxData>();
     public List<List<BoxData>> allGrids = new List<List<BoxData>>(); 
+
+    // USED for raycasting
+    public float maxDistance = 5.0f;
+    public float maxRadius = 0.20f;
+
 
     void Start()
     {
         GenerateGrid();
     }
 
+    // make sure to setup the tag "cleaning" in the tags and layers setting!
  
     void GenerateGrid()
     {
@@ -34,6 +60,7 @@ public class GridManager : MonoBehaviour
                 GameObject newBox = Instantiate(boxPrefab, spawnPosition, Quaternion.identity, startPosition);
                 newBox.name = $"Box_{x}_{z}";
                 newBox.transform.localScale = new Vector3(boxSize, boxSize, boxSize);
+                newBox.tag = "cleaning";
 
                 BoxData boxData = newBox.AddComponent<BoxData>();
                 BoxList.Add(boxData);
@@ -42,6 +69,15 @@ public class GridManager : MonoBehaviour
                 boxData.value = Random.Range(0, 100); // Example initialization
                 boxData.intensity = Random.Range(0.0f, 1.0f); // Example initialization
                 boxData.flag = Random.value > 0.5f; // Example initialization
+                // Set the color based on intensity
+                Renderer boxRenderer = newBox.GetComponent<Renderer>();
+                boxRenderer.material = new Material(boxRenderer.material); // This is necessary if you're not using shared materials
+                boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
+                // Add a BoxCollider to the box
+                //newBox.AddComponent<BoxCollider>();
+            
+                maxCleanValuePossible += 1.0f; 
+
             }
         }
 
@@ -119,8 +155,175 @@ public class GridManager : MonoBehaviour
             // Increment or update properties as an example
             box.value++;
             box.intensity += 0.1f;
+            box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
             box.flag = !box.flag; // Toggle for example
+
+            // Update the color based on the new intensity
+            Renderer boxRenderer = box.GetComponent<Renderer>();
+            boxRenderer.material.color = Color.Lerp(Color.black, Color.white, box.intensity);
+   
         }
         allGrids.Add(BoxList);
     }
+
+     void UpdateBoxValuesWithRayCast()
+    {
+        // needs thr transform to be the nozzle of the watersprayer
+        Ray ray = new Ray(Nozzle.transform.position, transform.forward);
+        RaycastHit hit;
+        Debug.DrawRay(transform.position, transform.forward * 30, Color.blue);
+
+        float SumCleaningsFactor = 0.0f;
+
+        if (Physics.Raycast(ray, out hit, maxDistance))
+        {
+            // Calculate factors for decreasing value based on distance
+            float distanceFromRayOrigin = Vector3.Distance(Nozzle.transform.position, hit.point);
+            float valueFactor = 1 - (distanceFromRayOrigin / maxDistance);
+
+            // Perform an overlapping sphere check to simulate a cone spread
+            float radiusAtHit = Mathf.Lerp(0, maxRadius, hit.distance / maxDistance);
+            Collider[] hitColliders = Physics.OverlapSphere(hit.point, radiusAtHit);
+
+
+            foreach (Collider collider in hitColliders)
+            {
+
+                // Calculate radial factors for value decrement based on distance
+                float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
+                float radialFactor = 1 - (radialDistance / radiusAtHit);
+                float cleaningsFactor = valueFactor * radialFactor;
+
+                // sum the cleaning effort for this time frame.
+                SumCleaningsFactor += cleaningsFactor;
+
+                Debug.Log("cleaning value: " + cleaningsFactor);
+
+                BoxData boxData = collider.GetComponent<BoxData>(); 
+                if (boxData != null && BoxList.Contains(collider.gameObject))
+                {
+
+                    // Update the box cleanings status
+                    // using the value as the total amount of cleaning applied, there intencity if the real cleanliness of the box
+                    boxData.value += cleaningsFactor;
+                    boxData.intensity = Mathf.Clamp(boxData.intensity + cleaningsFactor, 0.0f, 1.0f);
+                    // set the flag, if box is 100p cleaned
+                    if (boxData.intensity == 1.0f)
+                    {
+                        boxData.flag = true;
+                    }
+                    // Update the color based on the new intensity
+                    Renderer boxRenderer = boxData.gameObject.GetComponent<Renderer>();
+                    boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
+           
+                }
+            }
+        }
+        // get states of each box 
+        cleaningPerSecond = SumCleaningsFactor;
+        float temp = 0.0f;
+        foreach (var box in BoxList)
+        {
+           
+            temp += box.intensity;
+            
+        }
+
+        currentCleanValue = temp;
+        cleaningPercent = (maxCleanValuePossible / 100) * currentCleanValue;
+
+        // append the boxlist current states to the list
+        allGrids.Add(BoxList);
+    }
+
+    // void UpdateBoxValuesWithRayCast()
+    // {
+    //     // should not be the camera but the spraying nozzle
+    //     Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+    //     RaycastHit hit;
+
+    //     Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 30, Color.blue);
+       
+    //     if (Physics.Raycast(ray, out hit, maxDistance))
+    //     {
+          
+
+    //     }
+       
+
+    //      // Perform an overlapping sphere check that simulates the cone spread
+    //     float radiusAtHit = Mathf.Lerp(0, maxRadius, hit.distance / maxDistance);
+    //     Collider[] hitColliders = Physics.OverlapSphere(hit.point, radiusAtHit);
+        
+    //     foreach (Collider collider in hitColliders)
+    //     {
+    //         float distanceFromRayOrigin = Vector3.Distance(transform.position, collider.transform.position);
+    //         float valueFactor = 1 - (distanceFromRayOrigin / maxDistance);
+    //         float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
+    //         float radialFactor = 1 - (radialDistance / radiusAtHit);
+
+    //         // Calculate final value based on distance and radial position
+    //         float finalValue = valueFactor * radialFactor;
+
+    //     // box code
+    //     foreach (var box in BoxList)
+    //     {
+    //         // Increment or update properties as an example
+    //         box.value++;
+    //         box.intensity += 0.1f;
+    //         box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
+    //         box.flag = !box.flag; // Toggle for example
+
+    //         // Update the color based on the new intensity
+    //         Renderer boxRenderer = box.GetComponent<Renderer>();
+    //         boxRenderer.material.color = Color.Lerp(Color.black, Color.white, box.intensity);
+   
+    //     }
+    //     allGrids.Add(BoxList);
+    // }
+
+    // void UpdateBoxValuesWithRayCast()
+    // {
+    //     // Assuming 'transform' refers to the spraying nozzle
+    //     Ray ray = new Ray(transform.position, transform.forward);
+    //     RaycastHit hit;
+    //     Debug.DrawRay(transform.position, transform.forward * 30, Color.blue);
+
+    //     if (Physics.Raycast(ray, out hit, maxDistance))
+    //     {
+    //         // Perform an overlapping sphere check that simulates the cone spread
+    //         float radiusAtHit = Mathf.Lerp(0, maxRadius, hit.distance / maxDistance);
+    //         Collider[] hitColliders = Physics.OverlapSphere(hit.point, radiusAtHit);
+
+    //         // calculate the factors for decreasing the value based on distance, 
+    //         float distanceFromRayOrigin = Vector3.Distance(transform.position, collider.transform.position);
+    //         float valueFactor = 1 - (distanceFromRayOrigin / maxDistance);
+            
+    //         foreach (Collider collider in hitColliders)
+    //         {
+    //             // Calculate general factors for value decrement based on distance
+    //             float distanceFromRayOrigin = Vector3.Distance(transform.position, collider.transform.position);
+    //             float valueFactor = 1 - (distanceFromRayOrigin / maxDistance);
+    //             float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
+    //             float radialFactor = 1 - (radialDistance / radiusAtHit);
+
+    //             // Check if the collider belongs to a box in BoxList
+    //             Box boxComponent = collider.GetComponent<Box>(); // Assuming 'Box' is a script attached to the box GameObjects
+    //             if (boxComponent != null && BoxList.Contains(boxComponent.gameObject))
+    //             {
+    //                 // Update the box properties based on computed values
+    //                 boxComponent.value += valueFactor * radialFactor;
+    //                 boxComponent.intensity = Mathf.Clamp(boxComponent.intensity + valueFactor * radialFactor, 0.0f, 1.0f);
+    //                 boxComponent.flag = !boxComponent.flag;
+
+    //                 // Update the color based on the new intensity
+    //                 Renderer boxRenderer = boxComponent.gameObject.GetComponent<Renderer>();
+    //                 boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxComponent.intensity);
+    //             }
+    //         }
+    //     }
+
+    // }
+
+
 }
