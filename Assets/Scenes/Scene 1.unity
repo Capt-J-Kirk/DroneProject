@@ -8491,9 +8491,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boxPrefab: {fileID: 7441868214857073919, guid: e29df64337ca4b947b275a55776a4559, type: 3}
   startPosition: {fileID: 755401780}
+  Nozzle: {fileID: 9167356388198541515}
   width: 10
   height: 10
   boxSize: 0.1
+  type: 
+  name: 
+  controlScheme: 
+  startPose: 
+  gridLocation: 
+  userInterface: 
+  cleaningPercent: 0
+  maxCleanValuePossible: 0
+  currentCleanValue: 0
+  cleaningPerSecond: 0
+  maxDistance: 5
+  maxRadius: 0.2
 --- !u!1 &760638430
 GameObject:
   m_ObjectHideFlags: 0
@@ -22931,7 +22944,7 @@ MonoBehaviour:
   sec_drone: {fileID: 1324526383}
   quadcopterController_Sec: {fileID: 1324526390}
   objectTransform: {fileID: 1324526389}
-  performanceCleaning: {fileID: 755401779}
+  performanceCleaning: {fileID: 755401781}
   userInput: {fileID: 478909919}
   grid: {fileID: 755401778}
   TwoScreen: {fileID: 545416000}

@@ -48,7 +48,7 @@ public class MissionManager : MonoBehaviour
     public QuadcopterController_sec quadcopterController_Sec;
     public ObjectTransform objectTransform;
 
-    public PerformanceCleaning performanceCleaning;
+    public GridManager performanceCleaning;
 
     public UserInput userInput;
     
