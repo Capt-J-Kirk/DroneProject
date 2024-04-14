@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro; 
 
 
 
@@ -84,6 +84,7 @@ public class MissionManager : MonoBehaviour
     private string mission = "controller";
     public bool startMission = false;
     public bool selectCombination = true;
+    public int count = 0;
 
     //
     public bool isRecording = false;
@@ -92,6 +93,15 @@ public class MissionManager : MonoBehaviour
 
     private int missionCombination = 0;
     
+    public int Tutorial = 0;
+    public bool runTutorial = false;
+
+    public GameObject Menu;
+
+    public TMP_Text username;
+    public TMP_Text mission_count;
+
+
     private List<int> usedCombinations = new List<int>();
 
     private bool test = true;
@@ -113,9 +123,43 @@ public class MissionManager : MonoBehaviour
     void FixedUpdate()
     {
         // user push button then ready for new mission, before that selects mission type
-        if (selectCombination)
-        {
 
+        username.text = "Name: " + name;
+        mission_count.text = "Number: " + count + "/16";
+
+
+        if (runTutorial)
+        {
+            Menu.SetActive(false);
+            if(Tutorial == 1)
+            {
+                userInput.ManualControl = true;
+                objectTransform.ControlScheme = 0;
+            }
+            if(Tutorial == 2)
+            {
+                userInput.ManualControl = false;
+                objectTransform.ControlScheme = 1;
+            }
+            if(Tutorial == 3)
+            {
+                userInput.ManualControl = false;
+                objectTransform.ControlScheme = 2;
+            }
+
+            
+            if(timer >= targetTime )
+            {
+                // stop running the tutorial
+                runTutorial = false;  
+                Menu.SetActive(true); 
+            }
+        }
+
+
+        if (selectCombination && !runTutorial)
+        {
+            Menu.SetActive(false);
             if (mission == "controller")
             {
                 // total combination
@@ -155,13 +199,13 @@ public class MissionManager : MonoBehaviour
                     }
                 }
             }
-
+            count += 1;
             selectCombination = false;
         }
 
         // then the system have found the next combination, the user cliks on startMission
         // run through once
-        if (startMission)
+        if (startMission && !runTutorial)
         {
             if (mission == "controller")
             {
@@ -232,6 +276,7 @@ public class MissionManager : MonoBehaviour
 
         if(timer >= targetTime && test)
         {
+            Menu.SetActive(true);
             test = false;
             missionActive = false;
             isRecording = false;
