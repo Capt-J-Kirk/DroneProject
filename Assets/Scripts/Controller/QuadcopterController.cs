@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro; 
 
 public class QuadcopterController: MonoBehaviour
 {
@@ -66,6 +67,15 @@ public class QuadcopterController: MonoBehaviour
     private Collider targetCollider; // Collider of the target object
     private string currentState = "No Danger";
     public float distanceToObject = 0;
+
+
+    // UserInterface's infobars TWO SCREEN 
+    public TMP_Text TWO_t_main_dist;
+    public Image TWO_i_main_dist;
+
+    // UserInterface's infobars ONE SCREEN 
+    public TMP_Text ONE_t_main_dist;
+    public Image ONE_i_main_dist;
 
 
     private void TestingDesiredPose()
@@ -270,39 +280,30 @@ public class QuadcopterController: MonoBehaviour
             // Update the state based on the distance
             if (distanceToObject < 1f)
             {
-                currentState = "Extreme Close";
+                TWO_t_main_dist.text = "Dist Extreme Close";
+                TWO_i_main_dist.color = Color.red;
+                ONE_t_main_dist.text = "Dist Extreme Close";
+                ONE_i_main_dist.color =  Color.red;
             }
             else if (distanceToObject < 3f)
             {
-                currentState = "Close";
+                TWO_t_main_dist.text = "Dist Close";
+                TWO_i_main_dist.color = Color.yellow;
+                ONE_t_main_dist.text = "Dist Close";
+                ONE_i_main_dist.color =  Color.yellow;
             }
             else
             {
-                currentState = "No Danger";
+                TWO_t_main_dist.text = "Dist safe";
+                TWO_i_main_dist.color = Color.green;
+                ONE_t_main_dist.text = "Dist safe";
+                ONE_i_main_dist.color =  Color.green;
             }
 
-            // Optional: Perform actions based on the current state
-            HandleState(currentState);
         }
       
     }
 
-    private void HandleState(string state)
-    {
-        // Implementation of state-specific behaviors
-        switch (state)
-        {
-            case "No Danger":
-                // Handle 'No Danger' state
-                break;
-            case "Close":
-                // Handle 'Close' state
-                break;
-            case "Extreme Close":
-                // Handle 'Extreme Close' state
-                break;
-        }
-    }
 
     void UpdatePID()
     {

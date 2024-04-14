@@ -6082,6 +6082,10 @@ MonoBehaviour:
   Visual_Quadcopter_main: {fileID: 1015122123}
   windblade: {fileID: 514512097}
   distanceToObject: 0
+  TWO_t_main_dist: {fileID: 1238340296}
+  TWO_i_main_dist: {fileID: 499111441}
+  ONE_t_main_dist: {fileID: 621688768}
+  ONE_i_main_dist: {fileID: 1274269455}
 --- !u!54 &478909921
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12355,6 +12359,10 @@ MonoBehaviour:
   Visual_Quadcopter_main: {fileID: 0}
   windblade: {fileID: 0}
   distanceToObject: 0
+  TWO_t_main_dist: {fileID: 0}
+  TWO_i_main_dist: {fileID: 0}
+  ONE_t_main_dist: {fileID: 0}
+  ONE_i_main_dist: {fileID: 0}
 --- !u!114 &1015122129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20865,6 +20873,10 @@ MonoBehaviour:
   Visual_Quadcopter_secondary: {fileID: 2124728577}
   windblade: {fileID: 514512097}
   distanceToObject: 0
+  TWO_t_sec_dist: {fileID: 2013774417}
+  TWO_i_sec_dist: {fileID: 2038643205}
+  ONE_t_sec_dist: {fileID: 1848692102}
+  ONE_i_sec_dist: {fileID: 1779895140}
 --- !u!1 &1340394775
 GameObject:
   m_ObjectHideFlags: 3
@@ -27633,6 +27645,10 @@ MonoBehaviour:
   Visual_Quadcopter_secondary: {fileID: 0}
   windblade: {fileID: 0}
   distanceToObject: 0
+  TWO_t_sec_dist: {fileID: 0}
+  TWO_i_sec_dist: {fileID: 0}
+  ONE_t_sec_dist: {fileID: 0}
+  ONE_i_sec_dist: {fileID: 0}
 --- !u!114 &2124728583
 MonoBehaviour:
   m_ObjectHideFlags: 0
