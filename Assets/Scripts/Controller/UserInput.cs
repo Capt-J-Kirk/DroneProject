@@ -52,6 +52,7 @@ public class UserInput : MonoBehaviour
     bool switchScren = true;
 
 
+
     // UserInterface's infobars TWO SCREEN 
     public TMP_Text TWO_t_main_active;
     public Image TWO_i_main_active;
@@ -220,42 +221,42 @@ public class UserInput : MonoBehaviour
         if(togglesecondarDrone)
         {
             TWO_t_main_active.text = "testDrone Master";
-            TWO_i_main_active.color = color.red;
+            TWO_i_main_active.color = Color.red;
             TWO_t_sec_active.text = "testDrone Secondary";
-            TWO_i_sec_active.color = color.green;
+            TWO_i_sec_active.color = Color.green;
 
             ONE_t_main_active.text = "testDrone Master";
-            ONE_i_main_active.color = color.red;
+            ONE_i_main_active.color = Color.red;
             ONE_t_sec_active.text = "testDrone Secondary";
-            ONE_i_sec_active.color = color.green;
+            ONE_i_sec_active.color = Color.green;
         }
         else{
             TWO_t_main_active.text = "testDrone Master";
-            TWO_i_main_active.color = new color(0,1,0,1);
+            TWO_i_main_active.color = Color.green;
             TWO_t_sec_active.text = "testDrone Secondary";
-            TWO_i_sec_active.color = new color(1,0,0,1);
+            TWO_i_sec_active.color = Color.red;
 
             ONE_t_main_active.text = "testDrone Master";
-            ONE_i_main_active.color = new color(0,1,0,1);
+            ONE_i_main_active.color = Color.green;
             ONE_t_sec_active.text = "testDrone Secondary";
-            ONE_i_sec_active.color = new color(1,0,0,1);
+            ONE_i_sec_active.color = Color.red;
         }
        
 
         if(transformAdjustment.toggleFollow)
         {
             TWO_t_follow.text = "Follow: ON";
-            TWO_i_follow.color = color.green;
+            TWO_i_follow.color = Color.green;
 
             ONE_t_follow.text = "Follow: ON";
-            ONE_i_follow.color = color.green;
+            ONE_i_follow.color = Color.green;
         }
         else{
             TWO_t_follow.text = "Follow: OFF";
-            TWO_i_follow.color = color.red;
+            TWO_i_follow.color = Color.red;
 
             ONE_t_follow.text = "Follow: OFF";
-            ONE_i_follow.color = color.red;
+            ONE_i_follow.color = Color.red;
         }
 
     }

@@ -6045,6 +6045,18 @@ MonoBehaviour:
   mainDrone: {fileID: 478909918}
   ScreenTWO: {fileID: 1917135716}
   ScreenONE: {fileID: 2085098931}
+  TWO_t_main_active: {fileID: 30265744}
+  TWO_i_main_active: {fileID: 515458352}
+  TWO_t_sec_active: {fileID: 748225643}
+  TWO_i_sec_active: {fileID: 2001102584}
+  TWO_t_follow: {fileID: 1490764781}
+  TWO_i_follow: {fileID: 427535203}
+  ONE_t_main_active: {fileID: 1138927007}
+  ONE_i_main_active: {fileID: 394643866}
+  ONE_t_sec_active: {fileID: 774379375}
+  ONE_i_sec_active: {fileID: 1387871997}
+  ONE_t_follow: {fileID: 232859722}
+  ONE_i_follow: {fileID: 831369622}
   screen1: 
 --- !u!114 &478909920
 MonoBehaviour:
@@ -12375,6 +12387,18 @@ MonoBehaviour:
   mainDrone: {fileID: 0}
   ScreenTWO: {fileID: 0}
   ScreenONE: {fileID: 0}
+  TWO_t_main_active: {fileID: 0}
+  TWO_i_main_active: {fileID: 0}
+  TWO_t_sec_active: {fileID: 0}
+  TWO_i_sec_active: {fileID: 0}
+  TWO_t_follow: {fileID: 0}
+  TWO_i_follow: {fileID: 0}
+  ONE_t_main_active: {fileID: 0}
+  ONE_i_main_active: {fileID: 0}
+  ONE_t_sec_active: {fileID: 0}
+  ONE_i_sec_active: {fileID: 0}
+  ONE_t_follow: {fileID: 0}
+  ONE_i_follow: {fileID: 0}
   screen1: 
 --- !u!1 &1027646507
 GameObject:
