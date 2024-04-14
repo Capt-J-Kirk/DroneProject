@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro; 
 
 public class UserInput : MonoBehaviour
 {
@@ -48,6 +50,25 @@ public class UserInput : MonoBehaviour
     public GameObject ScreenTWO;
     public GameObject ScreenONE;
     bool switchScren = true;
+
+
+    // UserInterface's infobars TWO SCREEN 
+    public TMP_Text TWO_t_main_active;
+    public Image TWO_i_main_active;
+    public TMP_Text  TWO_t_sec_active;
+    public Image TWO_i_sec_active;
+    public TMP_Text TWO_t_follow;
+    public Image TWO_i_follow;
+
+    // UserInterface's infobars ONE SCREEN 
+    public TMP_Text ONE_t_main_active;
+    public Image ONE_i_main_active;
+    public TMP_Text  ONE_t_sec_active;
+    public Image ONE_i_sec_active;
+    public TMP_Text ONE_t_follow;
+    public Image ONE_i_follow;
+
+
 
     public string screen1 = ""; 
 
@@ -192,6 +213,51 @@ public class UserInput : MonoBehaviour
         }
 
         HandleInput();
+
+
+
+        // update the text and color on the screens 
+        if(togglesecondarDrone)
+        {
+            TWO_t_main_active.text = "testDrone Master";
+            TWO_i_main_active.color = color.red;
+            TWO_t_sec_active.text = "testDrone Secondary";
+            TWO_i_sec_active.color = color.green;
+
+            ONE_t_main_active.text = "testDrone Master";
+            ONE_i_main_active.color = color.red;
+            ONE_t_sec_active.text = "testDrone Secondary";
+            ONE_i_sec_active.color = color.green;
+        }
+        else{
+            TWO_t_main_active.text = "testDrone Master";
+            TWO_i_main_active.color = new color(0,1,0,1);
+            TWO_t_sec_active.text = "testDrone Secondary";
+            TWO_i_sec_active.color = new color(1,0,0,1);
+
+            ONE_t_main_active.text = "testDrone Master";
+            ONE_i_main_active.color = new color(0,1,0,1);
+            ONE_t_sec_active.text = "testDrone Secondary";
+            ONE_i_sec_active.color = new color(1,0,0,1);
+        }
+       
+
+        if(transformAdjustment.toggleFollow)
+        {
+            TWO_t_follow.text = "Follow: ON";
+            TWO_i_follow.color = color.green;
+
+            ONE_t_follow.text = "Follow: ON";
+            ONE_i_follow.color = color.green;
+        }
+        else{
+            TWO_t_follow.text = "Follow: OFF";
+            TWO_i_follow.color = color.red;
+
+            ONE_t_follow.text = "Follow: OFF";
+            ONE_i_follow.color = color.red;
+        }
+
     }
 
     void HandleInput()
