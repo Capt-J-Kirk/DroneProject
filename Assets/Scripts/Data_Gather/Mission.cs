@@ -400,8 +400,8 @@ public class MissionManager : MonoBehaviour
         if(true)
         {
             //Debug.Log("performanceCleaning called");
-            performanceCleaning.UpdateBoxValues();
-            //performanceCleaning.UpdateBoxValuesWithRayCast();
+            //performanceCleaning.UpdateBoxValues();
+            performanceCleaning.UpdateBoxValuesWithRayCast();
         } 
     }
 

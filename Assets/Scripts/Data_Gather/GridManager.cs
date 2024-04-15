@@ -126,7 +126,12 @@ public class GridManager : MonoBehaviour
             csvBuilder.AppendLine();
         }
 
-        string filePath = Path.Combine(Application.persistentDataPath, "box_data.csv");
+        string fileNamePart = ("performance" + "_" + type + "_" + name + "_" + controlScheme + "_" + startPose + "_" + gridLocation + "_" + userInterface); 
+        string fileName = $"{fileNamePart}_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
+        string filePath = Path.Combine(Application.persistentDataPath, fileName);
+
+
+        //string filePath = Path.Combine(Application.persistentDataPath, "box_data.csv");
         File.WriteAllText(filePath, csvBuilder.ToString());
 
         Debug.Log($"Data saved to {filePath}");
@@ -240,7 +245,7 @@ public class GridManager : MonoBehaviour
 
     public void UpdateBoxValuesWithRayCast()
     {
-        Debug.Log("inside raycast");
+        //Debug.Log("inside raycast");
         // needs thr transform to be the nozzle of the watersprayer
         Ray ray = new Ray(Nozzle.transform.position, transform.forward* -1);
         RaycastHit hit;
@@ -270,12 +275,12 @@ public class GridManager : MonoBehaviour
                 // sum the cleaning effort for this time frame.
                 SumCleaningsFactor += cleaningsFactor;
 
-                Debug.Log("cleaning value: " + cleaningsFactor);
+                //Debug.Log("cleaning value: " + cleaningsFactor);
 
                 BoxData boxData = collider.GetComponent<BoxData>(); 
                 if (boxData != null) //&& BoxList.Contains(collider.gameObject))
                 {
-                    Debug.Log("box data:");
+                    //Debug.Log("box data:");
                     // Update the box cleanings status
                     // using the value as the total amount of cleaning applied, there intencity if the real cleanliness of the box
                     boxData.value += cleaningsFactor;
@@ -306,41 +311,24 @@ public class GridManager : MonoBehaviour
         // append the boxlist current states to the list
         //allGrids.Add(BoxList);
 
+        List<BoxData> currentGridState = new List<BoxData>();
         foreach (var box in BoxList)
         {
-            // Increment or update properties as an example
-            box.value++;
-            box.intensity += 0.1f;
-            box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
-            box.flag = !box.flag; // Toggle for example
-
-            // Update the color based on the new intensity
-            Renderer boxRenderer = box.GetComponent<Renderer>();
-            boxRenderer.material.color = Color.Lerp(Color.black, Color.white, box.intensity);
-   
+            // Clone the box data to keep a snapshot of its current state
+            BoxData boxStateSnapshot = new BoxData()
+            {
+                value = box.value,
+                intensity = box.intensity,
+                flag = box.flag
+            };
+            currentGridState.Add(boxStateSnapshot);
+            temp += box.intensity;
         }
-        allGrids.Add(BoxList);
+        currentCleanValue = temp;
+        cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
 
-
-
-        // List<BoxData> currentGridState = new List<BoxData>();
-        // foreach (var box in BoxList)
-        // {
-        //     // Clone the box data to keep a snapshot of its current state
-        //     BoxData boxStateSnapshot = new BoxData()
-        //     {
-        //         value = box.value,
-        //         intensity = box.intensity,
-        //         flag = box.flag
-        //     };
-        //     currentGridState.Add(boxStateSnapshot);
-        //     temp += box.intensity;
-        // }
-        // currentCleanValue = temp;
-        // cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
-
-        // // Append the snapshot of the current grid state to allGrids
-        // allGrids.Add(currentGridState);
+        // Append the snapshot of the current grid state to allGrids
+        allGrids.Add(currentGridState);
 
         
     }
