@@ -291,16 +291,21 @@ public class MissionManager : MonoBehaviour
 
         if(gridLocation == "grid1")
         {
+            grid.width = 10;
+            grid.height = 10;
             grid.transform.position = new Vector3(100,80,100);
             grid.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
         if(gridLocation == "grid2")
         {
+            grid.width = 30;
+            grid.height = 5;
             grid.transform.position = new Vector3(110,80,100);
             grid.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-
-
+        
+        performanceCleaning.GenerateGrid();
+        
         // set user interface
 
         if(userInterface == "2screen")
