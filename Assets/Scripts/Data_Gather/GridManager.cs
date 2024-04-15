@@ -333,5 +333,25 @@ public class GridManager : MonoBehaviour
         
     }
 
+
+    public void ClearGridData()
+    {
+        allGrids.Clear();
+
+        foreach (var box in BoxList)
+        {
+            box.value = 0.0f;
+            box.intensity = 0.0f;
+            box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
+            box.flag = false; // Toggle for example
+
+            // Update the color based on the new intensity
+            Renderer boxRenderer = box.GetComponent<Renderer>();
+            boxRenderer.material.color = Color.Lerp(Color.black, Color.white, box.intensity);
+   
+        }
+        Debug.Log("Grid list cleared.");
+
+    }
  
 }
