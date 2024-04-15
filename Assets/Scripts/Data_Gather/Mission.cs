@@ -255,16 +255,17 @@ public class MissionManager : MonoBehaviour
 
     private void LoadMission()
     {
-        if (mission == "controller")
-        {
-            selectControlCombination(missionCombination);
-        }
-        if (mission == "userInterface")
-        {
-            selectUserInterfaceCombination(missionCombination);
+        // if (mission == "controller")
+        // {
+        //     selectControlCombination(missionCombination);
+        // }
+        // if (mission == "userInterface")
+        // {
+        //     selectUserInterfaceCombination(missionCombination);
 
-        }
-
+        // }
+        ALLCombinations();
+        
         startMission = false;
 
         // load the config
@@ -305,7 +306,7 @@ public class MissionManager : MonoBehaviour
         }
         
         performanceCleaning.GenerateGrid();
-        
+
         // set user interface
 
         if(userInterface == "2screen")
@@ -610,6 +611,112 @@ public class MissionManager : MonoBehaviour
                 break; 
         }
     }
+
+
+     private void ALLCombinations(int combi)
+    {
+        switch (combi)
+        {
+            case 1:
+                controlScheme = "scheme0";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 2:
+                controlScheme = "scheme0";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 3:
+                controlScheme = "scheme0";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 4:
+                controlScheme = "scheme0";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 5:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 6:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 7:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 8:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 9:
+                controlScheme = "scheme2";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 10:
+                controlScheme = "scheme2";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "2screen";
+                break;
+            case 11:
+                controlScheme = "scheme2";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;
+            case 12:
+                controlScheme = "scheme2";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "2screen";
+                break;   
+             case 13:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid1";
+                userInterface = "1screen";
+                break;
+            case 14:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid1";
+                userInterface = "1screen";
+                break;
+            case 15:
+                controlScheme = "scheme1";
+                startPose = "start2";
+                gridLocation = "grid2";
+                userInterface = "1screen";
+                break;
+            case 16:
+                controlScheme = "scheme1";
+                startPose = "start1";
+                gridLocation = "grid2";
+                userInterface = "1screen";
+                break; 
+        }
+    }
+
+
 
 
     private void loadConfig()
