@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.IO;
 
@@ -104,7 +105,7 @@ public class GridManager : MonoBehaviour
             csvBuilder.Append("Value"); // This will go into the first column of the new row
             foreach (var box in grid)
             {
-                csvBuilder.Append($",{box.value}"); // Ensure to start with a comma
+                csvBuilder.Append($",{box.value.ToString(CultureInfo.InvariantCulture)}"); // Ensure to start with a comma
             }
             csvBuilder.AppendLine();
 
@@ -112,7 +113,7 @@ public class GridManager : MonoBehaviour
             csvBuilder.Append("Intensity");
             foreach (var box in grid)
             {
-                csvBuilder.Append($",{box.intensity:F2}"); // Ensure to start with a comma
+                csvBuilder.Append($",{box.intensity.ToString(CultureInfo.InvariantCulture):F2}"); // Ensure to start with a comma
             }
             csvBuilder.AppendLine();
 
