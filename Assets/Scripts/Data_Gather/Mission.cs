@@ -66,12 +66,13 @@ public class MissionManager : MonoBehaviour
     private DataCollector dataCollectionIntance = new DataCollector();
     // init the raycaster for tracking
     private RaycastCounter raycastCounter = new RaycastCounter();
-
+    // init the performance 
+    private GridManager gridManager = new GridManager();
 
 
     // still need to pass the data to the datacollector!
     public string name = "sofie";
-    public string controlScheme = "scheme 1";
+    public string controlScheme = "scheme0";
     public string startPose = "start1";
     public string gridLocation = "grid1";
     public string userInterface = "2screen";
@@ -127,186 +128,192 @@ public class MissionManager : MonoBehaviour
         username.text = "Name: " + name;
         mission_count.text = "Number: " + count + "/16";
 
-
-        if (runTutorial)
+        if(false)
         {
-            Menu.SetActive(false);
-            if(Tutorial == 1)
+            // then not debugging, set true
+        
+            if (runTutorial)
             {
-                userInput.ManualControl = true;
-                objectTransform.ControlScheme = 0;
-            }
-            if(Tutorial == 2)
-            {
-                userInput.ManualControl = false;
-                objectTransform.ControlScheme = 1;
-            }
-            if(Tutorial == 3)
-            {
-                userInput.ManualControl = false;
-                objectTransform.ControlScheme = 2;
-            }
-
-            
-            if(timer >= targetTime )
-            {
-                // stop running the tutorial
-                runTutorial = false;  
-                Menu.SetActive(true); 
-            }
-        }
-
-
-        if (selectCombination && !runTutorial)
-        {
-            Menu.SetActive(false);
-            if (mission == "controller")
-            {
-                // total combination
-                // 3 schemes
-                // 2 start poses
-                // 2 grid location
-                // 1 userinterfaces
-                // total = 12
-                bool selectVALIDCombo = true;
-                while(selectVALIDCombo)
+                Menu.SetActive(false);
+                if(Tutorial == 1)
                 {
-                    missionCombination = Random.Range(1,13);
-                    if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
-                    {
-                        usedCombinations.Add(missionCombination); // Add the new unique number to the list
-                        selectVALIDCombo = false; // Break the loop
-                    }
+                    userInput.ManualControl = true;
+                    objectTransform.ControlScheme = 0;
                 }
+                if(Tutorial == 2)
+                {
+                    userInput.ManualControl = false;
+                    objectTransform.ControlScheme = 1;
+                }
+                if(Tutorial == 3)
+                {
+                    userInput.ManualControl = false;
+                    objectTransform.ControlScheme = 2;
+                }
+
                 
-            }
-            if (mission == "userInterface")
-            {
-                // total combination
-                // 1 schemes
-                // 2 start poses
-                // 2 grid location
-                // 2 userinterfaces
-                // total = 8
-                bool selectVALIDCombo = true;
-                while(selectVALIDCombo)
+                if(timer >= targetTime )
                 {
-                    missionCombination = Random.Range(1,9);
-                    if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
-                    {
-                        usedCombinations.Add(missionCombination); // Add the new unique number to the list
-                        selectVALIDCombo = false; // Break the loop
-                    }
+                    // stop running the tutorial
+                    runTutorial = false;  
+                    Menu.SetActive(true); 
                 }
             }
-            count += 1;
-            selectCombination = false;
-        }
 
-        // then the system have found the next combination, the user cliks on startMission
-        // run through once
-        if (startMission && !runTutorial)
-        {
-            if (mission == "controller")
-            {
-                selectControlCombination(missionCombination);
-            }
-            if (mission == "userInterface")
-            {
-                selectUserInterfaceCombination(missionCombination);
 
-            }
-
-            startMission = false;
-
-            // load the config
-            loadConfig();
-
-            // setActive() the userinterface 
-            if(userInterface == "2screen")
+            if (selectCombination && !runTutorial)
             {
-                TwoScreen.SetActive(true);
-                OneScreen.SetActive(false);
-            }
-            if(userInterface == "1screen")
-            {
-                TwoScreen.SetActive(false);
-                OneScreen.SetActive(true);
-            }
-
-            if(controlScheme == "scheme0")
-            {
-                userInput.ManualControl = true;
-                objectTransform.ControlScheme = 0;
-            }
-            if(controlScheme == "scheme1")
-            {
-                userInput.ManualControl = false;
-                objectTransform.ControlScheme = 1;
-            }
-            if(controlScheme == "scheme2")
-            {
-                userInput.ManualControl = false;
-                objectTransform.ControlScheme = 2;
+                Menu.SetActive(false);
+                if (mission == "controller")
+                {
+                    // total combination
+                    // 3 schemes
+                    // 2 start poses
+                    // 2 grid location
+                    // 1 userinterfaces
+                    // total = 12
+                    bool selectVALIDCombo = true;
+                    while(selectVALIDCombo)
+                    {
+                        missionCombination = Random.Range(1,13);
+                        if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
+                        {
+                            usedCombinations.Add(missionCombination); // Add the new unique number to the list
+                            selectVALIDCombo = false; // Break the loop
+                        }
+                    }
+                    
+                }
+                if (mission == "userInterface")
+                {
+                    // total combination
+                    // 1 schemes
+                    // 2 start poses
+                    // 2 grid location
+                    // 2 userinterfaces
+                    // total = 8
+                    bool selectVALIDCombo = true;
+                    while(selectVALIDCombo)
+                    {
+                        missionCombination = Random.Range(1,9);
+                        if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
+                        {
+                            usedCombinations.Add(missionCombination); // Add the new unique number to the list
+                            selectVALIDCombo = false; // Break the loop
+                        }
+                    }
+                }
+                count += 1;
+                selectCombination = false;
             }
 
-            missionActive = true;
-            isRecording = true;
-            timer = 0.0f;
+            // then the system have found the next combination, the user cliks on startMission
+            // run through once
+            if (startMission && !runTutorial)
+            {
+                if (mission == "controller")
+                {
+                    selectControlCombination(missionCombination);
+                }
+                if (mission == "userInterface")
+                {
+                    selectUserInterfaceCombination(missionCombination);
 
-            // parse the combination to raycaster
-            raycastCounter.type = mission;
-            raycastCounter.name = name;
-            raycastCounter.controlScheme = controlScheme;
-            raycastCounter.startPose = startPose;
-            raycastCounter.gridLocation = gridLocation;
-            raycastCounter.userInterface = userInterface;
+                }
 
-            // parse the combination to performance
-            performanceCleaning.type = mission;
-            performanceCleaning.name = name;
-            performanceCleaning.controlScheme = controlScheme;
-            performanceCleaning.startPose = startPose;
-            performanceCleaning.gridLocation = gridLocation;
-            performanceCleaning.userInterface = userInterface;
-        }
-        
-        // start the timer, and finish the mission then it runs out
-        timer += Time.fixedDeltaTime;
+                startMission = false;
 
-        if(timer >= targetTime && test)
-        {
-            Menu.SetActive(true);
-            test = false;
-            missionActive = false;
-            isRecording = false;
-            Debug.Log("3 minutes have passed.");
-            // data 
-            dataCollectionIntance.SaveDataToCSV();
-            dataCollectionIntance.ClearDataList();
-            // tracking
-            raycastCounter.SaveHitRecords();
-            raycastCounter.ClearhitRecords();
-            // missing performance
-        }
-        
-        // resets the current mission 
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            Debug.Log("Mission is reset: " + missionCombination);
-            timer = 0.0f;
-            missionActive = false;
-            startMission = true;
-            isRecording = false;
-            dataCollectionIntance.ClearDataList();
-            raycastCounter.ClearhitRecords();
-            // add performance
+                // load the config
+                //loadConfig();
+
+                // setActive() the userinterface 
+                if(userInterface == "2screen")
+                {
+                    TwoScreen.SetActive(true);
+                    OneScreen.SetActive(false);
+                }
+                if(userInterface == "1screen")
+                {
+                    TwoScreen.SetActive(false);
+                    OneScreen.SetActive(true);
+                }
+
+                if(controlScheme == "scheme0")
+                {
+                    userInput.ManualControl = true;
+                    objectTransform.ControlScheme = 0;
+                }
+                if(controlScheme == "scheme1")
+                {
+                    userInput.ManualControl = false;
+                    objectTransform.ControlScheme = 1;
+                }
+                if(controlScheme == "scheme2")
+                {
+                    userInput.ManualControl = false;
+                    objectTransform.ControlScheme = 2;
+                }
+
+                missionActive = true;
+                isRecording = true;
+                timer = 0.0f;
+
+                // parse the combination to raycaster
+                raycastCounter.type = mission;
+                raycastCounter.name = name;
+                raycastCounter.controlScheme = controlScheme;
+                raycastCounter.startPose = startPose;
+                raycastCounter.gridLocation = gridLocation;
+                raycastCounter.userInterface = userInterface;
+
+                // parse the combination to performance
+                performanceCleaning.type = mission;
+                performanceCleaning.name = name;
+                performanceCleaning.controlScheme = controlScheme;
+                performanceCleaning.startPose = startPose;
+                performanceCleaning.gridLocation = gridLocation;
+                performanceCleaning.userInterface = userInterface;
+            }
+            
+            // start the timer, and finish the mission then it runs out
+            timer += Time.fixedDeltaTime;
+
+            if(timer >= targetTime && test)
+            {
+                Menu.SetActive(true);
+                test = false;
+                missionActive = false;
+                isRecording = false;
+                Debug.Log("3 minutes have passed.");
+                // data 
+                dataCollectionIntance.SaveDataToCSV();
+                dataCollectionIntance.ClearDataList();
+                // tracking
+                raycastCounter.SaveHitRecords();
+                raycastCounter.ClearhitRecords();
+                // missing performance
+            }
+            
+            // resets the current mission 
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                Debug.Log("Mission is reset: " + missionCombination);
+                timer = 0.0f;
+                missionActive = false;
+                startMission = true;
+                isRecording = false;
+                dataCollectionIntance.ClearDataList();
+                raycastCounter.ClearhitRecords();
+                // add performance
+            }
         }
 
         if(Input.GetKeyDown(KeyCode.A))
         {
             raycastCounter.SaveHitRecords();
             raycastCounter.ClearhitRecords();
+            gridManager.SaveToCSV();
+            
         }
 
     }
@@ -389,7 +396,11 @@ public class MissionManager : MonoBehaviour
 
     void PerformanceUpdate()
     {
-        // missing 
+        if(true)
+        {
+            Debug.Log("performanceCleaning called");
+            performanceCleaning.UpdateBoxValuesWithRayCast();
+        } 
     }
 
     private void selectControlCombination(int combi)

@@ -66,9 +66,9 @@ public class GridManager : MonoBehaviour
                 BoxList.Add(boxData);
                 
                 // Initialize properties
-                boxData.value = Random.Range(0, 100); // Example initialization
-                boxData.intensity = Random.Range(0.0f, 1.0f); // Example initialization
-                boxData.flag = Random.value > 0.5f; // Example initialization
+                boxData.value = 0.0f;//Random.Range(0, 100); // Example initialization
+                boxData.intensity = 0.0f; //Random.Range(0.0f, 1.0f); // Example initialization
+                boxData.flag = false; //Random.value > 0.5f; // Example initialization
                 // Set the color based on intensity
                 Renderer boxRenderer = newBox.GetComponent<Renderer>();
                 boxRenderer.material = new Material(boxRenderer.material); // This is necessary if you're not using shared materials
@@ -137,15 +137,15 @@ public class GridManager : MonoBehaviour
         SaveToCSV();
     }
 
-    void Update()
-    {
-        UpdateBoxValues();
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            UpdateBoxValues();
-            SaveToCSV();
-        }
-    }
+    // void Update()
+    // {
+    //     UpdateBoxValues();
+    //     if (Input.GetKeyDown(KeyCode.W))
+    //     {
+    //         UpdateBoxValues();
+    //         SaveToCSV();
+    //     }
+    // }
     
 
     void UpdateBoxValues()
@@ -166,12 +166,13 @@ public class GridManager : MonoBehaviour
         allGrids.Add(BoxList);
     }
 
-     void UpdateBoxValuesWithRayCast()
+    public void UpdateBoxValuesWithRayCast()
     {
+        Debug.Log("inside raycast");
         // needs thr transform to be the nozzle of the watersprayer
-        Ray ray = new Ray(Nozzle.transform.position, transform.forward);
+        Ray ray = new Ray(Nozzle.transform.position, transform.forward* -1);
         RaycastHit hit;
-        Debug.DrawRay(transform.position, transform.forward * 30, Color.blue);
+        Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * 10, Color.blue);
 
         float SumCleaningsFactor = 0.0f;
 
