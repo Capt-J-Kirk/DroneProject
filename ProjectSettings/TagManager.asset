@@ -11,6 +11,7 @@ TagManager:
   - TrackableObject
   - Tile
   - cleaning
+  - inCleaning
   layers:
   - Default
   - TransparentFX

@@ -292,7 +292,9 @@ public class MissionManager : MonoBehaviour
                 // tracking
                 raycastCounter.SaveHitRecords();
                 raycastCounter.ClearhitRecords();
-                // missing performance
+                // performance
+                performanceCleaning.SaveToCSV();
+                performanceCleaning.ClearGridData();
             }
             
             // resets the current mission 
@@ -305,16 +307,19 @@ public class MissionManager : MonoBehaviour
                 isRecording = false;
                 dataCollectionIntance.ClearDataList();
                 raycastCounter.ClearhitRecords();
-                // add performance
+                performanceCleaning.ClearGridData();
             }
         }
 
         if(Input.GetKeyDown(KeyCode.A))
         {
+            // Debugging 
+            dataCollectionIntance.SaveDataToCSV();
+            dataCollectionIntance.ClearDataList();
             raycastCounter.SaveHitRecords();
             raycastCounter.ClearhitRecords();
             performanceCleaning.SaveToCSV();
-            
+            performanceCleaning.ClearGridData();
         }
 
     }
