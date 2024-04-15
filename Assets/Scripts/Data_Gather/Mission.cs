@@ -210,45 +210,56 @@ public class MissionManager : MonoBehaviour
     private void SelectMission()
     {
         Menu.SetActive(false);
-        if (mission == "controller")
+
+        bool selectVALIDCombo = true;
+        while(selectVALIDCombo)
         {
-            // total combination
-            // 3 schemes
-            // 2 start poses
-            // 2 grid location
-            // 1 userinterfaces
-            // total = 12
-            bool selectVALIDCombo = true;
-            while(selectVALIDCombo)
+            missionCombination = Random.Range(1,17);
+            if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
             {
-                missionCombination = Random.Range(1,13);
-                if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
-                {
-                    usedCombinations.Add(missionCombination); // Add the new unique number to the list
-                    selectVALIDCombo = false; // Break the loop
-                }
+                usedCombinations.Add(missionCombination); // Add the new unique number to the list
+                selectVALIDCombo = false; // Break the loop
             }
+        }
+        // if (mission == "controller")
+        // {
+        //     // total combination
+        //     // 3 schemes
+        //     // 2 start poses
+        //     // 2 grid location
+        //     // 1 userinterfaces
+        //     // total = 12
+        //     bool selectVALIDCombo = true;
+        //     while(selectVALIDCombo)
+        //     {
+        //         missionCombination = Random.Range(1,13);
+        //         if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
+        //         {
+        //             usedCombinations.Add(missionCombination); // Add the new unique number to the list
+        //             selectVALIDCombo = false; // Break the loop
+        //         }
+        //     }
             
-        }
-        if (mission == "userInterface")
-        {
-            // total combination
-            // 1 schemes
-            // 2 start poses
-            // 2 grid location
-            // 2 userinterfaces
-            // total = 8
-            bool selectVALIDCombo = true;
-            while(selectVALIDCombo)
-            {
-                missionCombination = Random.Range(1,9);
-                if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
-                {
-                    usedCombinations.Add(missionCombination); // Add the new unique number to the list
-                    selectVALIDCombo = false; // Break the loop
-                }
-            }
-        }
+        // }
+        // if (mission == "userInterface")
+        // {
+        //     // total combination
+        //     // 1 schemes
+        //     // 2 start poses
+        //     // 2 grid location
+        //     // 2 userinterfaces
+        //     // total = 8
+        //     bool selectVALIDCombo = true;
+        //     while(selectVALIDCombo)
+        //     {
+        //         missionCombination = Random.Range(1,9);
+        //         if (!usedCombinations.Contains(missionCombination)) // Check if the number hasn't been used
+        //         {
+        //             usedCombinations.Add(missionCombination); // Add the new unique number to the list
+        //             selectVALIDCombo = false; // Break the loop
+        //         }
+        //     }
+        // }
         count += 1;
         selectCombination = false;
     }
@@ -265,7 +276,7 @@ public class MissionManager : MonoBehaviour
 
         // }
         ALLCombinations();
-        
+
         startMission = false;
 
         // load the config
