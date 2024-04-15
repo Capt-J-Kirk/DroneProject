@@ -225,8 +225,20 @@ public class RaycastCounter : MonoBehaviour
             // // Add the record to the list
             // Debug.Log("record: " + record);
             // hitRecords.Add(record);
-
+            Vector3 localHitPoint;
             //
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, TargetLayer))
+            {
+                // Access the hit object's transform
+                Transform hitTransform = hit.transform;
+
+                // Convert the world position of the hit to a local position
+                localHitPoint = hitTransform.InverseTransformPoint(hit.point);
+
+                // Debug output to the console
+                Debug.Log("Local hit point: " + localHitPoint);
+            }
+
 
             if(hit.collider.CompareTag("TrackableObject"))
             {
@@ -247,19 +259,26 @@ public class RaycastCounter : MonoBehaviour
                 lastHitObject = hit.collider.gameObject; // Update last hit object
 
                 // Prepare the record string
-                string record = PrepareRecord(objectName, transition, hasTransitioned);
+                string record = PrepareRecord(objectName, transition, hasTransitioned, localHitPoint);
                 // Add the record to the list
                 Debug.Log("record: " + record);
                 hitRecords.Add(record);
             }
+
+            
         }
+
+
+        // local xz
+
+
     }
-    string PrepareRecord(string hitObject, string transition, bool flag)
+    string PrepareRecord(string hitObject, string transition, bool flag, Vector3 localhit)
     {
         Debug.Log("PrepareRecord ");
 
         string time = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        string test = time + "},{" + hitObject + "},{" + transition + "},{" + flag;
+        string test = time + "},{" + hitObject + "},{" + transition + "},{" + flag + "},{" + localhit.x + "},{" + localhit.y + "},{" + localhit.z;
        // return $"{time},{hitObject},{transition},{flag}";
         return  $"{test}";
     }
@@ -277,7 +296,7 @@ public class RaycastCounter : MonoBehaviour
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
 
         StringBuilder csvContent = new StringBuilder();
-        csvContent.AppendLine("time,hitObject,transition,flag");
+        csvContent.AppendLine("time,hitObject,transition,flag,x,y,z");
 
         foreach (var record in hitRecords)
         {
