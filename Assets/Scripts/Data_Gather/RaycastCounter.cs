@@ -225,7 +225,9 @@ public class RaycastCounter : MonoBehaviour
             // // Add the record to the list
             // Debug.Log("record: " + record);
             // hitRecords.Add(record);
-            Vector3 localHitPoint;
+            LayerMask TargetLayer = LayerMask.GetMask("baseTargetLayer");
+
+            Vector3 localHitPoint = new Vector3(0,0,0);
             //
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, TargetLayer))
             {

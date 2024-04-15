@@ -10430,33 +10430,77 @@ PrefabInstance:
       propertyPath: m_Name
       value: infodisplay main active
       objectReference: {fileID: 0}
+    - target: {fileID: -7543056547468943028, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
     - target: {fileID: -4061183912977848326, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: infodisplay null
+      objectReference: {fileID: 0}
+    - target: {fileID: -4061183912977848326, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
+    - target: {fileID: -3764890687279828086, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
       objectReference: {fileID: 0}
     - target: {fileID: -3372522033569347474, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: Body
       objectReference: {fileID: 0}
+    - target: {fileID: -3372522033569347474, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -2392270760361838127, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: infodisplay main dist
+      objectReference: {fileID: 0}
+    - target: {fileID: -2392270760361838127, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
       objectReference: {fileID: 0}
     - target: {fileID: -1841786808339424507, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: infodisplay sec dist
       objectReference: {fileID: 0}
+    - target: {fileID: -1841786808339424507, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 552788545395646728, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: TwoScreenController
+      objectReference: {fileID: 0}
+    - target: {fileID: 926606341286601751, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
       objectReference: {fileID: 0}
     - target: {fileID: 3135212814184917379, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: infodisplay sec active
       objectReference: {fileID: 0}
+    - target: {fileID: 3135212814184917379, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
     - target: {fileID: 6541449792694956596, guid: c55ba9eca406c794096291040536eafe, type: 3}
       propertyPath: m_Name
       value: infodisplay follow
+      objectReference: {fileID: 0}
+    - target: {fileID: 6541449792694956596, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183818533932772739, guid: c55ba9eca406c794096291040536eafe, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12841,17 +12885,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: infodisplay main dist
       objectReference: {fileID: 0}
+    - target: {fileID: -6914995852326702715, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
     - target: {fileID: -4127460620126236395, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
       propertyPath: m_Name
       value: infodisplay sec dist
+      objectReference: {fileID: 0}
+    - target: {fileID: -4127460620126236395, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
+    - target: {fileID: -3764890687279828086, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
+    - target: {fileID: -3372522033569347474, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -2201505104300592458, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
       propertyPath: m_Name
       value: infodisplay sec active
       objectReference: {fileID: 0}
+    - target: {fileID: -2201505104300592458, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
     - target: {fileID: -97260465219885794, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
       propertyPath: m_Name
       value: infodisplay null
+      objectReference: {fileID: 0}
+    - target: {fileID: -97260465219885794, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
       propertyPath: m_Name
@@ -12861,13 +12929,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: infodisplay follow
       objectReference: {fileID: 0}
+    - target: {fileID: 2415596623844378529, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
     - target: {fileID: 4797885985458961532, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
       propertyPath: m_Name
       value: infodisplay main active
       objectReference: {fileID: 0}
+    - target: {fileID: 4797885985458961532, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
     - target: {fileID: 5206738626385693914, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
       propertyPath: m_Name
       value: display
+      objectReference: {fileID: 0}
+    - target: {fileID: 5206738626385693914, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5206738626385693914, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183818533932772739, guid: 369cddb4562f8f8468e252c565bc3835, type: 3}
+      propertyPath: m_TagString
+      value: TrackableObject
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26949,7 +27037,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
