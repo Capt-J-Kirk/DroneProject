@@ -268,9 +268,41 @@ public class MissionManager : MonoBehaviour
         startMission = false;
 
         // load the config
-        //loadConfig();
 
-        // setActive() the userinterface 
+        // set start pose
+
+        if(startPose == "start1")
+        {
+            main_drone.transform.position = new Vector3(100,80,110);
+            main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            sec_drone.transform.position = new Vector3(100,80,100);
+            sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            
+        }
+        if(startPose == "start2")
+        {
+            main_drone.transform.position = new Vector3(100,80,110);
+            main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            sec_drone.transform.position = new Vector3(100,80,100);
+            sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
+        // set grid location
+
+        if(gridLocation == "grid1")
+        {
+            grid.transform.position = new Vector3(100,80,100);
+            grid.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        if(gridLocation == "grid2")
+        {
+            grid.transform.position = new Vector3(110,80,100);
+            grid.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
+
+        // set user interface
+
         if(userInterface == "2screen")
         {
             TwoScreen.SetActive(true);
@@ -281,6 +313,8 @@ public class MissionManager : MonoBehaviour
             TwoScreen.SetActive(false);
             OneScreen.SetActive(true);
         }
+
+        // set control scheme
 
         if(controlScheme == "scheme0")
         {
