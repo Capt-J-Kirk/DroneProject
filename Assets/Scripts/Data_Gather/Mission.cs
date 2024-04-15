@@ -67,7 +67,7 @@ public class MissionManager : MonoBehaviour
     // init the raycaster for tracking
     private RaycastCounter raycastCounter = new RaycastCounter();
     // init the performance 
-    private GridManager gridManager = new GridManager();
+    //private GridManager gridManager = new GridManager();
 
 
     // still need to pass the data to the datacollector!
@@ -114,6 +114,7 @@ public class MissionManager : MonoBehaviour
 
     void Start()
     {
+        performanceCleaning.GenerateGrid();
         dataCollectionIntance.type = mission;
         InvokeRepeating("DataUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("TrackingUpdate", 0.05f, 0.05f); // call 1/20 a sec 
@@ -312,7 +313,7 @@ public class MissionManager : MonoBehaviour
         {
             raycastCounter.SaveHitRecords();
             raycastCounter.ClearhitRecords();
-            gridManager.SaveToCSV();
+            performanceCleaning.SaveToCSV();
             
         }
 
@@ -387,7 +388,7 @@ public class MissionManager : MonoBehaviour
 
     void TrackingUpdate()
     {
-        if(true)//isRecording)
+        if(false)//isRecording)
         {
             //Debug.Log("TrackingUpdate called");
             raycastCounter.PerformRaycast();
@@ -398,8 +399,9 @@ public class MissionManager : MonoBehaviour
     {
         if(true)
         {
-            Debug.Log("performanceCleaning called");
-            performanceCleaning.UpdateBoxValuesWithRayCast();
+            //Debug.Log("performanceCleaning called");
+            performanceCleaning.UpdateBoxValues();
+            //performanceCleaning.UpdateBoxValuesWithRayCast();
         } 
     }
 

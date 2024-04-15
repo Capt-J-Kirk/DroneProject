@@ -42,12 +42,12 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        GenerateGrid();
+       // GenerateGrid();
     }
 
     // make sure to setup the tag "cleaning" in the tags and layers setting!
  
-    void GenerateGrid()
+    public void GenerateGrid()
     {
        
         Vector3 basePosition = startPosition.position;
@@ -83,27 +83,28 @@ public class GridManager : MonoBehaviour
 
         allGrids.Add(BoxList);
     }
-
-
     public void SaveToCSV()
     {
         StringBuilder csvBuilder = new StringBuilder();
 
-        // Add the top headers only once, at the start
+        // Start with an empty string for the first cell if you want headers to start from the second column
+        csvBuilder.Append("Box"); // Or leave this empty if you want an empty first cell
+        
+        // Add the top headers
         for (int i = 0; i < width * height; i++)
         {
             csvBuilder.Append($",Box_{i}");
         }
         csvBuilder.AppendLine();
 
-        // Write the data of each grid in blocks of three rows per grid
+        // Write the data of each grid
         foreach (var grid in allGrids)
         {
             // Values Row with its property name
-            csvBuilder.Append("Value");
+            csvBuilder.Append("Value"); // This will go into the first column of the new row
             foreach (var box in grid)
             {
-                csvBuilder.Append($", {box.value}");
+                csvBuilder.Append($",{box.value}"); // Ensure to start with a comma
             }
             csvBuilder.AppendLine();
 
@@ -111,7 +112,7 @@ public class GridManager : MonoBehaviour
             csvBuilder.Append("Intensity");
             foreach (var box in grid)
             {
-                csvBuilder.Append($", {box.intensity:F2}");
+                csvBuilder.Append($",{box.intensity:F2}"); // Ensure to start with a comma
             }
             csvBuilder.AppendLine();
 
@@ -119,7 +120,7 @@ public class GridManager : MonoBehaviour
             csvBuilder.Append("Flag");
             foreach (var box in grid)
             {
-                csvBuilder.Append($", {box.flag}");
+                csvBuilder.Append($",{box.flag}"); // Ensure to start with a comma
             }
             csvBuilder.AppendLine();
         }
@@ -129,6 +130,52 @@ public class GridManager : MonoBehaviour
 
         Debug.Log($"Data saved to {filePath}");
     }
+
+
+    // public void SaveToCSV()
+    // {
+    //     StringBuilder csvBuilder = new StringBuilder();
+
+    //     // Add the top headers only once, at the start
+    //     for (int i = 0; i < width * height; i++)
+    //     {
+    //         csvBuilder.Append($",Box_{i}");
+    //     }
+    //     csvBuilder.AppendLine();
+
+    //     // Write the data of each grid in blocks of three rows per grid
+    //     foreach (var grid in allGrids)
+    //     {
+    //         // Values Row with its property name
+    //         csvBuilder.Append("Value");
+    //         foreach (var box in grid)
+    //         {
+    //             csvBuilder.Append($", {box.value}");
+    //         }
+    //         csvBuilder.AppendLine();
+
+    //         // Intensity Row with its property name
+    //         csvBuilder.Append("Intensity");
+    //         foreach (var box in grid)
+    //         {
+    //             csvBuilder.Append($", {box.intensity:F2}");
+    //         }
+    //         csvBuilder.AppendLine();
+
+    //         // Flag Row with its property name
+    //         csvBuilder.Append("Flag");
+    //         foreach (var box in grid)
+    //         {
+    //             csvBuilder.Append($", {box.flag}");
+    //         }
+    //         csvBuilder.AppendLine();
+    //     }
+
+    //     string filePath = Path.Combine(Application.persistentDataPath, "box_data.csv");
+    //     File.WriteAllText(filePath, csvBuilder.ToString());
+
+    //     Debug.Log($"Data saved to {filePath}");
+    // }
 
 
     public void UpdateAndSaveData()
@@ -148,12 +195,13 @@ public class GridManager : MonoBehaviour
     // }
     
 
-    void UpdateBoxValues()
+    public void UpdateBoxValues()
     {
+        // used to update the values
         foreach (var box in BoxList)
         {
             // Increment or update properties as an example
-            box.value++;
+            box.value +=0.01f;
             box.intensity += 0.1f;
             box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
             box.flag = !box.flag; // Toggle for example
@@ -163,7 +211,30 @@ public class GridManager : MonoBehaviour
             boxRenderer.material.color = Color.Lerp(Color.black, Color.white, box.intensity);
    
         }
-        allGrids.Add(BoxList);
+        // allGrids.Add(BoxList);
+
+
+        // used to take a snapshot and store it
+        List<BoxData> currentGridState = new List<BoxData>();
+        foreach (var box in BoxList)
+        {
+            // Clone the box data to keep a snapshot of its current state
+            BoxData boxStateSnapshot = new BoxData()
+            {
+                value = box.value,
+                intensity = box.intensity,
+                flag = box.flag
+            };
+            currentGridState.Add(boxStateSnapshot);
+            //temp += box.intensity;
+        }
+        //currentCleanValue = temp;
+        //cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
+
+        // Append the snapshot of the current grid state to allGrids
+        allGrids.Add(currentGridState);
+
+
     }
 
     public void UpdateBoxValuesWithRayCast()
@@ -203,7 +274,7 @@ public class GridManager : MonoBehaviour
                 BoxData boxData = collider.GetComponent<BoxData>(); 
                 if (boxData != null) //&& BoxList.Contains(collider.gameObject))
                 {
-
+                    Debug.Log("box data:");
                     // Update the box cleanings status
                     // using the value as the total amount of cleaning applied, there intencity if the real cleanliness of the box
                     boxData.value += cleaningsFactor;
@@ -234,25 +305,41 @@ public class GridManager : MonoBehaviour
         // append the boxlist current states to the list
         //allGrids.Add(BoxList);
 
-
-        List<BoxData> currentGridState = new List<BoxData>();
         foreach (var box in BoxList)
         {
-            // Clone the box data to keep a snapshot of its current state
-            BoxData boxStateSnapshot = new BoxData()
-            {
-                value = box.value,
-                intensity = box.intensity,
-                flag = box.flag
-            };
-            currentGridState.Add(boxStateSnapshot);
-            temp += box.intensity;
-        }
-        currentCleanValue = temp;
-        cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
+            // Increment or update properties as an example
+            box.value++;
+            box.intensity += 0.1f;
+            box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
+            box.flag = !box.flag; // Toggle for example
 
-        // Append the snapshot of the current grid state to allGrids
-        allGrids.Add(currentGridState);
+            // Update the color based on the new intensity
+            Renderer boxRenderer = box.GetComponent<Renderer>();
+            boxRenderer.material.color = Color.Lerp(Color.black, Color.white, box.intensity);
+   
+        }
+        allGrids.Add(BoxList);
+
+
+
+        // List<BoxData> currentGridState = new List<BoxData>();
+        // foreach (var box in BoxList)
+        // {
+        //     // Clone the box data to keep a snapshot of its current state
+        //     BoxData boxStateSnapshot = new BoxData()
+        //     {
+        //         value = box.value,
+        //         intensity = box.intensity,
+        //         flag = box.flag
+        //     };
+        //     currentGridState.Add(boxStateSnapshot);
+        //     temp += box.intensity;
+        // }
+        // currentCleanValue = temp;
+        // cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
+
+        // // Append the snapshot of the current grid state to allGrids
+        // allGrids.Add(currentGridState);
 
         
     }
