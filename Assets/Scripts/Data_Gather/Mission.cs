@@ -276,7 +276,7 @@ public class MissionManager : MonoBehaviour
 
         // }
         ALLCombinations(missionCombination);
-
+        Debug.Log("Mission combination: "+ missionCombination);
         startMission = false;
 
         // load the config
