@@ -41,7 +41,7 @@ public class QuadcopterController: MonoBehaviour
     private float rollKp = 5.0f, rollKi = 0.3f, rollKd = 0.08f;
     private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
     private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f;
-    private float altitudeKp = 5.0f, altitudeKi = 0.3f, altitudeKd = 4f; 
+    private float altitudeKp = 5.0f, altitudeKi = 0.3f, altitudeKd = 0.08f; 
     // // needs fine tuning! 
     // public float rollKp = 1.0f, rollKi = 0.1f, rollKd = 0.01f;
     // public float pitchKp = 1.0f, pitchKi = 0.1f, pitchKd = 0.01f;
@@ -123,7 +123,7 @@ public class QuadcopterController: MonoBehaviour
         float pitchSensitivity = 10.0f;
         float rollSensitivity = 10.0f;
         float yawSensitivity = 5.0f;
-        float altitudeSensitivity = 2.0f;
+        float altitudeSensitivity = 0.50f;
         float newPitch = 0;
         float newRoll = 0;
         
