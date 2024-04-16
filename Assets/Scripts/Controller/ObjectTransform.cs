@@ -61,7 +61,7 @@ public class ObjectTransform: MonoBehaviour
     public int point = 0;
     private float starttime =0;
     private int count = 0;
-    private float minRadius = 1.5f;
+    private float minRadius = 2f;
     private float maxRadius = 8f;
 
     void Start()
@@ -238,6 +238,13 @@ public class ObjectTransform: MonoBehaviour
         Vector3 targetPosition = new Vector3(x, y, z);
         //Debug.Log("targetPosition: " + targetPosition); 
         //Debug.Log("actual pos: " + sec_position);
+
+ 
+        // test this out; xz is the horizontal plane and y is vertical 
+        //float x = radius * Mathf.Sin(phi) * Mathf.Cos(theta);
+        //float y = radius * Mathf.Sin(phi) * Mathf.Sin(theta);
+        //float z = radius * Mathf.Cos(phi);
+
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;

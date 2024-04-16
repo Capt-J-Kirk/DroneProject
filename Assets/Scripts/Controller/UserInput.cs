@@ -221,42 +221,42 @@ public class UserInput : MonoBehaviour
         if(togglesecondarDrone)
         {
             TWO_t_main_active.text = "Drone: "+ "\n" +" Master";
-            TWO_i_main_active.color = Color.red;
+            TWO_i_main_active.color = Color.grey;
             TWO_t_sec_active.text = "Drone: "+"\n"+" Secondary";
-            TWO_i_sec_active.color = Color.green;
+            TWO_i_sec_active.color = Color.blue;
 
             ONE_t_main_active.text = "Drone: "+"\n"+" Master";
-            ONE_i_main_active.color = Color.red;
+            ONE_i_main_active.color = Color.grey;
             ONE_t_sec_active.text = "Drone: "+"\n"+" Secondary";
-            ONE_i_sec_active.color = Color.green;
+            ONE_i_sec_active.color = Color.blue;
         }
         else{
             TWO_t_main_active.text = "Drone: "+"\n"+" Master";
-            TWO_i_main_active.color = Color.green;
+            TWO_i_main_active.color = Color.blue;
             TWO_t_sec_active.text = "Drone: "+"\n"+" Secondary";
-            TWO_i_sec_active.color = Color.red;
+            TWO_i_sec_active.color = Color.grey;
 
             ONE_t_main_active.text = "Drone: "+"\n"+" Master";
-            ONE_i_main_active.color = Color.green;
+            ONE_i_main_active.color = Color.blue;
             ONE_t_sec_active.text = "Drone: "+"\n"+" Secondary";
-            ONE_i_sec_active.color = Color.red;
+            ONE_i_sec_active.color = Color.grey;
         }
        
 
         if(transformAdjustment.toggleFollow)
         {
             TWO_t_follow.text = "Follow: "+"\n"+" ON";
-            TWO_i_follow.color = Color.green;
+            TWO_i_follow.color = Color.blue;
 
             ONE_t_follow.text = "Follow: "+"\n"+" ON";
-            ONE_i_follow.color = Color.green;
+            ONE_i_follow.color = Color.blue;
         }
         else{
             TWO_t_follow.text = "Follow: "+"\n"+" OFF";
-            TWO_i_follow.color = Color.red;
+            TWO_i_follow.color = Color.grey;
 
             ONE_t_follow.text = "Follow: "+"\n"+" OFF";
-            ONE_i_follow.color = Color.red;
+            ONE_i_follow.color = Color.grey;
         }
 
     }

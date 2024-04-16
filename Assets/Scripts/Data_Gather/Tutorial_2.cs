@@ -6,6 +6,7 @@ public class ToggleScript2 : MonoBehaviour
 
     public void ToggleBoolean()
     {
+        Debug.Log("tutorial 2");
         toggleTutorial.Tutorial = 2;
         toggleTutorial.runTutorial = true;
     }

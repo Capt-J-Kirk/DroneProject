@@ -119,7 +119,7 @@ public class MissionManager : MonoBehaviour
 
     void Start()
     {
-        performanceCleaning.GenerateGrid();
+        //performanceCleaning.GenerateGrid();
         dataCollectionIntance.type = mission;
         InvokeRepeating("DataUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("TrackingUpdate", 0.05f, 0.05f); // call 1/20 a sec 
@@ -202,6 +202,7 @@ public class MissionManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.G))
         {
             test22 = !test22;
+            performanceCleaning.ClearGeneratedGrid();
             if(test22)
             {
                 Debug.Log("grid 1");
@@ -220,10 +221,15 @@ public class MissionManager : MonoBehaviour
                 grid.transform.rotation = Quaternion.Euler(1200,180,0);
             }
             // clear old grid
-            performanceCleaning.ClearGeneratedGrid();
+            //performanceCleaning.ClearGeneratedGrid();
             // generate a new grid
             performanceCleaning.GenerateGrid();
         }
+
+
+
+        // make the mission time, two timers, first for inflight 
+
 
     }
 
@@ -352,8 +358,8 @@ public class MissionManager : MonoBehaviour
         if(gridLocation == "grid2")
         {
             //
-            performanceCleaning.width = 30;
-            performanceCleaning.height = 5;
+            performanceCleaning.width = 200;
+            performanceCleaning.height = 10;
             grid.transform.position = new Vector3(395,116,638);
             grid.transform.rotation = Quaternion.Euler(90,180,0);
         }
