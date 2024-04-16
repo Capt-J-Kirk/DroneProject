@@ -3,15 +3,26 @@
 
 Installment guide:
 
+Download Unity hub from their own website, then install, open the hub, and install the Unity editor 2022.3.10f1 
 
-
-Download and install blender
+Download and install Blender
 - reason: the meshes are rendered by blender.
-- if they are still not showing. right-click on the project folder in and find the action called, re-import ... 
+- if they are still not showing. right-click on the project folder inside the open unity project and find the action called, re-import.
 
-Before launching the unity project.
-- start oculus, and connect the VR-headset
+Next go to: https://github.com/Capt-J-Kirk/DroneProject
+- clone this project.
+
+inside the Unity hub, go to project, in the top right is a drop-down menu beside ADD. select the "add a project from desk" 
+go to the folder you cloned the project to. 
+
+----For VR setup----
+Before launching the Unity project from the Hub.
+- Start the Oculus application on the PC, and connect the VR-headset
+- Make sure the Headset is listed as active!
 
 
-If the enhvironment is not loaded.
-- find the asset "scene1" and dobbelt click on it. 
+If the environment is not loaded.
+- find the asset "scene1" and dubbelt click on it. This should load the whole scene setup
+
+Now you should be ready to click on the play/run game icon above the debug- and VR-display
+
