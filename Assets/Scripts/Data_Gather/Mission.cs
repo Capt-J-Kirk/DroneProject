@@ -115,6 +115,7 @@ public class MissionManager : MonoBehaviour
 
 
     private bool manualMenu = false;
+    private bool test22 = false;
 
     void Start()
     {
@@ -195,6 +196,33 @@ public class MissionManager : MonoBehaviour
         {
             manualMenu = !manualMenu;
             Menu.SetActive(manualMenu);
+        }
+
+        
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            test22 = !test22;
+            if(test22)
+            {
+                Debug.Log("grid 1");
+                //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
+                performanceCleaning.width = 10;
+                performanceCleaning.height = 10;
+                grid.transform.position = new Vector3(395,116,638);
+                grid.transform.rotation = Quaternion.Euler(90,180,0);
+            }
+            else
+            {
+                Debug.Log("grid 2");
+                performanceCleaning.width = 30;
+                performanceCleaning.height = 5;
+                grid.transform.position = new Vector3(400,116,638);
+                grid.transform.rotation = Quaternion.Euler(1200,180,0);
+            }
+            // clear old grid
+            performanceCleaning.ClearGeneratedGrid();
+            // generate a new grid
+            performanceCleaning.GenerateGrid();
         }
 
     }
@@ -315,17 +343,19 @@ public class MissionManager : MonoBehaviour
 
         if(gridLocation == "grid1")
         {
+            //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
             performanceCleaning.width = 10;
             performanceCleaning.height = 10;
-            grid.transform.position = new Vector3(100,80,100);
-            grid.transform.rotation = Quaternion.Euler(0, 0, 0);
+            grid.transform.position = new Vector3(395,116,638);
+            grid.transform.rotation = Quaternion.Euler(90,180,0);
         }
         if(gridLocation == "grid2")
         {
+            //
             performanceCleaning.width = 30;
             performanceCleaning.height = 5;
-            grid.transform.position = new Vector3(110,80,100);
-            grid.transform.rotation = Quaternion.Euler(0, 0, 0);
+            grid.transform.position = new Vector3(395,116,638);
+            grid.transform.rotation = Quaternion.Euler(90,180,0);
         }
         // clear old grid
         performanceCleaning.ClearGeneratedGrid();
