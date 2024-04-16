@@ -92,7 +92,7 @@ public class MissionManager : MonoBehaviour
     public bool missionActive = false;
    
 
-    private int missionCombination = 0;
+    public int missionCombination = 0;
     
     public int Tutorial = 0;
     public bool runTutorial = false;
@@ -101,7 +101,8 @@ public class MissionManager : MonoBehaviour
 
     public TMP_Text username;
     public TMP_Text mission_count;
-
+    public TMP_Text mission_combi;
+    public TMP_Text scheme;
 
     private List<int> usedCombinations = new List<int>();
 
@@ -131,6 +132,8 @@ public class MissionManager : MonoBehaviour
 
         username.text = "Name: " + name;
         mission_count.text = "Number: " + count + "/16";
+        mission_combi.text = "Combi: " + "\n" + missionCombination;
+        scheme.text = "Scheme active: " + "\n" + controlScheme;
 
         if(false)
         {
