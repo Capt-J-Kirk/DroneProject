@@ -270,7 +270,7 @@ public class GridManager : MonoBehaviour
                 // Calculate radial factors for value decrement based on distance
                 float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
                 float radialFactor = 1 - (radialDistance / radiusAtHit);
-                float cleaningsFactor = valueFactor * radialFactor;
+                float cleaningsFactor = (valueFactor * radialFactor)/10f; // scale down the cleaning factor by 10
 
                 // sum the cleaning effort for this time frame.
                 SumCleaningsFactor += cleaningsFactor;
@@ -354,4 +354,22 @@ public class GridManager : MonoBehaviour
 
     }
  
+
+    public void ClearGeneratedGrid()
+    {
+        // Iterate through the list of box data objects
+        foreach (var boxData in BoxList)
+        {
+            if (boxData.gameObject != null)
+            {
+                Destroy(boxData.gameObject); // Destroy the GameObject
+            }
+        }
+        // Clear the lista
+        BoxList.Clear(); 
+        allGrids.Clear();
+        maxCleanValuePossible = 0; 
+        Debug.Log("All generated grid boxes have been removed.");
+    }
+
 }

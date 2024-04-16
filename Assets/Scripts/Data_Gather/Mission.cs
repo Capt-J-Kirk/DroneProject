@@ -327,7 +327,9 @@ public class MissionManager : MonoBehaviour
             grid.transform.position = new Vector3(110,80,100);
             grid.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        
+        // clear old grid
+        performanceCleaning.ClearGeneratedGrid();
+        // generate a new grid
         performanceCleaning.GenerateGrid();
 
         // set user interface
