@@ -9,7 +9,7 @@ public class QuadcopterController: MonoBehaviour
     private float maxVelocity = 200f; // Maximum linear velocity
     private float maxAcceleration = 20f; // Maximum linear acceleration
     private float drag = 0.5f; // Drag coefficient
-    private float mass = 5f; // Mass of the quadcopter
+    //private float mass = 5f; // Mass of the quadcopter
     private float maxAngularVelocity = 5f; // Maximum angular velocity
     //private float maxAngularAcceleration = 2f; // Maximum angular acceleration
     //public Vector3 thrustForce = new Vector3(0f, 5f, 0f); // Thrust force

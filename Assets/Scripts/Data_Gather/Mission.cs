@@ -112,6 +112,9 @@ public class MissionManager : MonoBehaviour
     // target time, 3 minutes = 180 sec
     private float targetTime = 10.0f; 
 
+
+    private bool manualMenu = false;
+
     void Start()
     {
         performanceCleaning.GenerateGrid();
@@ -183,6 +186,12 @@ public class MissionManager : MonoBehaviour
             raycastCounter.ClearhitRecords();
             performanceCleaning.SaveToCSV();
             performanceCleaning.ClearGridData();
+        }
+
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            manualMenu = !manualMenu;
+            Menu.SetActive(manualMenu);
         }
 
     }
