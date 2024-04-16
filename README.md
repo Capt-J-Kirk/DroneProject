@@ -7,7 +7,7 @@ Download Unity hub from their own website, then install, open the hub, and insta
 
 Download and install Blender
 - reason: the meshes are rendered by blender.
-- if they are still not showing. right-click on the project folder and find the action called, re-import ... 
+- if they are still not showing. right-click on the project folder inside the open unity project and find the action called, re-import.
 
 Next go to: https://github.com/Capt-J-Kirk/DroneProject
 - clone this project.
