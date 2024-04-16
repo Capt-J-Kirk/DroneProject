@@ -367,27 +367,27 @@ public class UserInput : MonoBehaviour
     private void OnAClick(InputAction.CallbackContext value)
     {
         // enable the adjustment of the secondary drones offset parameters
-        // if (togglesecondarDrone)
+        if (togglesecondarDrone)
+        {
+            if (transformAdjustment.ControlScheme == 0)
+            {
+                transformAdjustment.ControlScheme = 1;
+            }
+            else
+            {
+                transformAdjustment.ControlScheme = 0;
+            }
+            Debug.Log("changed position: " +  transformAdjustment.ControlScheme);
+        }
+        // if (transformAdjustment.ControlScheme == 0)
         // {
-        //     if (transformAdjustment.point == 0)
-        //     {
-        //         transformAdjustment.point = 1;
-        //     }
-        //     else
-        //     {
-        //         transformAdjustment.point = 0;
-        //     }
-        //     Debug.Log("changed position: " +  transformAdjustment.point);
+        //     transformAdjustment.point = 1;
         // }
-        if (transformAdjustment.ControlScheme == 0)
-        {
-            transformAdjustment.point = 1;
-        }
-        else
-        {
-            transformAdjustment.ControlScheme = 0;
-        }
-        Debug.Log("changed position: " +  transformAdjustment.ControlScheme);
+        // else
+        // {
+        //     transformAdjustment.ControlScheme = 0;
+        // }
+        // Debug.Log("changed position: " +  transformAdjustment.ControlScheme);
      
         Debug.Log("A CLICKED!!!!");
     }
@@ -418,29 +418,29 @@ public class UserInput : MonoBehaviour
 
     private void OnYClick(InputAction.CallbackContext value)
     {
-        // if(togglesecondarDrone)
+        if(togglesecondarDrone)
+        {
+            transformAdjustment.toggleFollow = !transformAdjustment.toggleFollow; 
+            // enable the adjustment of the secondary drones offset parameters
+            if (transformAdjustment.toggleFollow)
+            {
+                Debug.Log("Drone: following!");
+            }
+            else
+            {
+                Debug.Log("Drone: NOT following!");
+            }
+        }
+        // transformAdjustment.toggleFollow = !transformAdjustment.toggleFollow; 
+        // // enable the adjustment of the secondary drones offset parameters
+        // if (transformAdjustment.toggleFollow)
         // {
-        //     transformAdjustment.toggleFollow = !transformAdjustment.toggleFollow; 
-        //     // enable the adjustment of the secondary drones offset parameters
-        //     if (transformAdjustment.toggleFollow)
-        //     {
-        //         Debug.Log("Drone: following!");
-        //     }
-        //     else
-        //     {
-        //         Debug.Log("Drone: NOT following!");
-        //     }
+        //     Debug.Log("Drone: following!");
         // }
-        transformAdjustment.toggleFollow = !transformAdjustment.toggleFollow; 
-        // enable the adjustment of the secondary drones offset parameters
-        if (transformAdjustment.toggleFollow)
-        {
-            Debug.Log("Drone: following!");
-        }
-        else
-        {
-            Debug.Log("Drone: NOT following!");
-        }
+        // else
+        // {
+        //     Debug.Log("Drone: NOT following!");
+        // }
         Debug.Log("Y CLICKED!!!!");
     }
 }
