@@ -207,9 +207,11 @@ public class MissionManager : MonoBehaviour
             {
                 Debug.Log("grid 1");
                 //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
-                performanceCleaning.width = 10;
-                performanceCleaning.height = 10;
-                grid.transform.position = new Vector3(395,116,638);
+                performanceCleaning.width = 30;
+                performanceCleaning.height = 20;
+                //grid.transform.position = new Vector3(395,116,638);
+                //grid.transform.rotation = Quaternion.Euler(90,180,0);
+                grid.transform.position = new Vector3(399.839996f,131.279999f,638f);
                 grid.transform.rotation = Quaternion.Euler(90,180,0);
             }
             else
@@ -217,8 +219,8 @@ public class MissionManager : MonoBehaviour
                 Debug.Log("grid 2");
                 performanceCleaning.width = 30;
                 performanceCleaning.height = 5;
-                grid.transform.position = new Vector3(400,116,638);
-                grid.transform.rotation = Quaternion.Euler(1200,180,0);
+                grid.transform.position = new Vector3(397.26001f,116.07f,638.130005f);
+                grid.transform.rotation = Quaternion.Euler(35,0,0);
             }
             // clear old grid
             //performanceCleaning.ClearGeneratedGrid();
@@ -231,6 +233,36 @@ public class MissionManager : MonoBehaviour
         // make the mission time, two timers, first for inflight 
 
 
+    }
+
+    private void IDgenerator()
+    {   
+        int first;
+        int second;
+        bool id = true;
+        bool check = true;
+        while(id)
+        {
+           
+            if (check) // Check if the number hasn't been used
+            {
+                check = false;
+                first = Random.Range(10,100);
+                second = Random.Range(10,100);
+            }
+            if(Input.GetKeyDown(KeyCode.A))
+            {
+                id = false;
+            }
+            if(Input.GetKeyDown(KeyCode.D))
+            {
+                check = true;
+            }
+        }
+
+        string Id_name = first + second;
+        Debug.Log("ID: " + Id_name);
+        name = Id_name;
     }
 
     private void RunTutorial()
@@ -448,6 +480,8 @@ public class MissionManager : MonoBehaviour
         dataCollectionIntance.ClearDataList();
         raycastCounter.ClearhitRecords();
         performanceCleaning.ClearGridData();
+
+        // add count of how many resets and i which mission
     }
 
 
