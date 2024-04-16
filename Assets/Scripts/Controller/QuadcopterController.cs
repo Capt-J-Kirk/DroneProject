@@ -17,8 +17,8 @@ public class QuadcopterController: MonoBehaviour
 
     // Max angle
     public float maxYaw = 20.0f;
-    public float maxRoll = 10.0f;
-    public float maxPitch = 10.0f; 
+    public float maxRoll = 5.0f;
+    public float maxPitch = 5.0f; 
 
     // Max velocity
     private float maxVelYaw = 100.0f;
