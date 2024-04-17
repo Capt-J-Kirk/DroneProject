@@ -13,7 +13,8 @@ public class GridManager : MonoBehaviour
     public int height = 10;
     public float boxSize = 0.1f;
 
-
+    public GameObject grid1;
+    public GameObject grid2;
     
     // filename data !
     public string type;
@@ -84,6 +85,8 @@ public class GridManager : MonoBehaviour
 
         allGrids.Add(BoxList);
     }
+
+    
     public void SaveToCSV()
     {
         StringBuilder csvBuilder = new StringBuilder();
@@ -138,6 +141,45 @@ public class GridManager : MonoBehaviour
     }
 
 
+      // This method will repopulate the BoxList with BoxData components from existing grid children
+    public void PopulateBoxListFromExistingGrid()
+    {
+        // Clear the existing list to avoid duplicates
+        BoxList.Clear();
+
+        // Iterate through all children of the 'Grid' GameObject (this.transform assumes this script is attached to 'Grid')
+
+        // make a check to select which grid should be loaded
+
+        if(gridLocation = "grid1")
+        {
+            foreach (Transform child in grid1.transform)
+            {
+                // Check if the child has a BoxData component
+                BoxData boxData = child.GetComponent<BoxData>();
+                if (boxData != null)
+                {
+                    // Add the BoxData component to the BoxList
+                    BoxList.Add(boxData);
+                }
+            }
+        }  
+        else
+        {
+            foreach (Transform child in grid2.transform)
+            {
+                // Check if the child has a BoxData component
+                BoxData boxData = child.GetComponent<BoxData>();
+                if (boxData != null)
+                {
+                    // Add the BoxData component to the BoxList
+                    BoxList.Add(boxData);
+                }
+            }
+        }
+
+   
+    }
     // public void SaveToCSV()
     // {
     //     StringBuilder csvBuilder = new StringBuilder();
