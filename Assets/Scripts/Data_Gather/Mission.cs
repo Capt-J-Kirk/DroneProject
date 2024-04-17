@@ -130,6 +130,8 @@ public class MissionManager : MonoBehaviour
     private int second = 0;
     bool selectVALIDCombo = true;
 
+    bool testtest = true;
+
     void Start()
     {
         //performanceCleaning.GenerateGrid();
@@ -314,7 +316,20 @@ public class MissionManager : MonoBehaviour
                 manualMenu = !manualMenu;
                 Menu.SetActive(manualMenu);
             }
+            Debug.Log("grid 1");
+            //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
+            performanceCleaning.width = 30;
+            performanceCleaning.height = 20;
+            //grid.transform.position = new Vector3(395,116,638);
+            //grid.transform.rotation = Quaternion.Euler(90,180,0);
+            grid.transform.position = new Vector3(399.839996f,131.279999f,638f);
+            grid.transform.rotation = Quaternion.Euler(90,180,0);
 
+            if(testtest)
+            {
+                performanceCleaning.GenerateGrid();
+                testtest = false;
+            }
             
             if(Input.GetKeyDown(KeyCode.G))
             {
