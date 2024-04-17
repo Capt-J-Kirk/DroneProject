@@ -658,7 +658,7 @@ public class MissionManager : MonoBehaviour
 
     void PerformanceUpdate()
     {
-        if(inCleaning)
+        if(inCleaning && userInput.isSpraying)
         {
             //Debug.Log("performanceCleaning called");
             //performanceCleaning.UpdateBoxValues();
