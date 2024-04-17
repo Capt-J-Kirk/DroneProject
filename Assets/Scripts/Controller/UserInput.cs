@@ -111,10 +111,12 @@ public class UserInput : MonoBehaviour
             // Right trigger (spray)
             inputXRI.XRIRightHandInteraction.Activate.performed += OnSprayPerformed;
             inputXRI.XRIRightHandInteraction.Activate.canceled += OnSprayCancelled;
+            // Righthand
             inputXRI.XRIRightHandInteraction.A.performed += OnAClick;
-            inputXRI.XRIRightHandInteraction.A.performed += OnBClick;
-            inputXRI.XRIRightHandInteraction.A.performed += OnXClick;
-            inputXRI.XRIRightHandInteraction.A.performed += OnYClick;
+            inputXRI.XRIRightHandInteraction.B.performed += OnBClick;
+            // Lefthand
+            inputXRI.XRILeftHandInteraction.X.performed += OnXClick;
+            inputXRI.XRILeftHandInteraction.Y.performed += OnYClick;
 
         }
 
