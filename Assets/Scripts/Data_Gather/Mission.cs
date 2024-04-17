@@ -277,6 +277,22 @@ public class MissionManager : MonoBehaviour
             }
         }
         
+
+        if(Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            missionCombination = 1;
+            LoadMission();
+        }
+        if(Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            missionCombination = 5;
+            LoadMission();
+        }
+        if(Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            missionCombination = 9;
+            LoadMission();
+        }
         
         if(runDebugging)
         {
