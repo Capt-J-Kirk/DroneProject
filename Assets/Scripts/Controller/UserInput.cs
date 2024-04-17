@@ -77,7 +77,8 @@ public class UserInput : MonoBehaviour
     {
         inputDPad = new DPad_Control();
         inputXRI = new XRI_Control();
-
+        var main = droneSpray.main;
+        main.loop = true;
         //GCInstance = this;
      
     }
@@ -108,8 +109,8 @@ public class UserInput : MonoBehaviour
             inputXRI.XRIRightHandLocomotion.Move.performed += OnPitchRollPerformed;
             inputXRI.XRIRightHandLocomotion.Move.canceled += OnPitchRollCancelled;
             // Right trigger (spray)
-            //inputXRI.XRIRightHandInteraction.Activate.performed += OnSprayPerformed;
-            //inputXRI.XRIRightHandInteraction.Activate.canceled += OnSprayCancelled;
+            inputXRI.XRIRightHandInteraction.Activate.performed += OnSprayPerformed;
+            inputXRI.XRIRightHandInteraction.Activate.canceled += OnSprayCancelled;
             inputXRI.XRIRightHandInteraction.A.performed += OnAClick;
             inputXRI.XRIRightHandInteraction.A.performed += OnBClick;
             inputXRI.XRIRightHandInteraction.A.performed += OnXClick;
@@ -145,8 +146,8 @@ public class UserInput : MonoBehaviour
             inputXRI.XRIRightHandLocomotion.Move.performed -= OnPitchRollPerformed;
             inputXRI.XRIRightHandLocomotion.Move.canceled -= OnPitchRollCancelled;
             // Right trigger (spray)
-            //inputXRI.XRIRightHandInteraction.Activate.performed -= OnSprayPerformed;
-            //inputXRI.XRIRightHandInteraction.Activate.canceled -= OnSprayCancelled;
+            inputXRI.XRIRightHandInteraction.Activate.performed -= OnSprayPerformed;
+            inputXRI.XRIRightHandInteraction.Activate.canceled -= OnSprayCancelled;
         }
 
     }
@@ -442,5 +443,23 @@ public class UserInput : MonoBehaviour
         //     Debug.Log("Drone: NOT following!");
         // }
         Debug.Log("Y CLICKED!!!!");
+    }
+    
+    private void OnSprayPerformed(InputAction.CallbackContext value)
+    {
+        if (!droneSpray.isPlaying)
+        {
+            droneSpray.Play();
+            isSpraying = true;
+        }
+        else
+        {
+            droneSpray.Stop();
+            isSpraying = false;
+        }
+    }
+    private void OnSprayCancelled(InputAction.CallbackContext value)
+    {
+
     }
 }

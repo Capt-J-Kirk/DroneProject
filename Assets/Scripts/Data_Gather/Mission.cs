@@ -126,6 +126,8 @@ public class MissionManager : MonoBehaviour
     private float Tutorial_Timer = 120;
     private float Inflight_Timer = 0.0f;
 
+    private int first = 0;
+    private int second = 0;
     bool selectVALIDCombo = true;
 
     void Start()
@@ -156,7 +158,7 @@ public class MissionManager : MonoBehaviour
         // Mission
         // Debug
 
-        if(runMenu)
+        if(false)//runMenu)
         {
             Menu.SetActive(true);
             bool waithere = true;  
@@ -220,7 +222,7 @@ public class MissionManager : MonoBehaviour
                 runMenu = true;
                 // stop running the tutorial
                 runTutorial = false;  
-                runDebugging.Log("Times up!");
+                Debug.Log("Times up!");
                  
             }
         }
@@ -372,7 +374,7 @@ public class MissionManager : MonoBehaviour
         }
         
 
-        string Id_name = first + second;
+        string Id_name = first.ToString() + second.ToString();
         Debug.Log("ID: " + Id_name);
         name = Id_name;
     }
