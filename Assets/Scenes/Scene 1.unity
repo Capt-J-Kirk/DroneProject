@@ -6240,9 +6240,9 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -6327,22 +6327,19 @@ MonoBehaviour:
   testObject: {fileID: 0}
   spawn: {fileID: 735619031658442214, guid: a32bdc18a64ff1743a56dcf19653dfd3, type: 3}
   spawner: {fileID: 1763392098}
+  myDrone: {fileID: 0}
   raySenderObject: {fileID: 6246101043462387841}
   rayFrequency: 0.1
   rayCount: 18
   beamRadius: 0.25
-  brush:
-    brushTexture: {fileID: 0}
-    brushNormalTexture: {fileID: 0}
-    brushHeightTexture: {fileID: 0}
-    brushScale: 0
-    rotateAngle: 0
-    brushNormalBlend: 0
-    brushHeightBlend: 0
-    brushColor: {r: 0, g: 0, b: 0, a: 0}
-    colorBlendType: 0
-    normalBlendType: 0
-    heightBlendType: 0
+  rayCasters: []
+  targetTag: WindTurbine
+  brush: {brushTexture: {fileID: 0}, brushNormalTexture: {fileID: 0}, brushHeightTexture: {fileID: 0}, brushScale: 0, rotateAngle: 0, brushNormalBlend: 0, brushHeightBlend: 0, brushColor:
+      r: 0
+      g: 0
+      b: 0
+      a: 0
+, colorBlendType: 0, normalBlendType: 0, heightBlendType: 0}
 --- !u!1 &482619534
 GameObject:
   m_ObjectHideFlags: 0
@@ -13116,22 +13113,19 @@ MonoBehaviour:
   testObject: {fileID: 0}
   spawn: {fileID: 735619031658442214, guid: a32bdc18a64ff1743a56dcf19653dfd3, type: 3}
   spawner: {fileID: 1763392098}
+  myDrone: {fileID: 0}
   raySenderObject: {fileID: 6246101043462387841}
   rayFrequency: 0.1
   rayCount: 18
   beamRadius: 0.25
-  brush:
-    brushTexture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
-    brushNormalTexture: {fileID: 2800000, guid: 945b831b22eb06945bf77e00f16ff51a, type: 3}
-    brushHeightTexture: {fileID: 0}
-    brushScale: 0.05
-    rotateAngle: 0
-    brushNormalBlend: 0.1
-    brushHeightBlend: 0
-    brushColor: {r: 1, g: 1, b: 1, a: 0.1254902}
-    colorBlendType: 0
-    normalBlendType: 0
-    heightBlendType: 0
+  rayCasters: []
+  targetTag: WindTurbine
+  brush: {brushTexture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}, brushNormalTexture: {fileID: 2800000, guid: 945b831b22eb06945bf77e00f16ff51a, type: 3}, brushHeightTexture: {fileID: 0}, brushScale: 0.05, rotateAngle: 0, brushNormalBlend: 0.1, brushHeightBlend: 0, brushColor:
+      r: 1
+      g: 1
+      b: 1
+      a: 0.1254902
+, colorBlendType: 0, normalBlendType: 0, heightBlendType: 0}
 --- !u!114 &1015122128
 MonoBehaviour:
   m_ObjectHideFlags: 0

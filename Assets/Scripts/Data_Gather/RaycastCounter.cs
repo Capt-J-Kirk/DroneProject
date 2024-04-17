@@ -155,7 +155,7 @@ public class RaycastCounter : MonoBehaviour
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
         //Debug.Log("mouse" + Input.mousePosition);
-        Debug.DrawRay(camera.transform.position, camera.transform.forward*30, Color.green);
+        Debug.DrawRay(camera.transform.position, camera.transform.forward*10, Color.green);
         // "TrackableObject"
         if (Physics.Raycast(ray, out hit))
         {
