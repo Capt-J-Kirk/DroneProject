@@ -95,8 +95,7 @@ public class MissionManager : MonoBehaviour
     public int missionCombination = 0;
     
     public int Tutorial = 0;
-    public bool runTutorial = false;
-
+    
     public GameObject Menu;
 
     public TMP_Text username;
@@ -111,12 +110,21 @@ public class MissionManager : MonoBehaviour
     private float timer = 0.0f;
 
     // target time, 3 minutes = 180 sec
-    private float targetTime = 10.0f; 
+    private float targetTime = 90.0f; 
 
 
     private bool manualMenu = false;
     private bool test22 = false;
 
+    private bool runMenu = true;
+    public bool runTutorial = false;
+    private bool runMission = false;
+    private bool runDebugging = false;
+    bool id = true;
+
+    // 2 minuts per tutorial run
+    private float Tutorial_Timer = 120;
+    private float Inflight_Timer = 0.0f;
     void Start()
     {
         //performanceCleaning.GenerateGrid();
@@ -136,152 +144,232 @@ public class MissionManager : MonoBehaviour
         mission_combi.text = "Combi: " + "\n" + missionCombination;
         scheme.text = "Scheme active: " + "\n" + controlScheme;
 
-        if(false)
+        // update timer
+        timer += Time.fixedDeltaTime;
+
+        // Three states, RUN:
+        // Tutorial
+        // Mission
+        // Debug
+
+        if(runMenu)
         {
-            // then not debugging, set true
-        
-            if (runTutorial)
+            Menu.SetActive(true);
+            bool waithere = true;  
+            if(id)
             {
-               
-                RunTutorial();
-                
-                if(timer >= targetTime )
+                IDgenerator();
+            }
+            if(waithere && !id)
+            {
+                // 
+               if(Input.GetKeyDown(KeyCode.Q))
+               {
+                    runTutorial = true;
+                    runMission = false;
+                    runDebugging = false;
+                    Debug.Log("runTutorial");
+               }
+               if(Input.GetKeyDown(KeyCode.W))
+               {
+                    runTutorial = false;
+                    runMission = true;
+                    runDebugging = false;
+                    Debug.Log("runMission");
+                    waithere = false;
+               }
+               if(Input.GetKeyDown(KeyCode.E))
+               {
+                    runTutorial = false;
+                    runMission = false;
+                    runDebugging = true;
+                    Debug.Log("runDebugging");
+                    waithere = false;
+               }
+
+
+                if(runTutorial)
                 {
-                    // stop running the tutorial
-                    runTutorial = false;  
-                    Menu.SetActive(true); 
+                   waithere = RunTutorial();
+    
+                }
+
+
+            }
+            if(!waithere)
+            {
+                runMenu = false;
+                Menu.SetActive(false);
+            }
+            
+        }
+        
+           
+        
+        if (runTutorial)
+        {   // parse this to a text box
+            float timeLeft = Tutorial_Timer-timer;
+
+            if(timer >= Tutorial_Timer)
+            {
+                // set the correct booleans for toggling the menu to be active again
+                runMenu = true;
+                // stop running the tutorial
+                runTutorial = false;  
+                runDebugging.Log("Times up!");
+                 
+            }
+        }
+
+        if(runMission)
+        {
+            // select mission combination
+            if (selectCombination)
+            {
+                SelectMission();
+                startMission = true;
+                selectCombination = false;
+            }
+
+            // load that combination in
+            if (startMission)
+            {
+                LoadMission();
+                startMission = false;
+            }
+            
+           
+            // Update the inflight_timer aslong inflight
+            if(inFlight)
+            {
+                Inflight_Timer = timer;
+            }
+                    
+            if(inCleaning)
+            {
+                // give the user xxx time to wash the blade.
+                if(timer >= (Inflight_Timer + targetTime))
+                {
+                    OnTimeOut();
+                    selectCombination = true;
                 }
             }
 
-
-            if (selectCombination && !runTutorial)
-            {
-                SelectMission();
-            }
-
-            // then the system have found the next combination, the user cliks on startMission
-            // run through once
-            if (startMission && !runTutorial)
-            {
-                LoadMission();
-            }
-            
-            // start the timer, and finish the mission then it runs out
-            timer += Time.fixedDeltaTime;
-
-            if(timer >= targetTime && test)
-            {
-               OnTimeOut();
-            }
-            
             // resets the current mission 
             if(Input.GetKeyDown(KeyCode.R))
             {
                 ResetMission();
             }
         }
-
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            // Debugging 
-            dataCollectionIntance.SaveDataToCSV();
-            dataCollectionIntance.ClearDataList();
-            raycastCounter.SaveHitRecords();
-            raycastCounter.ClearhitRecords();
-            performanceCleaning.SaveToCSV();
-            performanceCleaning.ClearGridData();
-        }
-
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            manualMenu = !manualMenu;
-            Menu.SetActive(manualMenu);
-        }
-
         
-        if(Input.GetKeyDown(KeyCode.G))
+        
+        if(runDebugging)
         {
-            test22 = !test22;
-            performanceCleaning.ClearGeneratedGrid();
-            if(test22)
+            if(Input.GetKeyDown(KeyCode.A))
             {
-                Debug.Log("grid 1");
-                //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
-                performanceCleaning.width = 30;
-                performanceCleaning.height = 20;
-                //grid.transform.position = new Vector3(395,116,638);
-                //grid.transform.rotation = Quaternion.Euler(90,180,0);
-                grid.transform.position = new Vector3(399.839996f,131.279999f,638f);
-                grid.transform.rotation = Quaternion.Euler(90,180,0);
+                // Debugging 
+                dataCollectionIntance.SaveDataToCSV();
+                dataCollectionIntance.ClearDataList();
+                raycastCounter.SaveHitRecords();
+                raycastCounter.ClearhitRecords();
+                performanceCleaning.SaveToCSV();
+                performanceCleaning.ClearGridData();
             }
-            else
+
+            if(Input.GetKeyDown(KeyCode.M))
             {
-                Debug.Log("grid 2");
-                performanceCleaning.width = 30;
-                performanceCleaning.height = 5;
-                grid.transform.position = new Vector3(397.26001f,116.07f,638.130005f);
-                grid.transform.rotation = Quaternion.Euler(35,0,0);
+                manualMenu = !manualMenu;
+                Menu.SetActive(manualMenu);
             }
-            // clear old grid
-            //performanceCleaning.ClearGeneratedGrid();
-            // generate a new grid
-            performanceCleaning.GenerateGrid();
+
+            
+            if(Input.GetKeyDown(KeyCode.G))
+            {
+                test22 = !test22;
+                performanceCleaning.ClearGeneratedGrid();
+                if(test22)
+                {
+                    Debug.Log("grid 1");
+                    //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
+                    performanceCleaning.width = 30;
+                    performanceCleaning.height = 20;
+                    //grid.transform.position = new Vector3(395,116,638);
+                    //grid.transform.rotation = Quaternion.Euler(90,180,0);
+                    grid.transform.position = new Vector3(399.839996f,131.279999f,638f);
+                    grid.transform.rotation = Quaternion.Euler(90,180,0);
+                }
+                else
+                {
+                    Debug.Log("grid 2");
+                    performanceCleaning.width = 30;
+                    performanceCleaning.height = 5;
+                    grid.transform.position = new Vector3(397.26001f,116.07f,638.130005f);
+                    grid.transform.rotation = Quaternion.Euler(35,0,0);
+                }
+                // clear old grid
+                //performanceCleaning.ClearGeneratedGrid();
+                // generate a new grid
+                performanceCleaning.GenerateGrid();
+            }
         }
+        
 
 
 
         // make the mission time, two timers, first for inflight 
-
+        
 
     }
 
     private void IDgenerator()
     {   
-        int first;
-        int second;
-        bool id = true;
         bool check = true;
-        while(id)
+       
+        if (check) // Check if the number hasn't been used
         {
-           
-            if (check) // Check if the number hasn't been used
-            {
-                check = false;
-                first = Random.Range(10,100);
-                second = Random.Range(10,100);
-            }
-            if(Input.GetKeyDown(KeyCode.A))
-            {
-                id = false;
-            }
-            if(Input.GetKeyDown(KeyCode.D))
-            {
-                check = true;
-            }
+            check = false;
+            first = Random.Range(10,100);
+            second = Random.Range(10,100);
         }
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            id = false;
+        }
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            check = true;
+        }
+        
 
         string Id_name = first + second;
         Debug.Log("ID: " + Id_name);
         name = Id_name;
     }
 
-    private void RunTutorial()
+    private bool RunTutorial()
     {
         Menu.SetActive(false);
-        if(Tutorial == 1)
+        if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             userInput.ManualControl = true;
             objectTransform.ControlScheme = 0;
+            return false;
         }
-        if(Tutorial == 2)
+        if(Input.GetKeyDown(KeyCode.Alpha2))
         {
             userInput.ManualControl = false;
             objectTransform.ControlScheme = 1;
+            return false;
         }
-        if(Tutorial == 3)
+        if(Input.GetKeyDown(KeyCode.Alpha3))
         {
             userInput.ManualControl = false;
             objectTransform.ControlScheme = 2;
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
