@@ -296,7 +296,7 @@ public class MissionManager : MonoBehaviour
             LoadMission();
         }
         
-        if(runDebugging)
+        if(true)//runDebugging)
         {
             if(Input.GetKeyDown(KeyCode.A))
             {
