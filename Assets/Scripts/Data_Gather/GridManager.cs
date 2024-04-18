@@ -151,7 +151,7 @@ public class GridManager : MonoBehaviour
 
         // make a check to select which grid should be loaded
 
-        if(gridLocation = "grid1")
+        if(gridLocation == "grid1")
         {
             foreach (Transform child in grid1.transform)
             {

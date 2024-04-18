@@ -58,9 +58,14 @@ public class MissionManager : MonoBehaviour
     // grid gameobject here
     public GameObject grid;
 
+    public GameObject grid1;
+    public GameObject grid2;
+
     // screen 
     public GameObject  TwoScreen;
     public GameObject  OneScreen;
+
+    public GameObject Windmill;
 
     // init the datacollector
     private DataCollector dataCollectionIntance = new DataCollector();
@@ -446,41 +451,43 @@ public class MissionManager : MonoBehaviour
         // set start pose of both drones
         if(startPose == "start1")
         {
-            main_drone.transform.position = new Vector3(100,80,110);
-            main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-            sec_drone.transform.position = new Vector3(100,80,100);
-            sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            // main_drone.transform.position = new Vector3(100,80,110);
+            // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            // sec_drone.transform.position = new Vector3(100,80,100);
+            // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            Windmill.transform.rotation = Quaternion.Euler(0,-90,0);
             
         }
         if(startPose == "start2")
         {
-            main_drone.transform.position = new Vector3(100,80,110);
-            main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-            sec_drone.transform.position = new Vector3(100,80,100);
-            sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            // main_drone.transform.position = new Vector3(100,80,110);
+            // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            // sec_drone.transform.position = new Vector3(100,80,100);
+            // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            Windmill.transform.rotation = Quaternion.Euler(0,120,0);
         }
 
         // set grid location
         // grid should be pre-generated and set active 
         if(gridLocation == "grid1")
         {
-            //grid1.SetActive(true);
-            //grid2.SetActive(false);
+            grid1.SetActive(true);
+            grid2.SetActive(false);
 
             //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
-            performanceCleaning.width = 10;
-            performanceCleaning.height = 10;
-            grid.transform.position = new Vector3(395,116,638);
-            grid.transform.rotation = Quaternion.Euler(90,180,0);
+            // performanceCleaning.width = 10;
+            // performanceCleaning.height = 10;
+            // grid.transform.position = new Vector3(395,116,638);
+            // grid.transform.rotation = Quaternion.Euler(90,180,0);
         }
         if(gridLocation == "grid2")
         {
-            //grid1.SetActive(false);
-            //grid2.SetActive(true);
-            performanceCleaning.width = 200;
-            performanceCleaning.height = 10;
-            grid.transform.position = new Vector3(395,116,638);
-            grid.transform.rotation = Quaternion.Euler(90,180,0);
+            grid1.SetActive(false);
+            grid2.SetActive(true);
+            // performanceCleaning.width = 200;
+            // performanceCleaning.height = 10;
+            // grid.transform.position = new Vector3(395,116,638);
+            // grid.transform.rotation = Quaternion.Euler(90,180,0);
         }
         // clear old grid
         //performanceCleaning.ClearGeneratedGrid();
