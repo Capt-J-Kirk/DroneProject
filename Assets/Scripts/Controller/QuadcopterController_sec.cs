@@ -495,12 +495,12 @@ public class QuadcopterController_sec: MonoBehaviour
 
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
-        rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
+        //rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
 
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
-        rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
+        //rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
