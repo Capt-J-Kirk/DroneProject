@@ -613,8 +613,8 @@ public class ObjectTransform: MonoBehaviour
     {
         translationVector = translation;
         rotationVector = rotation;
-    }// Apply to drone controller
-        ApplyNewPose(targetPosition, targetOrientation);
+    }
+    
     public void SetUserInput(float roll, float pitch, float yaw, float throttle)
     {
         // not actually used for such, but remapped
