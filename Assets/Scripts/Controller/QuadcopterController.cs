@@ -385,6 +385,9 @@ public class QuadcopterController: MonoBehaviour
     void UpdatePID()
     {
     
+        // visual show pitch and roll rotation
+        rb.transform.rotation = Quaternion.Euler(desiredEulerAngles.x, 0, desiredEulerAngles.z);
+
         // get time since last update 
         float deltaTime = Time.fixedDeltaTime;
 
