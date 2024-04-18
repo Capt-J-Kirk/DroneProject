@@ -202,7 +202,9 @@ public class QuadcopterController_sec: MonoBehaviour
     {
         // Sensitivity factors (determine how much each input affects the pose)
         float pitchSensitivity = 5.0f;
-        float rollSensitivity = 5.0f;
+        float pitch_x = 2.0f;
+        float rollSensitivity = 10.0f;
+        float roll_z = 2.0f;
         float yawSensitivity = 5.0f;
         float altitudeSensitivity = 0.50f;
         float newPitch = 0;
@@ -270,14 +272,26 @@ public class QuadcopterController_sec: MonoBehaviour
         //Update desired orientation
         desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
 
-    
+        Vector3 currentDesiredPosition = desiredPosition;
+
+        // x
+        float newPositionChangeX = currentDesiredPosition.x + pitchChange * pitch_x;
+        // y
+        float newPositionChangeY = currentDesiredPosition.y * throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
+        // z 
+        float newPositionChangeZ = currentDesiredPosition.z * rollChange * roll_z;
+
+        //Vector3 newPositionChangeY = Vector3.up * throttleChange * altitudeSensitivity;
+        // Update desired position
+        //desiredPosition = currentDesiredPosition + newPositionChange;
+        desiredPosition = new Vector3(newPositionChangeX, newPositionChangeY, newPositionChangeZ);
         // current position should be the desired position, as its the starting position. 
 
-        Vector3 currentDesiredPosition = desiredPosition;
-        Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
+        // Vector3 currentDesiredPosition = desiredPosition;
+        // Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
 
-        // Update desired position
-        desiredPosition = currentDesiredPosition + newPositionChange;
+        // // Update desired position
+        // desiredPosition = currentDesiredPosition + newPositionChange;
 
     }
 
@@ -417,7 +431,26 @@ public class QuadcopterController_sec: MonoBehaviour
             Debug.Log("currentAngularVelocity: " + currentAngularVelocity);
             //Debug.DrawRay(transform.position, rb.angularVelocity * 200, Color.black);
         }
-       
+        
+        // Object avoidance 
+        float minDistance = 0.5f;
+        if (distanceToObject < minDistance)
+        {
+            // Calculate the direction from the object to the GameObject
+            Vector3 directionFromObject = currentPosition - closestPoint;
+            directionFromObject.Normalize();  // Normalize the direction vector
+
+            // Set the new desired position to maintain at least minDistance
+            desiredPosition = closestPoint + directionFromObject * minDistance;
+        }
+
+
+        // calculate the velocity 
+        Vector3 vectorToTarget = desiredPosition - currentPosition;
+        Vector3 velocity = vectorToTarget / deltaTime;
+
+        // get current Velocity 
+        Vector3 currentVelocity = rb.velocity;
 
         // PID control on the angular velocity error (closed feedback loop)
 
@@ -426,9 +459,9 @@ public class QuadcopterController_sec: MonoBehaviour
         float yawControlInput = yawPIDQuaternion.UpdateAA(angularVelocityError.y, currentAngularVelocity.y, deltaTime);
     
        
-        float altitudeError = AltitudePID.UpdateAA(desiredPosition.y, currentPosition.y, deltaTime);
-        float xControlInput = xPID.UpdateAA(desiredPosition.x, currentPosition.x, deltaTime);
-        float zControlInput = zPID.UpdateAA(desiredPosition.z, currentPosition.z, deltaTime);
+        float altitudeError = AltitudePID.UpdateAA(velocity.y, currentVelocity.y, deltaTime);
+        float xControlInput = xPID.UpdateAA(velocity.x, currentVelocity.x, deltaTime);
+        float zControlInput = zPID.UpdateAA(velocity.z, currentVelocity.z, deltaTime);
         // Gravity compensation 
         float altitudeControlInput = altitudeError + gravityComp;
 

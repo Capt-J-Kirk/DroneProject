@@ -299,6 +299,8 @@ public class QuadcopterController: MonoBehaviour
             // Calculate the distance from this GameObject's position to the closest point
             distanceToObject = Vector3.Distance(transform.position, closestPoint);
 
+
+
             // Update the state based on the distance
             // if (distanceToObject < 1f)
             // {
@@ -430,6 +432,18 @@ public class QuadcopterController: MonoBehaviour
             // //Debug.DrawRay(transform.position, angularVelocityError * 200, Color.yellow);
             // Debug.Log("currentAngularVelocity: " + currentAngularVelocity);
             // //Debug.DrawRay(transform.position, rb.angularVelocity * 200, Color.black);
+        }
+
+        // Object avoidance 
+        float minDistance = 0.5f;
+        if (distanceToObject < minDistance)
+        {
+            // Calculate the direction from the object to the GameObject
+            Vector3 directionFromObject = currentPosition - closestPoint;
+            directionFromObject.Normalize();  // Normalize the direction vector
+
+            // Set the new desired position to maintain at least minDistance
+            desiredPosition = closestPoint + directionFromObject * minDistance;
         }
 
 
