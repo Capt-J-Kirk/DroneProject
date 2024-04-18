@@ -38,7 +38,7 @@ public class RaycastCounter : MonoBehaviour
 
     private string filePath;
 
-    public string type;
+    public int type;
     public string name;
     public string controlScheme;
     public string startPose;
@@ -293,7 +293,7 @@ public class RaycastCounter : MonoBehaviour
             return;
         }
 
-        string fileNamePart = ("HitTracking" + "_" + type + "_" + name + "_" + controlScheme + "_" + startPose + "_" + gridLocation + "_" + userInterface); // Customize as needed
+        string fileNamePart = ("HitTracking" + "_" + type.ToString() + "_" + name + "_" + controlScheme + "_" + startPose + "_" + gridLocation + "_" + userInterface); // Customize as needed
         string fileName = $"{fileNamePart}_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
 

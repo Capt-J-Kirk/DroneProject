@@ -449,8 +449,9 @@ public class MissionManager : MonoBehaviour
         ALLCombinations(missionCombination);
         Debug.Log("Mission combination: "+ missionCombination);
 
+        dataCollectionIntance.type = missionCombination;
         // parse the combination to raycaster
-        raycastCounter.type = mission;
+        raycastCounter.type = missionCombination;
         raycastCounter.name = name;
         raycastCounter.controlScheme = controlScheme;
         raycastCounter.startPose = startPose;
@@ -458,7 +459,7 @@ public class MissionManager : MonoBehaviour
         raycastCounter.userInterface = userInterface;
 
         // parse the combination to performance
-        performanceCleaning.type = mission;
+        performanceCleaning.type = missionCombination;
         performanceCleaning.name = name;
         performanceCleaning.controlScheme = controlScheme;
         performanceCleaning.startPose = startPose;

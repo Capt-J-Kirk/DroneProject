@@ -7,7 +7,7 @@ using UnityEngine;
 public class DataCollector : MonoBehaviour
 {
     // start of data collection
-    public string type = "controller";
+    public int type = 0;
     public bool startDataCollection = false;
 
     // allocation of each list, limit memory reallocation during testing. 
@@ -55,7 +55,7 @@ public class DataCollector : MonoBehaviour
             return;
         }
 
-        string fileNamePart = type + "_" + dataList[0].name + "_" + dataList[0].controlScheme + "_" + dataList[0].startPose + "_" + dataList[0].gridLocation + "_" + dataList[0].userInterface; // Customize as needed
+        string fileNamePart = type.ToString() + "_" + dataList[0].name + "_" + dataList[0].controlScheme + "_" + dataList[0].startPose + "_" + dataList[0].gridLocation + "_" + dataList[0].userInterface; // Customize as needed
         string fileName = $"{fileNamePart}_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
 

@@ -17,7 +17,7 @@ public class GridManager : MonoBehaviour
     public GameObject grid2;
     
     // filename data !
-    public string type;
+    public int type;
     public string name;
     public string controlScheme;
     public string startPose;
@@ -129,7 +129,7 @@ public class GridManager : MonoBehaviour
             csvBuilder.AppendLine();
         }
 
-        string fileNamePart = ("performance" + "_" + type + "_" + name + "_" + controlScheme + "_" + startPose + "_" + gridLocation + "_" + userInterface); 
+        string fileNamePart = ("performance" + "_" + type.ToString() + "_" + name + "_" + controlScheme + "_" + startPose + "_" + gridLocation + "_" + userInterface); 
         string fileName = $"{fileNamePart}_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
 
