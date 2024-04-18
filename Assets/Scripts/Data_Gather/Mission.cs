@@ -142,7 +142,7 @@ public class MissionManager : MonoBehaviour
     void Start()
     {
         //performanceCleaning.GenerateGrid();
-        dataCollectionIntance.type = mission;
+        dataCollectionIntance.type = missionCombination;
         InvokeRepeating("DataUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("TrackingUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("PerformanceUpdate", 0.05f, 0.05f); // call 1/20 a sec 

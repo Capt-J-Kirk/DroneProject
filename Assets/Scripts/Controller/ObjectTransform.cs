@@ -65,7 +65,7 @@ public class ObjectTransform: MonoBehaviour
     private float minRadius = 2f;
     private float maxRadius = 8f;
 
-
+    private bool isReversing = false;
     private bool initStart = true;
     private float waypointTimer = 0.5f; // Time between waypoint changes
     private float timer; // Current timer
@@ -614,7 +614,7 @@ public class ObjectTransform: MonoBehaviour
         translationVector = translation;
         rotationVector = rotation;
     }
-    
+
     public void SetUserInput(float roll, float pitch, float yaw, float throttle)
     {
         // not actually used for such, but remapped
