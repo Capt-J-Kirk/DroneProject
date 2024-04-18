@@ -246,15 +246,24 @@ public class ObjectTransform: MonoBehaviour
         //float z = radius * Mathf.Cos(phi);
 
         // Addded Yaw orientation lock +- 45degs from lock point
-    
+
 
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
+        // possible add previous yaw, such it dosn't reset
         float newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
-        Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
+        //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
+
+        // face towards the main drone
+        Vector3 targetDirection = (new Vector3(0, 0, 0) - main_position).normalized;
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+        // Adding yaw adjustment 45-degree yaw
+        Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
+        Quaternion targetOrientation  = yawRotation * baseRotation;
+
         // Apply to drone controller
         ApplyNewPose(targetPosition, targetOrientation);
     }
