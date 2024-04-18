@@ -297,12 +297,12 @@ public class MissionManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Alpha8))
         {
-            missionCombination = 5;
+            missionCombination = 6;//5;
             LoadMission();
         }
         if(Input.GetKeyDown(KeyCode.Alpha9))
         {
-            missionCombination = 9;
+            missionCombination = 11;//9;
             LoadMission();
         }
         

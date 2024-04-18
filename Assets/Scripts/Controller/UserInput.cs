@@ -372,11 +372,15 @@ public class UserInput : MonoBehaviour
         // enable the adjustment of the secondary drones offset parameters
         if (togglesecondarDrone)
         {
-            if (transformAdjustment.ControlScheme == 2)
+            if (transformAdjustment.toggleFollow)
             {
-                transformAdjustment.changeInPosition = true;
+                if (transformAdjustment.ControlScheme == 2)
+                {
+                    transformAdjustment.changeInPosition = true;
+                }
+                Debug.Log("changed position: " +  transformAdjustment.changeInPosition);
             }
-            Debug.Log("changed position: " +  transformAdjustment.changeInPosition);
+            
         }
         // if (transformAdjustment.ControlScheme == 0)
         // {
