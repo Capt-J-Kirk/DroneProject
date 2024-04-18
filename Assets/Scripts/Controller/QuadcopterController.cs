@@ -34,6 +34,8 @@ public class QuadcopterController: MonoBehaviour
     private PIDController rollPIDQuaternion;
     private PIDController pitchPIDQuaternion;
     private PIDController yawPIDQuaternion;
+    private PIDController xPID;
+    private PIDController zPID;
 
     public UserInput inputController;
     
@@ -42,6 +44,8 @@ public class QuadcopterController: MonoBehaviour
     private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
     private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f;
     private float altitudeKp = 5.0f, altitudeKi = 0.3f, altitudeKd = 0.08f; 
+    private float xKp = 5.0f, xKi = 0.3f, xKd = 0.08f; 
+    private float zKp = 5.0f, zKi = 0.3f, zKd = 0.08f; 
     // // needs fine tuning! 
     // public float rollKp = 1.0f, rollKi = 0.1f, rollKd = 0.01f;
     // public float pitchKp = 1.0f, pitchKi = 0.1f, pitchKd = 0.01f;
@@ -76,6 +80,13 @@ public class QuadcopterController: MonoBehaviour
     // UserInterface's infobars ONE SCREEN 
     public TMP_Text ONE_t_main_dist;
     public Image ONE_i_main_dist;
+
+
+    // add blinking functionality
+    private bool shouldBlink = false;
+
+
+
 
 
     private void TestingDesiredPose()
@@ -121,7 +132,9 @@ public class QuadcopterController: MonoBehaviour
     {
         // Sensitivity factors (determine how much each input affects the pose)
         float pitchSensitivity = 10.0f;
+        float pitch_x = 2.0f;
         float rollSensitivity = 10.0f;
+        float roll_z = 2.0f;
         float yawSensitivity = 5.0f;
         float altitudeSensitivity = 0.50f;
         float newPitch = 0;
@@ -202,11 +215,18 @@ public class QuadcopterController: MonoBehaviour
         // current position should be the desired position, as its the starting position. 
 
         Vector3 currentDesiredPosition = desiredPosition;
-        Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
 
+        // x
+        float newPositionChangeX = currentDesiredPosition.x + pitchChange * pitch_x;
+        // y
+        float newPositionChangeY = currentDesiredPosition.y * throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
+        // z 
+        float newPositionChangeZ = currentDesiredPosition.z * rollChange * roll_z;
+
+        //Vector3 newPositionChangeY = Vector3.up * throttleChange * altitudeSensitivity;
         // Update desired position
-        desiredPosition = currentDesiredPosition + newPositionChange;
-
+        //desiredPosition = currentDesiredPosition + newPositionChange;
+        desiredPosition = new Vector3(newPositionChangeX, newPositionChangeY, newPositionChangeZ);
     }
 
     float WrapAngle(float angle)
@@ -225,6 +245,8 @@ public class QuadcopterController: MonoBehaviour
         
         // Initialize PID controllers for each axis
         AltitudePID =  new PIDController(altitudeKp, altitudeKi, altitudeKd);
+        xPID = new PIDController(xKp, xKi, xKd);
+        zPID = new PIDController(zKp, zKi, zKd);
 
         rollPIDQuaternion = new PIDController(rollKp, rollKi, rollKd);
         pitchPIDQuaternion = new PIDController(pitchKp, pitchKi, pitchKd);
@@ -237,7 +259,7 @@ public class QuadcopterController: MonoBehaviour
         rb.centerOfMass = Vector3.zero;
         rb.maxAngularVelocity = maxAngularVelocity;
         // starting baseAltitude;
-        desiredPosition.y = rb.transform.position.y;
+        desiredPosition = rb.transform.position;
         neutralOrientation = rb.transform.rotation;
         desiredOrientation = rb.transform.rotation;
         gravityComp = Mathf.Abs(Physics.gravity.y) * rb.mass;
@@ -278,30 +300,85 @@ public class QuadcopterController: MonoBehaviour
             distanceToObject = Vector3.Distance(transform.position, closestPoint);
 
             // Update the state based on the distance
-            if (distanceToObject < 1f)
+            // if (distanceToObject < 1f)
+            // {
+            //     TWO_t_main_dist.text = "Dist Extreme Close";
+            //     TWO_i_main_dist.color = Color.red;
+            //     ONE_t_main_dist.text = "Dist Extreme Close";
+            //     ONE_i_main_dist.color =  Color.red;
+            // }
+            // else if (distanceToObject < 3f)
+            // {
+            //     TWO_t_main_dist.text = "Dist Close";
+            //     TWO_i_main_dist.color = Color.yellow;
+            //     ONE_t_main_dist.text = "Dist Close";
+            //     ONE_i_main_dist.color =  Color.yellow;
+            // }
+            // else
+            // {
+            //     TWO_t_main_dist.text = "Dist safe";
+            //     TWO_i_main_dist.color = Color.green;
+            //     ONE_t_main_dist.text = "Dist safe";
+            //     ONE_i_main_dist.color =  Color.green;
+            // }
+            if (distanceToObject < 1.2f)
             {
+                shouldBlink = true;
+                StartBlinking(Color.red);
                 TWO_t_main_dist.text = "Dist Extreme Close";
-                TWO_i_main_dist.color = Color.red;
                 ONE_t_main_dist.text = "Dist Extreme Close";
-                ONE_i_main_dist.color =  Color.red;
             }
-            else if (distanceToObject < 3f)
+            else if (distanceToObject < 4f)
             {
+                shouldBlink = false;
+                StopBlinking();
                 TWO_t_main_dist.text = "Dist Close";
                 TWO_i_main_dist.color = Color.yellow;
                 ONE_t_main_dist.text = "Dist Close";
-                ONE_i_main_dist.color =  Color.yellow;
+                ONE_i_main_dist.color = Color.yellow;
             }
             else
             {
-                TWO_t_main_dist.text = "Dist safe";
+                shouldBlink = false;
+                StopBlinking();
+                TWO_t_main_dist.text = "Dist Safe";
                 TWO_i_main_dist.color = Color.green;
-                ONE_t_main_dist.text = "Dist safe";
-                ONE_i_main_dist.color =  Color.green;
+                ONE_t_main_dist.text = "Dist Safe";
+                ONE_i_main_dist.color = Color.green;
             }
+
 
         }
       
+    }
+
+    IEnumerator Blink(Color blinkColor)
+    {
+        while (shouldBlink)
+        {
+            TWO_i_main_dist.color = blinkColor;
+            ONE_i_main_dist.color = blinkColor;
+            yield return new WaitForSeconds(0.5f); // Blink interval
+            TWO_i_main_dist.color = Color.clear; // Choose the off color, e.g., clear or white
+            ONE_i_main_dist.color = Color.clear;
+            yield return new WaitForSeconds(0.5f);
+        }
+        // Reset color to current state
+        TWO_i_main_dist.color = blinkColor;
+        ONE_i_main_dist.color = blinkColor;
+    }
+
+    void StartBlinking(Color color)
+    {
+        StopCoroutine("Blink");
+        StartCoroutine(Blink(color));
+    }
+
+    void StopBlinking()
+    {
+        StopCoroutine("Blink");
+        TWO_i_main_dist.color = TWO_i_main_dist.color; // Reset to current non-blinking color
+        ONE_i_main_dist.color = ONE_i_main_dist.color;
     }
 
 
@@ -351,7 +428,14 @@ public class QuadcopterController: MonoBehaviour
             // Debug.Log("currentAngularVelocity: " + currentAngularVelocity);
             // //Debug.DrawRay(transform.position, rb.angularVelocity * 200, Color.black);
         }
-       
+
+
+        // calculate the velocity 
+        Vector3 vectorToTarget = desiredPosition - currentPosition;
+        Vector3 velocity = vectorToTarget / deltaTime;
+
+        // get current Velocity 
+        Vector3 currentVelocity = rb.velocity;
 
         // PID control on the angular velocity error (closed feedback loop)
 
@@ -359,14 +443,19 @@ public class QuadcopterController: MonoBehaviour
         float pitchControlInput = pitchPIDQuaternion.UpdateAA(angularVelocityError.x, currentAngularVelocity.x, deltaTime);
         float yawControlInput = yawPIDQuaternion.UpdateAA(angularVelocityError.y, currentAngularVelocity.y, deltaTime);
     
-       
-        float altitudeError = AltitudePID.UpdateAA(desiredPosition.y, currentPosition.y, deltaTime);
-        
+        // x
+        float xControlInput = xPID.UpdateAA(velocity.x, currentVelocity.x, deltaTime);
+        // y
+        //float altitudeError = AltitudePID.UpdateAA(desiredPosition.y, currentPosition.y, deltaTime);
+        float altitudeError = AltitudePID.UpdateAA(velocity.y, currentVelocity.y, deltaTime);
+        // z
+        float zControlInput = xPID.UpdateAA(velocity.x, currentVelocity.x, deltaTime);
+
         // Gravity compensation 
         float altitudeControlInput = altitudeError + gravityComp;
 
         // Apply control input 
-        ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput);
+        ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput, xControlInput, zControlInput);
  
     }
     // Singularity issue around 180 and 270!
@@ -505,7 +594,7 @@ public class QuadcopterController: MonoBehaviour
         return angularVelocity;
     }
 
-    void ControlMotors(float roll, float pitch, float yaw, float lift)
+    void ControlMotors(float roll, float pitch, float yaw, float lift, float x, float z)
     {
         // // new
 
@@ -527,6 +616,14 @@ public class QuadcopterController: MonoBehaviour
 
         // old
 
+        // x 
+        float x_force = Mathf.Clamp(x, -maxVelocity, maxVelocity);
+        rb.AddForce(transform.right * x_force, ForceMode.Force);
+
+        // z
+        float z_force = Mathf.Clamp(z, -maxVelocity, maxVelocity);
+        rb.AddForce(transform.right * z_force, ForceMode.Force);
+
         // Apply Clamp to simulate actuators that limits the control signal. 
         float throttle2 = Mathf.Clamp(lift, -maxVelocity, maxVelocity);
         // Throttle, the upward force 
@@ -534,12 +631,12 @@ public class QuadcopterController: MonoBehaviour
 
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
-        rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
+        //rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
 
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
-        rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
+        //rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);

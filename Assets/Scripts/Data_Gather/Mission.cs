@@ -107,6 +107,8 @@ public class MissionManager : MonoBehaviour
     public TMP_Text mission_count;
     public TMP_Text mission_combi;
     public TMP_Text scheme;
+    public TMP_Text ActiveScheme1;
+    public TMP_Text ActiveScheme;
 
     private List<int> usedCombinations = new List<int>();
 
@@ -155,7 +157,8 @@ public class MissionManager : MonoBehaviour
         mission_count.text = "Number: " + count + "/16";
         mission_combi.text = "Combi: " + "\n" + missionCombination;
         scheme.text = "Scheme active: " + "\n" + controlScheme;
-
+        ActiveScheme1.text = controlScheme;
+        ActiveScheme.text = controlScheme;
         // update timer
         timer += Time.fixedDeltaTime;
 

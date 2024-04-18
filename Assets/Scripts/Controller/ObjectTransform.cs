@@ -245,6 +245,9 @@ public class ObjectTransform: MonoBehaviour
         //float y = radius * Mathf.Sin(phi) * Mathf.Sin(theta);
         //float z = radius * Mathf.Cos(phi);
 
+        // Addded Yaw orientation lock +- 45degs from lock point
+    
+
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
