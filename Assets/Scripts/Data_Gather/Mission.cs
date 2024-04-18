@@ -342,7 +342,7 @@ public class MissionManager : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.G))
             {
                 test22 = !test22;
-                performanceCleaning.ClearGeneratedGrid();
+                //performanceCleaning.ClearGeneratedGrid();
                 if(test22)
                 {
                     Debug.Log("grid 1");
@@ -365,7 +365,7 @@ public class MissionManager : MonoBehaviour
                 // clear old grid
                 //performanceCleaning.ClearGeneratedGrid();
                 // generate a new grid
-                performanceCleaning.GenerateGrid();
+                //performanceCleaning.GenerateGrid();
             }
         }
         
@@ -449,7 +449,21 @@ public class MissionManager : MonoBehaviour
         ALLCombinations(missionCombination);
         Debug.Log("Mission combination: "+ missionCombination);
 
-    
+        // parse the combination to raycaster
+        raycastCounter.type = mission;
+        raycastCounter.name = name;
+        raycastCounter.controlScheme = controlScheme;
+        raycastCounter.startPose = startPose;
+        raycastCounter.gridLocation = gridLocation;
+        raycastCounter.userInterface = userInterface;
+
+        // parse the combination to performance
+        performanceCleaning.type = mission;
+        performanceCleaning.name = name;
+        performanceCleaning.controlScheme = controlScheme;
+        performanceCleaning.startPose = startPose;
+        performanceCleaning.gridLocation = gridLocation;
+        performanceCleaning.userInterface = userInterface;
 
         // set start pose of both drones
         if(startPose == "start1")
@@ -476,7 +490,9 @@ public class MissionManager : MonoBehaviour
         {
             grid1.SetActive(true);
             grid2.SetActive(false);
-
+            performanceCleaning.ClearboxList();
+            performanceCleaning.PopulateBoxListFromExistingGrid();
+            performanceCleaning.ClearGridData();
             //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
             // performanceCleaning.width = 10;
             // performanceCleaning.height = 10;
@@ -487,6 +503,9 @@ public class MissionManager : MonoBehaviour
         {
             grid1.SetActive(false);
             grid2.SetActive(true);
+            performanceCleaning.ClearboxList();
+            performanceCleaning.PopulateBoxListFromExistingGrid();
+            performanceCleaning.ClearGridData();
             // performanceCleaning.width = 200;
             // performanceCleaning.height = 10;
             // grid.transform.position = new Vector3(395,116,638);
@@ -538,21 +557,7 @@ public class MissionManager : MonoBehaviour
         // starting of performance logging of cleaning, is started then transcition from inflight to incleaning
        
 
-        // parse the combination to raycaster
-        raycastCounter.type = mission;
-        raycastCounter.name = name;
-        raycastCounter.controlScheme = controlScheme;
-        raycastCounter.startPose = startPose;
-        raycastCounter.gridLocation = gridLocation;
-        raycastCounter.userInterface = userInterface;
-
-        // parse the combination to performance
-        performanceCleaning.type = mission;
-        performanceCleaning.name = name;
-        performanceCleaning.controlScheme = controlScheme;
-        performanceCleaning.startPose = startPose;
-        performanceCleaning.gridLocation = gridLocation;
-        performanceCleaning.userInterface = userInterface;
+    
     }
 
     private void OnTimeOut()

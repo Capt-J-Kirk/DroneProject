@@ -396,6 +396,12 @@ public class GridManager : MonoBehaviour
 
     }
  
+    public void ClearboxList()
+    {
+        BoxList.Clear(); 
+        allGrids.Clear();
+        maxCleanValuePossible = 0;
+    }
 
     public void ClearGeneratedGrid()
     {

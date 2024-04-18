@@ -54,6 +54,7 @@ public class ObjectTransform: MonoBehaviour
     public float phi = Mathf.PI / 2; // Vertical angle, starting vertically upwards
     private float prewYaw = 0f;
     private float yaw3 = 0f;
+    float newYaw = 0f;
 
     public bool toggleFollow = true;
 
@@ -63,6 +64,21 @@ public class ObjectTransform: MonoBehaviour
     private int count = 0;
     private float minRadius = 2f;
     private float maxRadius = 8f;
+
+
+    private bool initStart = true;
+    private float waypointTimer = 0.5f; // Time between waypoint changes
+    private float timer; // Current timer
+    private int currentWaypointIndex = 0;
+    // Waypoints in spherical coordinates (theta, phi)
+    private Vector2[] waypointsSpherical = new Vector2[]
+    {
+        new Vector2(-100, -10), // Point 1
+        new Vector2(-155, -10), // Point 2
+        new Vector2(155, 10),   // Point 3
+        new Vector2(100, 10)    // Point 4
+    };
+
 
     void Start()
     {
@@ -80,6 +96,7 @@ public class ObjectTransform: MonoBehaviour
         }
         Sec_nuetralOrientation = GetComponent<QuadcopterController_sec>().getneutralOrientation();
         // Sec_nuetralOrientation = Quadcopter_secondary.getneutralOrientation();
+        
     }
 
     // Update/fixedUpdate is the main loop
@@ -146,14 +163,14 @@ public class ObjectTransform: MonoBehaviour
             count = 0;
             Debug.Log("changing pose " + changeInPosition);
 
-            if (point == 0)
-            {
-                point = 1;
-            }
-            else
-            {
-                point = 0;
-            }
+            // if (point == 0)
+            // {
+            //     point = 1;
+            // }
+            // else
+            // {
+            //     point = 0;
+            // }
         }
     }
     // void GetParameterUpdate()
@@ -216,7 +233,7 @@ public class ObjectTransform: MonoBehaviour
 
         radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
-        yaw3 = yaw;
+        yaw3 += yaw;
     }
     void Scheme_1()
     {
@@ -247,13 +264,14 @@ public class ObjectTransform: MonoBehaviour
 
         // Addded Yaw orientation lock +- 45degs from lock point
 
-
-
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
+        // update prewious Yew
+        prewYaw = newYaw;
         // possible add previous yaw, such it dosn't reset
-        float newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
+        newYaw = Mathf.Clamp(newYaw, -45f, 45f);
         //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
 
@@ -292,121 +310,248 @@ public class ObjectTransform: MonoBehaviour
          
     // }
 
-    void Scheme_2()
-    {
-        // {theta, phi}
-        Vector2 leftPoint = new Vector2(-10,-100);//Vector2(45, 20);
-        Vector2 rightPoint = new Vector2(10, 100);//Vector2(-45, 20);
+//     void Scheme_2()
+//     {
+//         if (initStart)
+//         {
+//             targetPosition =  SphericalToCartesian(sphericalCoords.x, sphericalCoords.y, radius);
+//         }
+//         // {theta, phi}
+//         Vector2 leftPoint = new Vector2(-10,-100);//Vector2(45, 20);
+//         Vector2 rightPoint = new Vector2(10, 100);//Vector2(-45, 20);
 
-        float phiFixed = 0;
-        float thetaFixed = 0;
+//         float phiFixed = 0;
+//         float thetaFixed = 0;
 
-        int[] ThetaAngles = {-100, -155, 155, 100};//{45, -85, -120, -160, 160, 120, 85, 45};
-        int[] phiAngles = {-10, -10, 10, 10};
-        int i = 4;
-        Vector3 targetPosition = new Vector3(0, 0, 0);
-;
+//         int[] ThetaAngles = {-100, -155, 155, 100};//{45, -85, -120, -160, 160, 120, 85, 45};
+//         int[] phiAngles = {-10, -10, 10, 10};
+//         int i = 4;
+//         Vector3 targetPosition = new Vector3(0, 0, 0);
+// ;
 
-        if(point == 0)
-        {
-            phiFixed = leftPoint.y * Mathf.Deg2Rad;
-            thetaFixed = leftPoint.x * Mathf.Deg2Rad;
-        }
-        else
-        {
-            phiFixed = rightPoint.y * Mathf.Deg2Rad;
-            thetaFixed = rightPoint.x * Mathf.Deg2Rad;
-        }
+//         if(point == 0)
+//         {
+//             phiFixed = leftPoint.y * Mathf.Deg2Rad;
+//             thetaFixed = leftPoint.x * Mathf.Deg2Rad;
+//         }
+//         else
+//         {
+//             phiFixed = rightPoint.y * Mathf.Deg2Rad;
+//             thetaFixed = rightPoint.x * Mathf.Deg2Rad;
+//         }
 
-        if (false)//changeInPosition)
-        {
-            // using slerp to interpolate between the two points
-            if (point == 0)
-            {
-                // // Calculate desired positions
-                // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
-                // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
-                // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
-                // Vector3 newPosition = new Vector3(x, y, z);
+//         if (false)//changeInPosition)
+//         {
+//             // using slerp to interpolate between the two points
+//             if (point == 0)
+//             {
+//                 // // Calculate desired positions
+//                 // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
+//                 // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
+//                 // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+//                 // Vector3 newPosition = new Vector3(x, y, z);
 
 
-                // // Calculate old positions
-                // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
-                // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
-                // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
-                // Vector3 oldPosition = new Vector3(x, y, z);
-                if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
-                {
-                    float x = main_position.x + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[i - count] * Mathf.Deg2Rad);
-                    float y = main_position.y + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[i - count] * Mathf.Deg2Rad);
-                    float z = main_position.z + radius * Mathf.Cos(phiAngles[i -count] * Mathf.Deg2Rad);
-                    targetPosition = new Vector3(x, y, z);
+//                 // // Calculate old positions
+//                 // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
+//                 // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
+//                 // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+//                 // Vector3 oldPosition = new Vector3(x, y, z);
+//                 if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
+//                 {
+//                     float x = main_position.x + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[i - count] * Mathf.Deg2Rad);
+//                     float y = main_position.y + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[i - count] * Mathf.Deg2Rad);
+//                     float z = main_position.z + radius * Mathf.Cos(phiAngles[i -count] * Mathf.Deg2Rad);
+//                     targetPosition = new Vector3(x, y, z);
 
-                    count +=1;
-                    starttime = Time.deltaTime;
+//                     count +=1;
+//                     starttime = Time.deltaTime;
 
-                    if (count == 8)
-                    {
-                        changeInPosition = false;
-                    }
-                }
+//                     if (count == 8)
+//                     {
+//                         changeInPosition = false;
+//                     }
+//                 }
 
-            }
-            if (point == 1)
-            {
-                // // Calculate desired positions
-                // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
-                // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
-                // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
-                // Vector3 newPosition new Vector3(x, y, z);
+//             }
+//             if (point == 1)
+//             {
+//                 // // Calculate desired positions
+//                 // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
+//                 // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
+//                 // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
+//                 // Vector3 newPosition new Vector3(x, y, z);
 
-                // // Calculate old positions
-                // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
-                // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
-                // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
-                // Vector3 oldPosition = new Vector3(x, y, z);
+//                 // // Calculate old positions
+//                 // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
+//                 // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
+//                 // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
+//                 // Vector3 oldPosition = new Vector3(x, y, z);
 
-                 if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
-                {
-                    float x = main_position.x + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[count] * Mathf.Deg2Rad);
-                    float y = main_position.y + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[count] * Mathf.Deg2Rad);
-                    float z = main_position.z + radius * Mathf.Cos(phiAngles[count] * Mathf.Deg2Rad);
-                    targetPosition = new Vector3(x, y, z);
+//                  if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
+//                 {
+//                     float x = main_position.x + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[count] * Mathf.Deg2Rad);
+//                     float y = main_position.y + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[count] * Mathf.Deg2Rad);
+//                     float z = main_position.z + radius * Mathf.Cos(phiAngles[count] * Mathf.Deg2Rad);
+//                     targetPosition = new Vector3(x, y, z);
 
-                    count +=1;
-                    starttime = Time.deltaTime;
+//                     count +=1;
+//                     starttime = Time.deltaTime;
 
-                    if (count == 8)
-                    {
-                        changeInPosition = false;
-                    }
-                }
-            }
+//                     if (count == 8)
+//                     {
+//                         changeInPosition = false;
+//                     }
+//                 }
+//             }
 
             
-            //Vector3 targetPosition = StartCoroutine(InterpolatePositionOverTime(oldPosition, newPosition, 5f));
+//             //Vector3 targetPosition = StartCoroutine(InterpolatePositionOverTime(oldPosition, newPosition, 5f));
 
+//         }
+//         else
+//         {
+//             // THEN NOT CHANGING POINT
+//             // Calculate desired positions
+//             float x = main_position.x + radius * Mathf.Sin(phiFixed) * Mathf.Cos(thetaFixed);
+//             float y = main_position.y + radius * Mathf.Sin(phiFixed) * Mathf.Sin(thetaFixed);
+//             float z = main_position.z + radius * Mathf.Cos(phiFixed);
+//             targetPosition = new Vector3(x, y, z);
+//         }
+        
+
+//         // Calculate desired orientation
+//         float yawSensitivity = 5.0f;
+//         float newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+//         //newYaw = WrapAngle(newYaw);
+//         Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
+        
+//         // mutex, duing flip
+//         if(flip && notDuingFlip)
+//         {
+
+        
+
+//             // new stuff
+//             timer += Time.deltaTime;
+
+//             if (timer >= waypointTimer)
+//             {
+//                 timer = 0f; // Reset the timer
+
+//                 // Move to the next waypoint
+//                 currentWaypointIndex = (currentWaypointIndex + 1) % waypointsSpherical.Length;
+//                 MoveToWaypoint(waypointsSpherical[currentWaypointIndex]);
+//             }
+//         }
+
+
+//         targetPosition = SphericalToCartesian(sphericalCoords.x, sphericalCoords.y, radius);
+
+
+
+//         // Apply to drone controller
+//         ApplyNewPose(targetPosition, targetOrientation);
+//     }
+
+
+
+       void Scheme_2()
+    {
+        Vector3 targetPosition = new Vector3(0, 0, 0);
+
+        if (initStart)
+        {
+            targetPosition =  SphericalToCartesian(waypointsSpherical[0].x, waypointsSpherical[0].y, radius);
+            initStart = false;
+        }
+
+
+        // then flipping point
+        if (changeInPosition)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= waypointTimer)
+            {
+                timer = 0f; // Reset the timer
+                targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
+                // Check the direction and update the waypoint index accordingly
+                if (isReversing)
+                {
+                    currentWaypointIndex--;
+                    if (currentWaypointIndex <= 0)
+                    {
+                        // at index 0
+                        isReversing = false;
+                        changeInPosition = false; // Stop moving 
+                        currentWaypointIndex = 0; // Reset index
+                    }
+                }
+                else
+                {
+                    currentWaypointIndex++;
+                    if (currentWaypointIndex >= waypointsSpherical.Length)
+                    {
+                        // Reached the end point
+                        currentWaypointIndex = waypointsSpherical.Length - 2;
+                        isReversing = true;
+                        changeInPosition = false; // Stop moving
+                    }
+                }
+            }
         }
         else
         {
-            // THEN NOT CHANGING POINT
-            // Calculate desired positions
-            float x = main_position.x + radius * Mathf.Sin(phiFixed) * Mathf.Cos(thetaFixed);
-            float y = main_position.y + radius * Mathf.Sin(phiFixed) * Mathf.Sin(thetaFixed);
-            float z = main_position.z + radius * Mathf.Cos(phiFixed);
-            targetPosition = new Vector3(x, y, z);
+            targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
         }
-        
+     
+        // Addded Yaw orientation lock +- 45degs from lock point
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
-        float newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        // update prewious Yew
+        prewYaw = newYaw;
+        // possible add previous yaw, such it dosn't reset
+        newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
-        Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
+        newYaw = Mathf.Clamp(newYaw, -45f, 45f);
+        //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
-        // Apply to drone controller
+
+        // face towards the main drone
+        Vector3 targetDirection = (new Vector3(0, 0, 0) - main_position).normalized;
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+        // Adding yaw adjustment 45-degree yaw
+        Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
+        Quaternion targetOrientation  = yawRotation * baseRotation;
+        
+         
         ApplyNewPose(targetPosition, targetOrientation);
+
     }
+
+
+    private Vector3 SphericalToCartesian(float theta, float phi, float radius)
+    {
+        // Convert angles from degrees to radians
+        float phiRadian = phi * Mathf.Deg2Rad;
+        float thetaRadian = theta * Mathf.Deg2Rad;
+
+        // Calculate Cartesian coordinates
+        float x = main_position.x + radius * Mathf.Sin(phiRadian) * Mathf.Cos(thetaRadian);
+        float y = main_position.y + radius * Mathf.Sin(phiRadian) * Mathf.Sin(thetaRadian);
+        float z = main_position.z + radius * Mathf.Cos(phiRadian);
+
+        return new Vector3(x, y, z);
+    }
+
+
+
+
+
+
+
 
     // IEnumerator InterpolatePositionOverTime(Vector3 start, Vector3 end, float duration)
     //     {
@@ -468,7 +613,8 @@ public class ObjectTransform: MonoBehaviour
     {
         translationVector = translation;
         rotationVector = rotation;
-    }
+    }// Apply to drone controller
+        ApplyNewPose(targetPosition, targetOrientation);
     public void SetUserInput(float roll, float pitch, float yaw, float throttle)
     {
         // not actually used for such, but remapped
