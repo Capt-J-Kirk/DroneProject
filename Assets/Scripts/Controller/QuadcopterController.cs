@@ -71,7 +71,7 @@ public class QuadcopterController: MonoBehaviour
     private Collider targetCollider; // Collider of the target object
     private string currentState = "No Danger";
     public float distanceToObject = 0;
-
+    Vector3 closestPoint;
 
     // UserInterface's infobars TWO SCREEN 
     public TMP_Text TWO_t_main_dist;
@@ -295,7 +295,7 @@ public class QuadcopterController: MonoBehaviour
         if (targetCollider != null)
         {
             // Use ClosestPoint to get the closest point on the target's surface to this GameObject
-            Vector3 closestPoint = targetCollider.ClosestPoint(transform.position);
+            closestPoint = targetCollider.ClosestPoint(transform.position);
             // Calculate the distance from this GameObject's position to the closest point
             distanceToObject = Vector3.Distance(transform.position, closestPoint);
 
