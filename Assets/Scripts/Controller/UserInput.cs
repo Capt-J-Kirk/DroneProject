@@ -369,11 +369,13 @@ public class UserInput : MonoBehaviour
     // ########## Sec Drone parameter adjuster callbacks ##########
     private void OnAClick(InputAction.CallbackContext value)
     {
-        // enable the adjustment of the secondary drones offset parameters
+        // enable the adjustment of the secondary drones position
         if (togglesecondarDrone)
         {
+            // and that the sec drone is in follow mode.
             if (transformAdjustment.toggleFollow)
             {
+                // and we are in the control scheme 2
                 if (transformAdjustment.ControlScheme == 2)
                 {
                     transformAdjustment.changeInPosition = true;
