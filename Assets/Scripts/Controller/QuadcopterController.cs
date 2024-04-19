@@ -43,12 +43,12 @@ public class QuadcopterController: MonoBehaviour
     // Tested to be good values
     private float rollKp = 5.0f, rollKi = 0.3f, rollKd = 0.08f;
     private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
-    private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f;
-    //private float altitudeKp = 5.0f, altitudeKi = 0.3f, altitudeKd = 0.08f; 
-    //private float altitudeKp = 7.740008f, altitudeKi = 18.87807f, altitudeKd = 0.7933508f; 
+    private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f; 
     private float altitudeKp = 7.82403f, altitudeKi = 18.87807f, altitudeKd = 5f; 
-    private float xKp = 5.0f, xKi = 0.3f, xKd = 0.08f; 
-    private float zKp = 5.0f, zKi = 0.3f, zKd = 0.08f; 
+    //private float xKp = 5.0f, xKi = 0.3f, xKd = 0.08f; 
+    private float xKp = 7.82403f, xKi = 18.87807f, xKd = 5f; 
+    //private float zKp = 5.0f, zKi = 0.3f, zKd = 0.08f; 
+    private float zKp = 7.82403f, zKi = 18.87807f, zKd = 5f; 
     // // needs fine tuning! 
     // public float rollKp = 1.0f, rollKi = 0.1f, rollKd = 0.01f;
     // public float pitchKp = 1.0f, pitchKi = 0.1f, pitchKd = 0.01f;
@@ -151,26 +151,26 @@ public class QuadcopterController: MonoBehaviour
             if (oscillationCounter > 2)
             {
                 // The current Kp is approximately the ultimate gain
-                Ku = AltitudePID.proportionalGain;
+                Ku = xPID.proportionalGain;
 
                 // Stop the tuning
                 isTuning = false;
 
                 // Set PID parameters based on Ziegler-Nichols formulas
-                AltitudePID.proportionalGain = 0.6f * Ku;
-                AltitudePID.integralGain = 2f * AltitudePID.proportionalGain / Pu;
-                AltitudePID.derivativeGain = AltitudePID.proportionalGain * Pu / 8f;
+                xPID.proportionalGain = 0.6f * Ku;
+                xPID.integralGain = 2f * xPID.proportionalGain / Pu;
+                xPID.derivativeGain = xPID.proportionalGain * Pu / 8f;
 
                 // Log results for verification
                 Debug.Log($"Tuning complete: Ku = {Ku}, Pu = {Pu}");
-                Debug.Log($"Tuning complete: Kp = {AltitudePID.proportionalGain}, Ki = { AltitudePID.integralGain}, Kd = { AltitudePID.derivativeGain}");
+                Debug.Log($"Tuning complete: Kp = {xPID.proportionalGain}, Ki = { xPID.integralGain}, Kd = { xPID.derivativeGain}");
             }
         }
 
         // Increment Kp after every oscillation and before reaching ultimate gain
         if (isTuning && oscillationCounter <= 2)
         {
-            AltitudePID.proportionalGain += tuningKpIncrement;
+            xPID.proportionalGain += tuningKpIncrement;
         }
 
         lastOutput = currentOutput;
@@ -424,12 +424,7 @@ public class QuadcopterController: MonoBehaviour
         Visual_Quadcopter_main.transform.position = transform.position;
         Visual_Quadcopter_main.transform.rotation = transform.rotation;
 
-        // quick test
-        if (run1)
-        {
-            desiredPosition.y += 5.0f;
-            run1 = false;
-        }
+     
         
         //TestingDesiredPose();
         if (isTuning)
@@ -437,7 +432,7 @@ public class QuadcopterController: MonoBehaviour
             if (!stepInputApplied)
             {
                 // Apply the step change only once to start the tuning process
-                desiredPosition.y += 5.0f; // Induce a significant error
+                desiredPosition.x += 5.0f; // Induce a significant error
                 stepInputApplied = true; // Ensure the step change is not applied again
             }
 
