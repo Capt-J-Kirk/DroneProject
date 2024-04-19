@@ -553,6 +553,25 @@ public class MissionManager : MonoBehaviour
         // overall data
         // head tracking
 
+        // set the drones into a starting position
+        // main_drone.Rigidbody.transform.Velocity = 0f;
+        // main_drone.transform.angularVelocity = 0f;
+        // sec_drone.transform.velocity = 0f;
+        // sec_drone.transform.angularVelocity = 0f;
+
+
+        // main_drone.xPID.ClearPID();
+        // main_drone.zPID.ClearPID();
+        // main_drone.AltitudePID.ClearPID();
+        // main_drone.pitchPIDQuaternion.ClearPID();
+        // main_drone.rollPIDQuaternion.ClearPID();
+        // main_drone.yawPIDQuaternion.ClearPID();
+
+        // main_drone.transform.position = new Vector3(100,80,110);
+        // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+        // sec_drone.transform.position = new Vector3(100,80,100);
+        // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+
         missionActive = true;
         isRecording = true;
 

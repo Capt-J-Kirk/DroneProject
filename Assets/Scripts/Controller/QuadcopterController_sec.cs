@@ -30,13 +30,13 @@ public class QuadcopterController_sec: MonoBehaviour
    
 
     public Rigidbody rb;
-    private PIDController AltitudePID;
-    private PIDController rollPIDQuaternion;
-    private PIDController pitchPIDQuaternion;
-    private PIDController yawPIDQuaternion;
+    public PIDController AltitudePID;
+    public PIDController rollPIDQuaternion;
+    public PIDController pitchPIDQuaternion;
+    public PIDController yawPIDQuaternion;
 
-    private PIDController xPID;
-    private PIDController zPID;
+    public PIDController xPID;
+    public PIDController zPID;
 
     public UserInput inputController;
     

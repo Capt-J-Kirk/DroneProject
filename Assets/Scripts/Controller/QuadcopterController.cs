@@ -30,12 +30,12 @@ public class QuadcopterController: MonoBehaviour
 
 
     public Rigidbody rb;
-    private PIDController AltitudePID;
-    private PIDController rollPIDQuaternion;
-    private PIDController pitchPIDQuaternion;
-    private PIDController yawPIDQuaternion;
-    private PIDController xPID;
-    private PIDController zPID;
+    public PIDController AltitudePID;
+    public PIDController rollPIDQuaternion;
+    public PIDController pitchPIDQuaternion;
+    public PIDController yawPIDQuaternion;
+    public PIDController xPID;
+    public PIDController zPID;
 
     public UserInput inputController;
 
@@ -104,6 +104,10 @@ public class QuadcopterController: MonoBehaviour
     public float Pu; // Oscillation period
     private bool tuningStarted = false;
     private bool stepInputApplied = false;
+
+
+    float newPositionChangeX = 0f;
+    float newPositionChangeZ = 0f;
 
     void StartTuningPID()
     {
@@ -224,9 +228,9 @@ public class QuadcopterController: MonoBehaviour
             ylocalChange * ySensitivity,
             zlocalChange * zSensitivity);
 
-        // float newPositionChangeX = xlocalChange * xSensitivity;
+        newPositionChangeX = xlocalChange * xSensitivity;
         // float newPositionChangeY = ylocalChange * ySensitivity;
-        // float newPositionChangeZ = zlocalChange * zSensitivity;
+        newPositionChangeZ = zlocalChange * zSensitivity;
 
         // Convert local position change to world space
         Vector3 newPositionChangeWorld = transform.TransformPoint(newPositionChangeLocal) - transform.position;
@@ -345,16 +349,17 @@ public class QuadcopterController: MonoBehaviour
             ylocalChange * ySensitivity,
             zlocalChange * zSensitivity);
 
-        // float newPositionChangeX = xlocalChange * xSensitivity;
+        newPositionChangeX = xlocalChange * xSensitivity;
         // float newPositionChangeY = ylocalChange * ySensitivity;
-        // float newPositionChangeZ = zlocalChange * zSensitivity;
+        newPositionChangeZ = zlocalChange * zSensitivity;
 
         // Convert local position change to world space
-        Vector3 newPositionChangeWorld = transform.TransformPoint(newPositionChangeLocal) - transform.position;
+        //Vector3 newPositionChangeWorld = transform.TransformPoint(newPositionChangeLocal) - transform.position;
 
-        //Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
+        Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
         // Update desired position
-        desiredPosition = currentDesiredPosition + newPositionChangeWorld;
+        desiredPosition = currentDesiredPosition + newPositionChange;
+        //desiredPosition = currentDesiredPosition + newPositionChangeWorld;
        
     }
 
@@ -667,30 +672,30 @@ public class QuadcopterController: MonoBehaviour
         controlForceLocal.x = Mathf.Clamp(controlForceLocal.x, -maxVelocity, maxVelocity);
         controlForceLocal.y = Mathf.Clamp(controlForceLocal.y, -maxVelocity, maxVelocity);
         controlForceLocal.z = Mathf.Clamp(controlForceLocal.z, -maxVelocity, maxVelocity);
-        rb.AddForce(controlForceLocal, ForceMode.Force);
+        //rb.AddForce(controlForceLocal, ForceMode.Force);
 
 
         // x 
         // float x_force = Mathf.Clamp(x, -maxVelocity, maxVelocity);
-        // rb.AddForce(transform.right * x_force, ForceMode.Force);
+        //rb.AddForce(transform.right * newPositionChangeX, ForceMode.Force);
 
         // // z
         // float z_force = Mathf.Clamp(z, -maxVelocity, maxVelocity);
-        // rb.AddForce(transform.forward * z_force, ForceMode.Force);
+        //rb.AddForce(transform.forward * newPositionChangeZ, ForceMode.Force);
 
         // // Apply Clamp to simulate actuators that limits the control signal. 
-        // float throttle2 = Mathf.Clamp(lift, -maxVelocity, maxVelocity);
+        float throttle2 = Mathf.Clamp(lift, -maxVelocity, maxVelocity);
         // // Throttle, the upward force 
-        // rb.AddForce(transform.up * throttle2, ForceMode.Force);
+        rb.AddForce(transform.up * throttle2, ForceMode.Force);
 
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
-        //rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
+        rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
 
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
-        //rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
+        rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);

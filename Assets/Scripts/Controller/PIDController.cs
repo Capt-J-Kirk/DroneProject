@@ -20,6 +20,13 @@ public class PIDController
         derivativeGain = kd;
     }
 
+    public void ClearPID()
+    {
+        integral = 0f;
+        previousError = 0f;
+        previousActualValue = 0f;
+    }
+
     public float UpdateAA(float setPoint, float actualValue, float timeFrame)
     {
         if (timeFrame <= 0f) timeFrame = 0.01f;  // Prevent division by zero or negative time

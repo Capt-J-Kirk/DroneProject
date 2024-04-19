@@ -80,6 +80,12 @@ public class ObjectTransform: MonoBehaviour
     };
 
 
+
+    private float left_right = 0f; 
+    private float up_down = 0f;  
+        
+
+
     void Start()
     {
         // find the script for the secondary drone
@@ -230,7 +236,26 @@ public class ObjectTransform: MonoBehaviour
         theta += roll * thetaSensitivity; // horizontal movement
         phi += pitch * phiSensitivity; // vertical movement
         radius += throttle * radiusSensitivity; // change radius 
+        
+        radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
+        yaw3 += yaw;
+    }
+
+    void updateCylindricalParameters(float roll, float pitch, float throttle, float yaw)
+    {
+        // Spherical Orbit control 
+        float thetaSensitivity = 2.0f;
+        float phiSensitivity = 2.0f;
+        float radiusSensitivity = 2.0f;
+
+        radius += roll * phiSensitivity; // horizontal movement
+        theta += pitch * thetaSensitivity; // vertical movement
+        up_down += throttle * radiusSensitivity; // change radius 
+        
+
+        // ADD A BASELINE for up/down main_drones.y location
+        up_down = Mathf.Clamp(up_down, main_position.y-minRadius, maxRadius+main_position.y);
         radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
         yaw3 += yaw;
@@ -286,175 +311,40 @@ public class ObjectTransform: MonoBehaviour
         ApplyNewPose(targetPosition, targetOrientation);
     }
 
-    // void Scheme_2(float yaw, float pitch)
-    // {
-    //     float orbitYawDegrees = yaw; // Actual orbit left-right angle
-    //     float orbitPitchDegrees = pitch; // Actual orbit up-down angle
+    void Scheme_1_New()
+    {
+        // phi in this case is the vertical movement from the joystick
+        // Calculate desired positions for cylindrical coordinates
+        float x = main_position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
+        float z = main_position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
+        
+        float y = main_position.y + up_down;
+        
+        Vector3 targetPosition = new Vector3(x, y, z);
 
-    //     // Convert orbit angles from degrees to radians for Unity calculations
-    //     float orbitYawRadians = orbitYawDegrees * Mathf.Deg2Rad;
-    //     float orbitPitchRadians = orbitPitchDegrees * Mathf.Deg2Rad;
+        // Addded Yaw orientation lock +- 45degs from lock point
 
-    //     // Calculate new position for the secondary drone based on orbit angles and fixed distance
-    //     Vector3 newPosition = new Vector3(
-    //         fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Cos(orbitYawRadians),
-    //         fixedDistance * Mathf.Cos(orbitPitchRadians),
-    //         fixedDistance * Mathf.Sin(orbitPitchRadians) * Mathf.Sin(orbitYawRadians)
-    //     ) + main_position;
-
-    //     // calc the rotation facing direction using the fixed angles
-    //     Quaternion newfixedRotation = Quaternion.Euler(fixedPitchDegrees, fixedYawDegrees, 0);
-
-    //     // Set the secondary drone's new pose
-    //     ApplyNewPose(newPosition,newfixedRotation);
-         
-    // }
-
-//     void Scheme_2()
-//     {
-//         if (initStart)
-//         {
-//             targetPosition =  SphericalToCartesian(sphericalCoords.x, sphericalCoords.y, radius);
-//         }
-//         // {theta, phi}
-//         Vector2 leftPoint = new Vector2(-10,-100);//Vector2(45, 20);
-//         Vector2 rightPoint = new Vector2(10, 100);//Vector2(-45, 20);
-
-//         float phiFixed = 0;
-//         float thetaFixed = 0;
-
-//         int[] ThetaAngles = {-100, -155, 155, 100};//{45, -85, -120, -160, 160, 120, 85, 45};
-//         int[] phiAngles = {-10, -10, 10, 10};
-//         int i = 4;
-//         Vector3 targetPosition = new Vector3(0, 0, 0);
-// ;
-
-//         if(point == 0)
-//         {
-//             phiFixed = leftPoint.y * Mathf.Deg2Rad;
-//             thetaFixed = leftPoint.x * Mathf.Deg2Rad;
-//         }
-//         else
-//         {
-//             phiFixed = rightPoint.y * Mathf.Deg2Rad;
-//             thetaFixed = rightPoint.x * Mathf.Deg2Rad;
-//         }
-
-//         if (false)//changeInPosition)
-//         {
-//             // using slerp to interpolate between the two points
-//             if (point == 0)
-//             {
-//                 // // Calculate desired positions
-//                 // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
-//                 // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
-//                 // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
-//                 // Vector3 newPosition = new Vector3(x, y, z);
-
-
-//                 // // Calculate old positions
-//                 // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
-//                 // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
-//                 // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
-//                 // Vector3 oldPosition = new Vector3(x, y, z);
-//                 if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
-//                 {
-//                     float x = main_position.x + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[i - count] * Mathf.Deg2Rad);
-//                     float y = main_position.y + radius * Mathf.Sin(phiAngles[i -count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[i - count] * Mathf.Deg2Rad);
-//                     float z = main_position.z + radius * Mathf.Cos(phiAngles[i -count] * Mathf.Deg2Rad);
-//                     targetPosition = new Vector3(x, y, z);
-
-//                     count +=1;
-//                     starttime = Time.deltaTime;
-
-//                     if (count == 8)
-//                     {
-//                         changeInPosition = false;
-//                     }
-//                 }
-
-//             }
-//             if (point == 1)
-//             {
-//                 // // Calculate desired positions
-//                 // float x = main_position.x + radius * Mathf.Sin(rightPoint.y) * Mathf.Cos(rightPoint.x);
-//                 // float y = main_position.y + radius * Mathf.Sin(rightPoint.y) * Mathf.Sin(rightPoint.x);
-//                 // float z = main_position.z + radius * Mathf.Cos(rightPoint.y);
-//                 // Vector3 newPosition new Vector3(x, y, z);
-
-//                 // // Calculate old positions
-//                 // float x = main_position.x + radius * Mathf.Sin(leftPoint.y) * Mathf.Cos(leftPoint.x);
-//                 // float y = main_position.y + radius * Mathf.Sin(leftPoint.y) * Mathf.Sin(leftPoint.x);
-//                 // float z = main_position.z + radius * Mathf.Cos(leftPoint.y);
-//                 // Vector3 oldPosition = new Vector3(x, y, z);
-
-//                  if ((Time.deltaTime - starttime >= 0.5f) && (count < 8)) 
-//                 {
-//                     float x = main_position.x + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Cos(ThetaAngles[count] * Mathf.Deg2Rad);
-//                     float y = main_position.y + radius * Mathf.Sin(phiAngles[count] * Mathf.Deg2Rad) * Mathf.Sin(ThetaAngles[count] * Mathf.Deg2Rad);
-//                     float z = main_position.z + radius * Mathf.Cos(phiAngles[count] * Mathf.Deg2Rad);
-//                     targetPosition = new Vector3(x, y, z);
-
-//                     count +=1;
-//                     starttime = Time.deltaTime;
-
-//                     if (count == 8)
-//                     {
-//                         changeInPosition = false;
-//                     }
-//                 }
-//             }
-
-            
-//             //Vector3 targetPosition = StartCoroutine(InterpolatePositionOverTime(oldPosition, newPosition, 5f));
-
-//         }
-//         else
-//         {
-//             // THEN NOT CHANGING POINT
-//             // Calculate desired positions
-//             float x = main_position.x + radius * Mathf.Sin(phiFixed) * Mathf.Cos(thetaFixed);
-//             float y = main_position.y + radius * Mathf.Sin(phiFixed) * Mathf.Sin(thetaFixed);
-//             float z = main_position.z + radius * Mathf.Cos(phiFixed);
-//             targetPosition = new Vector3(x, y, z);
-//         }
+        // Calculate desired orientation
+        float yawSensitivity = 5.0f;
+        // update prewious Yew
+        prewYaw = newYaw;
+        // possible add previous yaw, such it dosn't reset
+        newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        //newYaw = WrapAngle(newYaw);
+        newYaw = Mathf.Clamp(newYaw, -45f, 45f);
+        //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
 
-//         // Calculate desired orientation
-//         float yawSensitivity = 5.0f;
-//         float newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
-//         //newYaw = WrapAngle(newYaw);
-//         Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
-        
-//         // mutex, duing flip
-//         if(flip && notDuingFlip)
-//         {
+        // face towards the main drone
+        Vector3 targetDirection = (new Vector3(0, 0, 0) - main_position).normalized;
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+        // Adding yaw adjustment 45-degree yaw
+        Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
+        Quaternion targetOrientation  = yawRotation * baseRotation;
 
-        
-
-//             // new stuff
-//             timer += Time.deltaTime;
-
-//             if (timer >= waypointTimer)
-//             {
-//                 timer = 0f; // Reset the timer
-
-//                 // Move to the next waypoint
-//                 currentWaypointIndex = (currentWaypointIndex + 1) % waypointsSpherical.Length;
-//                 MoveToWaypoint(waypointsSpherical[currentWaypointIndex]);
-//             }
-//         }
-
-
-//         targetPosition = SphericalToCartesian(sphericalCoords.x, sphericalCoords.y, radius);
-
-
-
-//         // Apply to drone controller
-//         ApplyNewPose(targetPosition, targetOrientation);
-//     }
-
-
+        // Apply to drone controller
+        ApplyNewPose(targetPosition, targetOrientation);
+    }    
 
        void Scheme_2()
     {
