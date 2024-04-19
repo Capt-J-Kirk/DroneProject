@@ -139,6 +139,8 @@ public class MissionManager : MonoBehaviour
 
     bool testtest = true;
 
+    bool check = true;
+
     void Start()
     {
         //performanceCleaning.GenerateGrid();
@@ -258,7 +260,7 @@ public class MissionManager : MonoBehaviour
             }
 
             // load that combination in
-            if (startMission)
+            if (startMission && Input.GetKeyDown(KeyCode.S))
             {
                 LoadMission();
                 startMission = false;
@@ -379,8 +381,7 @@ public class MissionManager : MonoBehaviour
 
     private void IDgenerator()
     {   
-        bool check = true;
-       
+              
         if (check) // Check if the number hasn't been used
         {
             check = false;
@@ -404,7 +405,7 @@ public class MissionManager : MonoBehaviour
 
     private bool RunTutorial()
     {
-        Menu.SetActive(false);
+
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             userInput.ManualControl = true;

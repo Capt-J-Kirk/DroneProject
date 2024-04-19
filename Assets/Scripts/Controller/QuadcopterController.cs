@@ -397,7 +397,7 @@ public class QuadcopterController: MonoBehaviour
         Visual_Quadcopter_main = GameObject.Find("Washing Drone");
 
         // Activate only then tuning
-        StartTuningPID();
+        //StartTuningPID();
 
     
         // object avoidance
@@ -417,7 +417,6 @@ public class QuadcopterController: MonoBehaviour
       
     }
 
-    bool run1 = false;
     void FixedUpdate()
     {
         // visual update the washing drones location
@@ -658,24 +657,7 @@ public class QuadcopterController: MonoBehaviour
 
     void ControlMotors(float roll, float pitch, float yaw, float lift, float x, float z)
     {
-        // // new
-
-        // // Spliting the thrust, to both the forward and lateral movement 
-        // float pitchRad = Mathf.Deg2Rad * pitch;
-        // float rollRad = Mathf.Deg2Rad * roll;
-        // // calc thrust component
-        // float forwardThrust = Mathf.Sin(pitchRad) * lift;
-        // float lateralThrust = Mathf.Sin(rollRad) * lift;
-
-        // // Apply forward and lateral thrust
-        // rb.AddForce(transform.forward * forwardThrust, ForceMode.Force);
-        // rb.AddForce(transform.right * lateralThrust, ForceMode.Force);
-
-        // // calc vertical thrust component
-        // float verticalAdjustment = Mathf.Sqrt(Mathf.Cos(pitchRad) * Mathf.Cos(pitchRad) + Mathf.Cos(rollRad) * Mathf.Cos(rollRad));
-        // float adjustedLift = lift * verticalAdjustment;
-        // rb.AddForce(Vector3.up * adjustedLift, ForceMode.Force);
-
+    
         
         Vector3 controlForceWorld = new Vector3(x, lift, z);
         //Debug.Log("controlForceWorld: " + controlForceWorld);
