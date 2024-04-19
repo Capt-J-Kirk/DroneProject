@@ -38,13 +38,15 @@ public class QuadcopterController: MonoBehaviour
     private PIDController zPID;
 
     public UserInput inputController;
-    
+
+
     // Tested to be good values
     private float rollKp = 5.0f, rollKi = 0.3f, rollKd = 0.08f;
     private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
     private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f;
     //private float altitudeKp = 5.0f, altitudeKi = 0.3f, altitudeKd = 0.08f; 
-    private float altitudeKp = 7.740008f, altitudeKi = 18.87807f, altitudeKd = 0.7933508f; 
+    //private float altitudeKp = 7.740008f, altitudeKi = 18.87807f, altitudeKd = 0.7933508f; 
+    private float altitudeKp = 7.82403f, altitudeKi = 18.87807f, altitudeKd = 5f; 
     private float xKp = 5.0f, xKi = 0.3f, xKd = 0.08f; 
     private float zKp = 5.0f, zKi = 0.3f, zKd = 0.08f; 
     // // needs fine tuning! 
