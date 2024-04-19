@@ -65,6 +65,9 @@ public class ObjectTransform: MonoBehaviour
     private float minRadius = 2f;
     private float maxRadius = 8f;
 
+    private float minLow = 3f;
+    private float maxHigh = 3f;
+
     private bool isReversing = false;
     private bool initStart = true;
     private float waypointTimer = 0.5f; // Time between waypoint changes
@@ -113,9 +116,9 @@ public class ObjectTransform: MonoBehaviour
         if (toggleFollow)
         {
             if (ControlScheme == 1)
-            {
-                // Spherical full control 
-                Scheme_1();
+            { 
+                //Scheme_1_Spherical();
+                Scheme_1_Cylindrical();
             }
             if (ControlScheme == 2)
             {
@@ -255,12 +258,12 @@ public class ObjectTransform: MonoBehaviour
         
 
         // ADD A BASELINE for up/down main_drones.y location
-        up_down = Mathf.Clamp(up_down, main_position.y-minRadius, maxRadius+main_position.y);
+        up_down = Mathf.Clamp(up_down, main_position.y-minLow, maxHigh+main_position.y);
         radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
         yaw3 += yaw;
     }
-    void Scheme_1()
+    void Scheme_1_Spherical()
     {
         // fejl fundet. fixed  yaw, so it dosn't rotate all the time. fixed it to nuatral point
         
@@ -311,7 +314,7 @@ public class ObjectTransform: MonoBehaviour
         ApplyNewPose(targetPosition, targetOrientation);
     }
 
-    void Scheme_1_New()
+    void Scheme_1_Cylindrical()
     {
         // phi in this case is the vertical movement from the joystick
         // Calculate desired positions for cylindrical coordinates
@@ -352,7 +355,8 @@ public class ObjectTransform: MonoBehaviour
 
         if (initStart)
         {
-            targetPosition =  SphericalToCartesian(waypointsSpherical[0].x, waypointsSpherical[0].y, radius);
+            //targetPosition =  SphericalToCartesian(waypointsSpherical[0].x, waypointsSpherical[0].y, radius);
+            targetPosition = PolarToCartesian(waypointsSpherical[currentWaypointIndex].x,radius);
             initStart = false;
         }
 
@@ -365,7 +369,8 @@ public class ObjectTransform: MonoBehaviour
             if (timer >= waypointTimer)
             {
                 timer = 0f; // Reset the timer
-                targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
+                //targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
+                targetPosition = PolarToCartesian(waypointsSpherical[currentWaypointIndex].x,radius);
                 // Check the direction and update the waypoint index accordingly
                 if (isReversing)
                 {
@@ -393,7 +398,8 @@ public class ObjectTransform: MonoBehaviour
         }
         else
         {
-            targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
+            //targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
+            targetPosition = PolarToCartesian(waypointsSpherical[currentWaypointIndex].x,radius);
         }
      
         // Addded Yaw orientation lock +- 45degs from lock point
@@ -438,28 +444,20 @@ public class ObjectTransform: MonoBehaviour
 
 
 
+    
+    private Vector3 PolarToCartesian(float theta, float radius)
+    {
+        // Calculate Cartesian coordinates
+        float x = main_position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
+        float z = main_position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
 
 
+        // set the hight offset
+        float y = main_position.y + 1f;
 
+        return new Vector3(x, y, z);
+    }
 
-
-    // IEnumerator InterpolatePositionOverTime(Vector3 start, Vector3 end, float duration)
-    //     {
-    //         float elapsed = 0f;
-
-    //         if (elapsed < duration)
-    //         {
-    //             float t = elapsed / duration;
-    //             elapsed += Time.deltaTime;
-    //             return  Vector3.slerp(start, end, t);
-    //         }
-    //         else
-    //         {
-    //             // can first change position after the transsition is done
-    //             changeInPosition = false;
-    //         }
-    //     }
-    // }
 
 
     private void ApplyNewPose(Vector3 pos, Quaternion rot)
@@ -474,27 +472,7 @@ public class ObjectTransform: MonoBehaviour
         GetComponent<QuadcopterController_sec>().SetQuadcopterPose(pos, rot);
      
     }
-    // private void UpdateFixedDistance()
-    // {
-    //     fixedDistance = throttle2;
-    // }
-    // private void UpdatefixedYawDegrees()
-    // {
-    //     fixedYawDegrees = yaw2;
-    // }
-    // private void UpdatefixedPitchDegrees()
-    // {
-    //     fixedPitchDegrees = pitch2;
-    // }
-    // public Vector3 GetRotationVector()
-    // {
-    //     return rotationVector;
-    // }
-
-    // public Vector3 GetTranslationVector()
-    // {
-    //     return translationVector;
-    // }
+   
     public void SetControlScheme(int val)
     {
         ControlScheme = val;
