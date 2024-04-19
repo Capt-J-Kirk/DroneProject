@@ -442,7 +442,7 @@ public class QuadcopterController_sec: MonoBehaviour
             directionFromObject.Normalize();  // Normalize the direction vector
 
             // Set the new desired position to maintain at least minDistance
-            desiredPosition = closestPoint + directionFromObject * minDistance;
+            //desiredPosition = closestPoint + directionFromObject * minDistance;
         }
 
 

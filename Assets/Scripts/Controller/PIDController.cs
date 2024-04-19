@@ -1,9 +1,9 @@
 using UnityEngine;
 public class PIDController
 {
-    private float proportionalGain;
-    private float integralGain;
-    private float derivativeGain;
+    public float proportionalGain;
+    public float integralGain;
+    public float derivativeGain;
 
     private float integral = 0f; 
     private float minIntegral = -5f;

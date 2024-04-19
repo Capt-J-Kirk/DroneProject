@@ -4351,7 +4351,7 @@ Transform:
   m_GameObject: {fileID: 319071624}
   serializedVersion: 2
   m_LocalRotation: {x: 0.8660253, y: -0, z: -0, w: -0.5000002}
-  m_LocalPosition: {x: 404.65945, y: 81.68513, z: 623}
+  m_LocalPosition: {x: 404.65945, y: 123.2, z: 605.9}
   m_LocalScale: {x: 3.7349155, y: 1.1856, z: 7.8350043}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9954,7 +9954,7 @@ MonoBehaviour:
   boxSize: 0.1
   grid1: {fileID: 4073737928090727783}
   grid2: {fileID: 2052369537}
-  type: 
+  type: 0
   name: 
   controlScheme: 
   startPose: 

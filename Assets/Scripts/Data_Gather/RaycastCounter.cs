@@ -229,17 +229,17 @@ public class RaycastCounter : MonoBehaviour
 
             Vector3 localHitPoint = new Vector3(0,0,0);
             //
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, TargetLayer))
-            {
-                // Access the hit object's transform
-                Transform hitTransform = hit.transform;
+            // if (Physics.Raycast(ray, out hit, Mathf.Infinity, TargetLayer))
+            // {
+            //     // Access the hit object's transform
+            //     Transform hitTransform = hit.transform;
 
-                // Convert the world position of the hit to a local position
-                localHitPoint = hitTransform.InverseTransformPoint(hit.point);
+            //     // Convert the world position of the hit to a local position
+            //     localHitPoint = hitTransform.InverseTransformPoint(hit.point);
 
-                // Debug output to the console
-                Debug.Log("Local hit point: " + localHitPoint);
-            }
+            //     // Debug output to the console
+            //     Debug.Log("Local hit point: " + localHitPoint);
+            // }
 
 
             if(hit.collider.CompareTag("TrackableObject"))
