@@ -8,17 +8,21 @@ using Es.InkPainter;
 
 public class RayCaster : MonoBehaviour
 {
+    // Ref. to performance.
+    PerformanceCalc performanceCalc;
+
     public GameObject spawn;
     public GameObject spawner;
 
     // Drone data
-    private DroneControl myDrone;
+    private DroneControl thisDrone;
 
     // Ray variables
-    public float rayFrequency = 0.1f;
-    public int rayCount = 18;
-    public float beamRadius = 0.25f;
-    private List<GameObject> rayCasters;
+    float rayFrequency = 0.1f;
+    int rayCount = 18;
+    float beamRadius = 0.25f;
+    List<GameObject> rayCasters;
+    float maxCleaningDistance = 9f;
 
     // Target object data
     private string tagTurbine = "WindTurbine";
@@ -32,9 +36,15 @@ public class RayCaster : MonoBehaviour
 
     private void Awake()
     {
+        performanceCalc = FindObjectOfType<PerformanceCalc>();
+        if (!performanceCalc) Debug.Log("PerformanceCalc was not found!");
         tagTarget = tagTurbine;
-        myDrone = GetComponent<DroneControl>();
+        thisDrone = GetComponent<DroneControl>();
         rayCasters = new();
+
+        // Testing
+        // thisDrone.isSpraying = true;
+        // thisDrone.droneSpray.Play();
     }
 
 
@@ -46,7 +56,7 @@ public class RayCaster : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (myDrone.isSpraying) SendRays();
+        if (thisDrone.isSpraying) SendRays();
     }
 
 
@@ -95,9 +105,18 @@ public class RayCaster : MonoBehaviour
             Ray ray = new Ray(position, forwardDirection);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.CompareTag(tagTarget))
+            if (Physics.Raycast(ray, out hit) &&
+                hit.collider.gameObject.CompareTag(tagTarget) &&
+                hit.distance < maxCleaningDistance
+                )
             {
-                Debug.Log("I hit: " + hit.collider.name);
+                foreach (TurbinePart itr in performanceCalc.parts)
+                {
+                    if (hit.collider.gameObject.name == itr.paint_GO.name) itr.wasHit = true;
+                }
+
+
+                //Debug.Log("I hit: " + hit.collider.name);
                 var paintObject = hit.transform.GetComponent<InkCanvas>();
                 if (paintObject != null)
                     paintObject.Paint(brush, hit);
@@ -112,7 +131,7 @@ public class RayCaster : MonoBehaviour
             }
 
             // Visualize ray
-            Debug.DrawRay(position, forwardDirection * 10, Color.yellow);
+            Debug.DrawRay(position, forwardDirection * maxCleaningDistance, Color.yellow);
         }
     }
 

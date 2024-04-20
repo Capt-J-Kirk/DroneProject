@@ -8,7 +8,7 @@ public class DroneControl: MonoBehaviour
 {
     private DPad_Control inputDPad = null;
     private XRI_Control_1 inputXRI = null;
-    [SerializeField] private ParticleSystem droneSpray;
+    [SerializeField] public ParticleSystem droneSpray;
     [HideInInspector] public bool isSpraying = false;
     private Rigidbody rb;
     private Vector2 throttleYawVector = Vector2.zero;
@@ -18,7 +18,7 @@ public class DroneControl: MonoBehaviour
     public float rotateTimer = 0;
 
     float maxSpeed = 2 ;                // Units per second.
-    public float maxAngularSpeed = 90;  // Degrees per second.
+    public float maxAngularSpeed = 10;  // Degrees per second.
     public float maxDegPitchRoll = 30;  // Maximum degrees pitch/roll.
 
 
@@ -30,9 +30,6 @@ public class DroneControl: MonoBehaviour
         rb = GetComponent<Rigidbody>();
         var main = droneSpray.main;
         main.loop = true;
-
-        // ########## TESTING ##########
-        isSpraying = true;
     }
 
 
@@ -127,7 +124,7 @@ public class DroneControl: MonoBehaviour
         // Level the drone
         if (throttleYawVector == Vector2.zero && pitchRollVector == Vector2.zero)
         {
-            float speed = 0.5f;
+            float speed = 0.6f;
             float singleStep = speed * Time.deltaTime;
 
             // Projecting local forward vector onto global level plane.
@@ -169,14 +166,14 @@ public class DroneControl: MonoBehaviour
             // Pitch
             if (Mathf.Abs(transform.rotation.eulerAngles.x) < maxDegPitchRoll || Mathf.Abs(transform.rotation.eulerAngles.x) > 360f - maxDegPitchRoll)
             {
-                if (Mathf.Abs(pitchRollVector.y) < 0.2f) pitchRollVector.y = 0f;
+                if (Mathf.Abs(pitchRollVector.y) < 0.5f) pitchRollVector.y = 0f;
                 transform.Rotate(new Vector3(pitchRollVector.y * maxAngularSpeed / 5f, 0f, 0f) * Time.deltaTime, Space.Self);
             }
 
             // Roll
             if (Mathf.Abs(transform.rotation.eulerAngles.z) < maxDegPitchRoll || Mathf.Abs(transform.rotation.eulerAngles.z) > 360f - maxDegPitchRoll)
             {
-                if (Mathf.Abs(pitchRollVector.x) < 0.2f) pitchRollVector.x = 0f;
+                if (Mathf.Abs(pitchRollVector.x) < 0.5f) pitchRollVector.x = 0f;
                 transform.Rotate(new Vector3(0f, 0f, -1f * pitchRollVector.x * maxAngularSpeed / 5f) * Time.deltaTime, Space.Self);
             }
         }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5804024051589227989
+--- !u!1 &1547698175853379360
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,11 +8,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6744174853870945833}
-  - component: {fileID: 1472034157102909969}
-  - component: {fileID: 6495140407492719210}
-  - component: {fileID: 5462273599268463439}
-  - component: {fileID: 3385005275234071306}
+  - component: {fileID: 3309403477038837540}
+  - component: {fileID: 7698390997433000982}
+  - component: {fileID: 5747186649712468893}
+  - component: {fileID: 187380714873228821}
   m_Layer: 0
   m_Name: Paint Camera
   m_TagString: MainCamera
@@ -20,28 +19,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6744174853870945833
+--- !u!4 &3309403477038837540
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804024051589227989}
+  m_GameObject: {fileID: 1547698175853379360}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 419.95, y: 77.38, z: 605.4}
+  m_LocalPosition: {x: 404.1, y: 111.2, z: 598.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1472034157102909969
+--- !u!20 &7698390997433000982
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804024051589227989}
+  m_GameObject: {fileID: 1547698175853379360}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
@@ -68,7 +67,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -77,7 +76,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 2
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 1
@@ -86,21 +85,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!124 &6495140407492719210
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804024051589227989}
-  m_Enabled: 1
---- !u!114 &5462273599268463439
+--- !u!114 &5747186649712468893
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804024051589227989}
+  m_GameObject: {fileID: 1547698175853379360}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 198ea805a7ea99e4f9dfb199175e9be9, type: 3}
@@ -109,30 +100,30 @@ MonoBehaviour:
   wheelSpeed: 10
   moveSpeed: 0.3
   rotateSpeed: 0.3
---- !u!114 &3385005275234071306
+--- !u!114 &187380714873228821
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804024051589227989}
+  m_GameObject: {fileID: 1547698175853379360}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1532b32c9929ea141974a1e47a80bb2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   brush:
-    brushTexture: {fileID: 2800000, guid: b8702b5a8624a114f82a6d09bc3ce746, type: 3}
-    brushNormalTexture: {fileID: 2800000, guid: 945b831b22eb06945bf77e00f16ff51a, type: 3}
+    brushTexture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+    brushNormalTexture: {fileID: 0}
     brushHeightTexture: {fileID: 0}
-    brushScale: 0.1
+    brushScale: 0.3
     rotateAngle: 0
-    brushNormalBlend: 0.1
+    brushNormalBlend: 0
     brushHeightBlend: 0
-    brushColor: {r: 0.421064, g: 0.42414397, b: 0.86764705, a: 1}
+    brushColor: {r: 0, g: 0, b: 0, a: 0.02745098}
     colorBlendType: 0
     normalBlendType: 0
     heightBlendType: 0
-  paintCamera: {fileID: 1472034157102909969}
+  paintCamera: {fileID: 7698390997433000982}
   useMethodType: 0
   erase: 0

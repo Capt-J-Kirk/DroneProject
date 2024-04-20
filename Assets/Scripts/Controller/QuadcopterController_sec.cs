@@ -303,6 +303,8 @@ public class QuadcopterController_sec: MonoBehaviour
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+
         //inputController = FindFirstObjectByType<UserInput>();
         desiredPosition = rb.transform.position;
         desiredOrientation = rb.transform.rotation;
@@ -321,7 +323,7 @@ public class QuadcopterController_sec: MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        // rb = GetComponent<Rigidbody>();
         rb.maxAngularVelocity = maxAngularVelocity;
         // starting baseAltitude;
         desiredPosition = transform.position;

@@ -3,33 +3,38 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TextureCalc : MonoBehaviour
+
+[Serializable]
+public class TurbinePart
+{
+    public GameObject paint_GO;
+    public InkCanvas inkCanvas;
+    public Material material;
+
+    public bool assigned = false;
+    public bool updatePerformance = false;
+    public float timer = 0;
+    public MeshFilter meshFilter;
+    public Texture2D startTexture;
+    public Texture2D currentTexture;
+
+    // Dirt info containers
+    public Dictionary<Vector3, float> coordDirt_Dict = new();
+    public List<Vector3> coordDirt_List = new();
+    public List<Vector2Int> textureDirt_List = new();
+    public Dictionary<Vector2Int, float> textureDirt_Dict = new();
+
+    // Overall measure for turbine part.
+    public float startDirt = 0;
+    public float currDirt = 0;
+
+    // Hit by raycast
+    public bool wasHit = false;
+}
+
+public class PerformanceCalc : MonoBehaviour
 {
     public List<TurbinePart> parts;
-
-    [Serializable]
-    public class TurbinePart
-    {
-        public GameObject paintObject;
-        public Material material;
-
-        public bool assigned = false;
-        public bool updatePerformance = false;
-        public float timer = 0;
-        public MeshFilter meshFilter;
-        public Texture2D startTexture;
-        public Texture2D currentTexture;
-        public List<Vector2Int> activePixelList = new();
-        public Dictionary<Vector2Int, Color> activePixelDict = new();
-
-        public Dictionary<Vector3Int, float> startDirtDict = new();
-        public Dictionary<Vector3Int, float> startDirtList = new();
-        public float startDirt = 0;
-        public Dictionary<Vector3Int, float> currDirtDict = new();
-        public float currDirt = 0;
-    }
-
-
 
     private void Awake()
     {
@@ -37,9 +42,8 @@ public class TextureCalc : MonoBehaviour
 
         foreach (TurbinePart itr in parts)
         {
-            Vector3 bounds = itr.paintObject.GetComponent<Renderer>().bounds.extents * 2f;
+            Vector3 bounds = itr.paint_GO.GetComponent<Renderer>().bounds.extents * 2f;
             //for(int i=0; )
-
         }
     }
 
@@ -47,21 +51,22 @@ public class TextureCalc : MonoBehaviour
     {
         foreach (TurbinePart itr in parts)
         {
-            if (!itr.assigned)
+            itr.timer += Time.deltaTime;
+
+            if (!itr.assigned && itr.timer > 3)
             {
-                if (itr.timer > 3)
-                {
-                    Debug.Log("Part " + itr.material + " beginning assig.");
-                    Assign(itr);
-                    Debug.Log("Part " + itr.material + " assigned.");
-                    itr.timer = 0;
-                }
-                else itr.timer += Time.deltaTime;
-            }
-            else if (itr.timer > 1f)
-            {
+                // Debug.Log("Wind turbine, " + itr.paint_GO.name + " texture BEGINNING assign.");
+                Assign(itr);
+                // Debug.Log("Wind turbine, " + itr.paint_GO.name + " texture SUCCESSFULLY assigned.");
                 itr.timer = 0;
+            }
+
+            if (itr.assigned && itr.timer > 1f && itr.wasHit)
+            {
                 UpdatePerformance(itr);
+                Debug.Log("Updating performance");
+                itr.timer = 0;
+                itr.wasHit = false;
             }
         }
     }
@@ -69,6 +74,29 @@ public class TextureCalc : MonoBehaviour
 
     void UpdatePerformance(TurbinePart itr)
     {
+        itr.inkCanvas = itr.paint_GO.GetComponent<InkCanvas>();
+        RenderTexture renderTex = itr.inkCanvas.GetPaintMainTexture(itr.material.name + " (Instance)");
+        RenderTexture.active = renderTex;
+
+        itr.currentTexture = new Texture2D(renderTex.width, renderTex.height, TextureFormat.RGBA32, false);
+        if (itr.currentTexture == null)
+        {
+            Debug.LogError("Instanced texure not found");
+            return;
+        }
+        itr.currentTexture.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
+        itr.currentTexture.Apply();
+        RenderTexture.active = null;
+
+        // Find current dirt.
+        itr.currDirt = 0;
+        foreach (Vector2Int texCoord in itr.textureDirt_List)
+        {
+            Color color = itr.currentTexture.GetPixel(texCoord.x, texCoord.y);
+            //float dirt_OLD = (color.r + color.g + color.b) / 3f;
+            float dirt = 1 - color.grayscale;
+            itr.currDirt += dirt;
+        }
 
     }
 
@@ -76,15 +104,15 @@ public class TextureCalc : MonoBehaviour
     void Assign(TurbinePart itr)
     {
         itr.assigned = true;
-        itr.meshFilter = itr.paintObject.GetComponent<MeshFilter>();
+        itr.meshFilter = itr.paint_GO.GetComponent<MeshFilter>();
         if (itr.meshFilter == null)
         {
             Debug.LogError("Mesh filter not found");
             return;
         }
 
-        InkCanvas inkCanvas = itr.paintObject.GetComponent<InkCanvas>();
-        RenderTexture renderTex = inkCanvas.GetPaintMainTexture(itr.material.name + " (Instance)");
+        itr.inkCanvas = itr.paint_GO.GetComponent<InkCanvas>();
+        RenderTexture renderTex = itr.inkCanvas.GetPaintMainTexture(itr.material.name + " (Instance)");
         RenderTexture.active = renderTex;
 
         itr.startTexture = new Texture2D(renderTex.width, renderTex.height, TextureFormat.RGBA32, false);
@@ -99,7 +127,7 @@ public class TextureCalc : MonoBehaviour
         // Reset the active RenderTexture
         RenderTexture.active = null;
 
-        Debug.Log("Start texture w/h: " + itr.startTexture.width + "/" + itr.startTexture.height);
+        //Debug.Log("Start texture w/h: " + itr.startTexture.width + "/" + itr.startTexture.height);
 
         for (int i = 0; i < itr.startTexture.width; i++)
         {
@@ -109,20 +137,22 @@ public class TextureCalc : MonoBehaviour
 
                 if (color.grayscale != 1)
                 {
-                    itr.activePixelList.Add(new Vector2Int(i, j));
-                    itr.activePixelDict.Add(new Vector2Int(i, j), color);
-
-
-                    // #####################
                     Vector2 uvCoordinate = new Vector2((float)i / itr.startTexture.width, (float)j / itr.startTexture.height);
                     Vector3 coordinate = GetLocalCoordinateFromUV(itr, uvCoordinate);
                     if (coordinate != Vector3.zero)
                     {
-                        itr.startDirt += (color.r + color.g + color.b) / 3f;
-                        Debug.Log("Start dirt: " + itr.startDirt);
-                        Debug.Log("Start dirt");
+                        //float dirt_OLD = (color.r + color.g + color.b) / 3f;
+                        float dirt = 1 - color.grayscale;
+                        itr.startDirt += dirt;
+                        itr.currDirt += dirt;
+
+                        // Dirt to texture
+                        itr.textureDirt_List.Add(new Vector2Int(i, j));
+                        itr.textureDirt_Dict.Add(new Vector2Int(i, j), dirt);
+                        // Dirt to coordinate
+                        itr.coordDirt_List.Add(coordinate);
+                        itr.coordDirt_Dict.Add(coordinate, dirt);
                     }
-                    // #####################
                 }
             }
         }

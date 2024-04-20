@@ -28,7 +28,7 @@ public class CheckForGround : MonoBehaviour
 
     private void Awake()
     {
-        chosenPrefab = hoseSegmentPrefabs[1];
+        chosenPrefab = hoseSegmentPrefabs[0];
         vanHosePoint = transform.position;
         droneHoseGO = GameObject.FindGameObjectWithTag("DroneHosePoint");
         droneHosePoint = droneHoseGO.transform.position;
