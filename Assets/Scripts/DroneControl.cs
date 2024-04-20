@@ -30,6 +30,9 @@ public class DroneControl: MonoBehaviour
         rb = GetComponent<Rigidbody>();
         var main = droneSpray.main;
         main.loop = true;
+
+        // ########## TESTING ##########
+        isSpraying = true;
     }
 
 

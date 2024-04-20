@@ -52,15 +52,6 @@ public class CheckForGround : MonoBehaviour
 
         
         }
-
-        /**
-        foreach (Vector3 itr in catenaryHosePoints)
-        {
-            GameObject segment = Instantiate(chosenPrefab, itr, Quaternion.identity);
-            segment.transform.parent = transform;
-            hoseSegments.Add(segment);
-        }
-        **/
     }
 
 

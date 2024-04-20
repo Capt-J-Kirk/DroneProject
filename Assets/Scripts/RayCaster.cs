@@ -8,15 +8,11 @@ using Es.InkPainter;
 
 public class RayCaster : MonoBehaviour
 {
-    public GameObject[] turbineObjects;
-    public GameObject testObject;
-
     public GameObject spawn;
     public GameObject spawner;
 
     // Drone data
     private DroneControl myDrone;
-    public GameObject raySenderObject;
 
     // Ray variables
     public float rayFrequency = 0.1f;
@@ -25,42 +21,34 @@ public class RayCaster : MonoBehaviour
     private List<GameObject> rayCasters;
 
     // Target object data
-    private string targetTag = "WindTurbine";
-
-
-    //private Mesh mesh;
-    //private Color[] originalColors;
-    //private Material material;
+    private string tagTurbine = "WindTurbine";
+    private string tagBoundingBox = "BoundingBox";
+    private string tagTarget = "";
 
     // Inkpainter
     [SerializeField]
     Brush brush;
 
+
     private void Awake()
     {
+        tagTarget = tagTurbine;
         myDrone = GetComponent<DroneControl>();
         rayCasters = new();
     }
 
+
     void Start()
     {
-        // Assuming your object has a MeshFilter and MeshRenderer
-        //mesh = GetComponent<MeshFilter>().mesh;
-        //originalColors = mesh.colors; // Store original colors
-        //material = GetComponent<Renderer>().material;
-
         SpawnRaycasters();
-        //foreach (GameObject itr in turbineObjects) InitMesh(itr);
-        //InitMesh(testObject);
     }
 
-    private void Update()
-    {
-        //if (myDrone.isSpraying && !IsInvoking(nameof(SendRays))) InvokeRepeating(nameof(SendRays), 0, rayFrequency);
-        //if (!myDrone.isSpraying) CancelInvoke(nameof(SendRays));
 
+    private void FixedUpdate()
+    {
         if (myDrone.isSpraying) SendRays();
     }
+
 
     void SpawnRaycasters()
     {
@@ -69,7 +57,7 @@ public class RayCaster : MonoBehaviour
         rayCasters.Add(rayCaster);
         rayCaster.transform.rotation = Quaternion.Euler(3,0,0);
 
-        return;
+        return; // Using just 1, for now.
 
         int casterCircleCount = 4;
         float angleIncrement = 360f / rayCount;
@@ -107,30 +95,20 @@ public class RayCaster : MonoBehaviour
             Ray ray = new Ray(position, forwardDirection);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.CompareTag(targetTag))
+            if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.CompareTag(tagTarget))
             {
                 Debug.Log("I hit: " + hit.collider.name);
                 var paintObject = hit.transform.GetComponent<InkCanvas>();
                 if (paintObject != null)
                     paintObject.Paint(brush, hit);
-                /**
-                // Get object data
-                GameObject hitObject = hit.collider.gameObject;
-                Mesh mesh = hitObject.GetComponent<MeshFilter>().mesh;
-                Color[] colors = mesh.colors;
 
-                // Get the triangle index from RaycastHit
-                int triangleIndex = hit.triangleIndex;
-                Debug.Log("I hit tri: " + triangleIndex + ", on: " + hitObject.name);
-
-                // Modify color
-                colors[triangleIndex*3] = Color.red;
-                colors[triangleIndex*3 + 1] = Color.red;
-                colors[triangleIndex*3 + 2] = Color.red;
-
-                // Apply modified colours
-                mesh.colors = colors;
-                **/
+                // #################################
+                // GameObject hitGO = hit.collider.gameObject;
+                // Debug.Log("Extends: " + hitGO.GetComponent<Renderer>().bounds.extents);
+                // Vector3 localHitPoint = hitGO.transform.InverseTransformPoint(hit.point) * hitGO.transform.parent.localScale.x;
+                // Vector3 boundingBox_BlenderAxes_Hit = new Vector3(localHitPoint.y, localHitPoint.z, localHitPoint.x);
+                // Debug.Log("Hit point. Object coordinate system: " + boundingBox_BlenderAxes_Hit);
+                // #################################
             }
 
             // Visualize ray

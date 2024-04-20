@@ -8,6 +8,7 @@ TagManager:
   - DroneHosePoint
   - WindTurbine
   - VanHosePoint
+  - BoundingBox
   layers:
   - Default
   - TransparentFX
