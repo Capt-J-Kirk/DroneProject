@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class DroneControl: MonoBehaviour
 {
     private DPad_Control inputDPad = null;
-    private XRI_Control inputXRI = null;
+    private XRI_Control_1 inputXRI = null;
     [SerializeField] private ParticleSystem droneSpray;
     [HideInInspector] public bool isSpraying = false;
     private Rigidbody rb;
@@ -26,7 +26,7 @@ public class DroneControl: MonoBehaviour
     private void Awake()
     {
         inputDPad = new DPad_Control();
-        inputXRI = new XRI_Control();
+        inputXRI = new XRI_Control_1();
         rb = GetComponent<Rigidbody>();
         var main = droneSpray.main;
         main.loop = true;

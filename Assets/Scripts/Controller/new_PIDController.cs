@@ -1,5 +1,5 @@
 using UnityEngine;
-public class PIDController
+public class new_PIDController
 {
     private float proportionalGain;
     private float integralGain;
@@ -8,7 +8,7 @@ public class PIDController
     private float integral = 0f; 
     private float previousError = 0f;
 
-    public PIDController(float kp, float ki, float kd)
+    public new_PIDController(float kp, float ki, float kd)
     {
         proportionalGain = kp;
         integralGain = ki;
