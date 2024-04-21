@@ -622,5 +622,18 @@ public class QuadcopterController_sec: MonoBehaviour
     {
         //rb.AddTorque(counterTorque, ForceMode.Impulse);
     }
+    public void reset_drone()
+    {
+        rb.transform.velocity = 0f;
+        rb.transform.angularVelocity = 0f;
+        AltitudePID.ClearPID();
+        pitchPIDQuaternion.ClearPID();
+        yawPIDQuaternion.ClearPID();
+        rollPIDQuaternion.ClearPID();
+        xPID.ClearPID();
+        zPID.ClearPID();
+        desiredOrientation = new Quaternion(0,0,0,0);
+        desiredPosition = rb.transform.position;
 
+    }
 }

@@ -240,6 +240,200 @@ public class QuadcopterController: MonoBehaviour
         desiredPosition = currentDesiredPosition + newPositionChangeWorld;
 
     }
+       private void new_CalcDesiredPose(float rollChange, float pitchChange, float yawChange, float throttleChange)
+    {
+        // Sensitivity factors (determine how much each input affects the pose)
+        float pitchSensitivity = 10.0f;
+        float pitch_x = 2.0f;
+        float rollSensitivity = 10.0f;
+        float roll_z = 2.0f;
+        float yawSensitivity = 5.0f;
+        float altitudeSensitivity = 0.50f;
+        float newPitch = 0;
+        float newRoll = 0;
+        float xSensitivity = 0.50f;
+        float ySensitivity = 0.50f;
+        float zSensitivity = 0.50f;
+
+        // quick mapping
+        float xlocalChange = pitchChange;
+        float ylocalChange = throttleChange;
+        float zlocalChange = rollChange;
+
+        float safeDistance = 0.5f
+
+        // // Converting neutral orientation from Quaternion to euler angles
+         Vector3 neutralEulerAngles = neutralOrientation.eulerAngles;
+
+        // // Calculate new angles by applying the userInput changes to the neutral orientation and limiting the angle 
+        // float newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
+        // float newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
+        // float newYaw = neutralEulerAngles.y + (yawChange * yawSensitivity); // yaw can freely move
+
+        Vector3 currentDesiredPosition = desiredPosition;
+
+        // find the distance to windblade
+        Vector3 localPos = transform.InverseTransformPoint(windblade.position)
+
+        if(Mathf.Abs(localPos) < safeDistance)
+        {
+
+            if (Mathf.Abs(localPos.z) < safeDistance)
+            {
+                // Target is in the forward or backward local space
+                if (localPos.z > 0)
+                {
+                    // Object is in forward direction
+                    Debug.Log("Object is too close in forward direction! Moving backward.");
+                    newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, 0);
+                }
+                else
+                {
+                    // Object is in backward direction
+                    Debug.Log("Object is too close in backward direction! Moving forward.");
+                    newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), 0, maxRoll);
+                }
+            }
+            
+            // Check if the target is within the safe distance in the right direction
+            if (Mathf.Abs(localPos.x) < safeDistance)
+            {
+                // Target is in the right or left local space
+                if (localPos.x > 0)
+                {
+                    // Object is in right direction
+                    Debug.Log("Object is too close in right direction! Moving left.");
+                    newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, 0);
+                }
+                else
+                {
+                    // Object is in left direction
+                    Debug.Log("Object is too close in left direction! Moving right.");
+                    newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), 0, maxPitch);
+                }
+            }
+
+            // Check if the target is within the safe distance in the up direction
+            if (Mathf.Abs(localPos.y) < safeDistance)
+            {
+                // Target is in the up or down local space
+                if (localPos.y > 0)
+                {
+                    // Object is in up direction
+                    Debug.Log("Object is too close in up direction! Moving down.");
+                    Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
+                    Mathf.Clamp(currentDesiredPosition.y + newPositionChange, currentDesiredPosition.y-100f, currentDesiredPosition.y);
+                }
+                else
+                {
+                    // Object is in down direction
+                    Debug.Log("Object is too close in down direction! Moving up.");
+                    Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
+                    Mathf.Clamp(currentDesiredPosition.y + newPositionChange, currentDesiredPosition.y, currentDesiredPosition.y+100f);
+                
+                }
+            }
+        }
+        else
+        {
+            if (pitchChange == 0)
+            {
+                // No input detected, set desiredOrientation to neutralOrientation
+                newPitch = neutralOrientation.eulerAngles.x;
+
+                // To cancel out the forward momentum, make a Impuls for a counter momentum 
+                Vector3 counterTorque = new Vector3(-1*rb.angularVelocity.x,0,0);
+                //ApplyCounterTorque(counterTorque);
+            
+            }
+            else
+            {
+                // Calculate new angles directly within bounds
+                newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
+                //float newPitch = Mathf.Clamp(pitchChange * pitchSensitivity, -maxPitch, maxPitch);
+                //newPitch = WrapAngle(newPitch);
+            }
+
+            if (rollChange == 0)
+            {
+                newRoll = neutralOrientation.eulerAngles.z;
+                // To cancel out the left/right momentum, make a Impuls for a counter momentum
+                Vector3 counterTorque = new Vector3(0,0,-1*rb.angularVelocity.z);
+                //ApplyCounterTorque(counterTorque);
+                
+            }
+            else
+            {
+                newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
+                //float newRoll = Mathf.Clamp(rollChange * rollSensitivity, -maxRoll, maxRoll);
+                //newRoll = WrapAngle(newRoll);
+            }
+
+
+            // update prewious Yew
+            prewYaw = newYaw;
+            float newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity);
+            // only used for datacollector
+            desiredEulerAngles = new Vector3(newPitch, newYaw, newRoll);
+            //
+
+            //Update desired orientation
+            desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
+        
+            //Debug.Log("desiredOrientation euler: " + desiredOrientation.eulerAngles);
+        
+            // current position should be the desired position, as its the starting position. 
+
+            //Vector3 currentDesiredPosition = desiredPosition;
+
+            // // x
+            // float newPositionChangeX = currentDesiredPosition.x + pitchChange * pitch_x;
+            // // y
+            // float newPositionChangeY = currentDesiredPosition.y + throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
+            // // z 
+            // float newPositionChangeZ = currentDesiredPosition.z + rollChange * roll_z;
+            Vector3 newPositionChangeLocal = new Vector3(
+                xlocalChange * xSensitivity,
+                ylocalChange * ySensitivity,
+                zlocalChange * zSensitivity);
+
+            newPositionChangeX = xlocalChange * xSensitivity;
+            // float newPositionChangeY = ylocalChange * ySensitivity;
+            newPositionChangeZ = zlocalChange * zSensitivity;
+
+            // Convert local position change to world space
+            //Vector3 newPositionChangeWorld = transform.TransformPoint(newPositionChangeLocal) - transform.position;
+
+            Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
+        }
+       
+
+
+        // 270 
+        
+        // may need to be the current orientation of the drone, to be able to spin 360
+         // yaw can freely move
+        //float newYaw = transform.rotation.eulerAngles.y + (yawChange * yawSensitivity); // yaw can freely move
+        //float newYaw = yawChange * yawSensitivity; // yaw can freely move
+        //newYaw = WrapAngle(newYaw);
+          
+        if (toggleDebug)
+        {
+            Debug.Log("DesiredPitch: " + newPitch);
+            Debug.Log("currentPitch: " + rb.transform.rotation.eulerAngles.x);
+            Debug.Log("DesiredYaw: " + newYaw);
+            // Debug.Log("PrewYaw: " + prewYaw);
+            Debug.Log("DesiredRoll: " + newRoll);
+            Debug.Log("currentRoll: " + rb.transform.rotation.eulerAngles.z);
+        }
+
+       
+        // Update desired position
+        desiredPosition = currentDesiredPosition + newPositionChange;
+        //desiredPosition = currentDesiredPosition + newPositionChangeWorld;
+       
+    }
+
 
     private void CalcDesiredPose(float rollChange, float pitchChange, float yawChange, float throttleChange)
     {
@@ -748,6 +942,21 @@ public class QuadcopterController: MonoBehaviour
             //Debug.Log("drone r/p/y/th: " + roll + "/" + pitch + "/" + yaw + "/" + throttle);
         }
          
+    }
+
+    public void reset_drone()
+    {
+        rb.transform.velocity = 0f;
+        rb.transform.angularVelocity = 0f;
+        AltitudePID.ClearPID();
+        pitchPIDQuaternion.ClearPID();
+        yawPIDQuaternion.ClearPID();
+        rollPIDQuaternion.ClearPID();
+        xPID.ClearPID();
+        zPID.ClearPID();
+        desiredOrientation = new Quaternion(0,0,0,0);
+        desiredPosition = rb.transform.position;
+
     }
 
 }

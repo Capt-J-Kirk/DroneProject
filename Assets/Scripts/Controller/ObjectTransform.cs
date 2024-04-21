@@ -54,7 +54,7 @@ public class ObjectTransform: MonoBehaviour
     public float phi = Mathf.PI / 2; // Vertical angle, starting vertically upwards
     private float prewYaw = 0f;
     private float yaw3 = 0f;
-    float newYaw = 0f;
+    public float newYaw = 0f;
 
     public bool toggleFollow = true;
 
@@ -339,7 +339,11 @@ public class ObjectTransform: MonoBehaviour
         
 
         // face towards the main drone
-        Vector3 targetDirection = (new Vector3(0, 0, 0) - main_position).normalized;
+        // use the alitude from the secondary drone itself
+        Vector3 focusPoint = new Vector3(main_position.x, sec_position.y, main_position.z);
+
+        Vector3 targetDirection = (focusPoint - sec_position).normalized;
+        // may need to add Vector3.up
         Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
@@ -416,8 +420,11 @@ public class ObjectTransform: MonoBehaviour
         
 
         // face towards the main drone
-        Vector3 targetDirection = (new Vector3(0, 0, 0) - main_position).normalized;
-        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+        // use the alitude from the secondary drone itself
+        Vector3 focusPoint = new Vector3(main_position.x, sec_position.y, main_position.z);
+
+        Vector3 targetDirection = (focusPoint - sec_position).normalized;
+        // may need to add Vector3.up        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
         Quaternion targetOrientation  = yawRotation * baseRotation;
