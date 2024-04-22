@@ -370,19 +370,29 @@ public class UserInput : MonoBehaviour
     private void OnAClick(InputAction.CallbackContext value)
     {
         // enable the adjustment of the secondary drones position
-        if (togglesecondarDrone)
+        switchScren = !switchScren;
+        //SetActive()
+        if(screen1 == "1screen")
         {
-            // and that the sec drone is in follow mode.
-            if (transformAdjustment.toggleFollow)
+            ScreenTWO.SetActive(switchScren);
+            ScreenONE.SetActive(!switchScren);
+        }
+        else
+        {
+            if (togglesecondarDrone)
             {
-                // and we are in the control scheme 2
-                if (transformAdjustment.ControlScheme == 2)
+                // and that the sec drone is in follow mode.
+                if (transformAdjustment.toggleFollow)
                 {
-                    transformAdjustment.changeInPosition = true;
+                    // and we are in the control scheme 2
+                    if (transformAdjustment.ControlScheme == 2)
+                    {
+                        transformAdjustment.changeInPosition = true;
+                    }
+                    Debug.Log("changed position: " +  transformAdjustment.changeInPosition);
                 }
-                Debug.Log("changed position: " +  transformAdjustment.changeInPosition);
+                
             }
-            
         }
         // if (transformAdjustment.ControlScheme == 0)
         // {
@@ -410,17 +420,16 @@ public class UserInput : MonoBehaviour
     {
         // should be used to toggle between screens
         // enable the adjustment of the secondary drones offset parameters
-        switchScren = !switchScren;
-        //SetActive()
-        if(screen1 == "1screen")
-        {
-            ScreenTWO.SetActive(switchScren);
-            ScreenONE.SetActive(!switchScren);
-        }
-        else
-        {
-            transformAdjustment.resetYaw();
-        }
+        // switchScren = !switchScren;
+        // //SetActive()
+        // if(screen1 == "1screen")
+        // {
+        //     ScreenTWO.SetActive(switchScren);
+        //     ScreenONE.SetActive(!switchScren);
+        // }
+       
+        transformAdjustment.resetYaw();
+       
         
         Debug.Log("X CLICKED!!!!");
     }
