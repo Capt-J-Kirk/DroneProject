@@ -312,7 +312,8 @@ public class ObjectTransform: MonoBehaviour
         Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
-        Quaternion targetOrientation  = yawRotation * baseRotation;
+        //Quaternion targetOrientation  = yawRotation * baseRotation;
+        Quaternion targetOrientation = baseRotation;
 
         // Apply to drone controller
         ApplyNewPose(targetPosition, targetOrientation);
@@ -349,11 +350,15 @@ public class ObjectTransform: MonoBehaviour
 
         Vector3 targetDirection = (focusPoint - sec_position).normalized;
         // may need to add Vector3.up
-        Quaternion baseRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
-        Quaternion targetOrientation  = yawRotation * baseRotation;
-
+        //Quaternion targetOrientation  = yawRotation * baseRotation;
+        Quaternion targetOrientation = baseRotation;
+        Debug.Log("targetOrientation:" + targetOrientation.eulerAngles);
+        Debug.Log("Quadcopter_secondary:" + Quadcopter_secondary.transform.rotation.eulerAngles);
+        //Quadcopter_secondary.transform.rotation = Quaternion.Euler(0, 45f, 0);
+        //Debug.Log("Quadcopter_secondary:" + Quadcopter_secondary.transform.rotation.eulerAngles);
         // Apply to drone controller
         ApplyNewPose(targetPosition, targetOrientation);
     }    

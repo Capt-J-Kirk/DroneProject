@@ -21,7 +21,7 @@ public class QuadcopterController_sec: MonoBehaviour
     public float maxPitch = 5.0f; 
 
     // Max velocity
-    private float maxVelYaw = .0f;
+    private float maxVelYaw = 10.0f;
     private float maxVelRoll = 10.0f;
     private float maxVelPitch = 10.0f; 
     private float gravityComp = 0f;
@@ -426,7 +426,7 @@ public class QuadcopterController_sec: MonoBehaviour
 
     void UpdatePID()
     {
-    
+        
         // get time since last update 
         float deltaTime = Time.fixedDeltaTime;
 
@@ -481,6 +481,13 @@ public class QuadcopterController_sec: MonoBehaviour
         // Gravity compensation 
         float altitudeControlInput = altitudeError + gravityComp;
 
+        // test
+        Debug.Log("yawControlInput: " + yawControlInput);
+        Debug.Log("desiredOrientation: " + desiredOrientation);
+        Debug.Log("currentOrientation: " + currentOrientation);
+        //Debug.Log("orientationDelta: " + orientationDelta);
+        Debug.Log("angularVelocityError: " + angularVelocityError);
+        //rb.transform.rotation = desiredOrientation;
         // Apply control input 
         ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput, xControlInput, zControlInput);
  
@@ -517,7 +524,7 @@ public class QuadcopterController_sec: MonoBehaviour
     {
         // convert from world space to local space, then applying force
         Vector3 controlForceWorld = new Vector3(x, lift2, z);
-        Vector3 controlForceLocal = transform.InverseTransformDirection(controlForceWorld);
+        Vector3 controlForceLocal = controlForceWorld;//transform.InverseTransformDirection(controlForceWorld);
 
         // apply force in x, y, and z
         controlForceLocal.x = Mathf.Clamp(controlForceLocal.x, -maxVelocity, maxVelocity);
@@ -550,7 +557,8 @@ public class QuadcopterController_sec: MonoBehaviour
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
         rb.AddTorque(transform.up * clampYaw, ForceMode.Force);
-        //Debug.Log("lift: " + lift2);
+        Debug.Log("yaw: " + yaw);
+        Debug.Log("yawForce: " + clampYaw);
         //Debug.Log("clamplift: " + throttle2);
 
         if (toggleDebug)
@@ -610,7 +618,7 @@ public class QuadcopterController_sec: MonoBehaviour
         // Already calc by the transform script, for follow behaviour.
         desiredOrientation = rot;
         desiredPosition = pos;
-        if (toggleDebug)
+        if (true)//toggleDebug)
         {
             Debug.Log("pos modtaget: " + pos);
             Debug.Log("rot modtaget: " + rot);
