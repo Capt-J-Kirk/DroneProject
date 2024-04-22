@@ -229,23 +229,23 @@ public class RaycastCounter : MonoBehaviour
             // // Add the record to the list
             // Debug.Log("record: " + record);
             // hitRecords.Add(record);
-            LayerMask TargetLayer = LayerMask.GetMask("baseTargetLayer");
-            int layer = 4;
+            //LayerMask TargetLayer = LayerMask.GetMask("baseTargetLayer");
+            int layer = 3;
             int LayerMask = 1 << layer;
 
             Vector3 localHitPoint = new Vector3(0,0,0);
             //
-            // if (Physics.Raycast(ray, out hit, Mathf.Infinity, TargetLayer))
-            // {
-            //     // Access the hit object's transform
-            //     Transform hitTransform = hit.transform;
+            if (Physics.Raycast(ray2, out hit2, Mathf.Infinity, LayerMask))
+            {
+                // Access the hit object's transform
+                Transform hitTransform = hit2.transform;
 
-            //     // Convert the world position of the hit to a local position
-            //     localHitPoint = hitTransform.InverseTransformPoint(hit.point);
+                // Convert the world position of the hit to a local position
+                localHitPoint = hitTransform.InverseTransformPoint(hit2.point);
 
-            //     // Debug output to the console
-            //     Debug.Log("Local hit point: " + localHitPoint);
-            // }
+                // Debug output to the console
+                Debug.Log("Local hit point: " + localHitPoint);
+            }
 
 
             if(hit.collider.CompareTag("TrackableObject"))

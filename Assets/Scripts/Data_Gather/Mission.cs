@@ -476,6 +476,7 @@ public class MissionManager : MonoBehaviour
             // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
             // sec_drone.transform.position = new Vector3(100,80,100);
             // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            Windmill.transcition.position = new Vector3(405.799988f,60.7999992f,680.799988f);
             Windmill.transform.rotation = Quaternion.Euler(0,-90,0);
             
         }
@@ -485,6 +486,7 @@ public class MissionManager : MonoBehaviour
             // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
             // sec_drone.transform.position = new Vector3(100,80,100);
             // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            Windmill.transcition.position = new Vector3(405.799988f,60.7999992f,680.799988f);
             Windmill.transform.rotation = Quaternion.Euler(0,120,0);
         }
 
@@ -570,10 +572,12 @@ public class MissionManager : MonoBehaviour
         // main_drone.yawPIDQuaternion.ClearPID();
         
 
-        // main_drone.transform.position = new Vector3(100,80,110);
-        // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-        // sec_drone.transform.position = new Vector3(100,80,100);
-        // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+        main_drone.transform.position = new Vector3(411.408539f,79.9533463f,613.304993f);
+        main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+    
+        sec_drone.transform.position = new Vector3(410.037994f,80.4376144f,615.354004f);
+        sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+
         quadcopterController.reset_drone();
         quadcopterController_Sec.reset_drone();
         

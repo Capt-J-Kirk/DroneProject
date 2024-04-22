@@ -62,8 +62,8 @@ public class ObjectTransform: MonoBehaviour
     public int point = 0;
     private float starttime =0;
     private int count = 0;
-    private float minRadius = 2f;
-    private float maxRadius = 8f;
+    private float minRadius = 1.5f;
+    private float maxRadius = 5f;
 
     private float minLow = 3f;
     private float maxHigh = 3f;
@@ -336,7 +336,7 @@ public class ObjectTransform: MonoBehaviour
         // update prewious Yew
         prewYaw = newYaw;
         // possible add previous yaw, such it dosn't reset
-        newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
         newYaw = Mathf.Clamp(newYaw, -45f, 45f);
         //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
@@ -344,11 +344,12 @@ public class ObjectTransform: MonoBehaviour
 
         // face towards the main drone
         // use the alitude from the secondary drone itself
+        // if the focus point should be ahead of the main drone, add to the x axis
         Vector3 focusPoint = new Vector3(main_position.x, sec_position.y, main_position.z);
 
         Vector3 targetDirection = (focusPoint - sec_position).normalized;
         // may need to add Vector3.up
-        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
         Quaternion targetOrientation  = yawRotation * baseRotation;
@@ -429,7 +430,7 @@ public class ObjectTransform: MonoBehaviour
 
         Vector3 targetDirection = (focusPoint - sec_position).normalized;
         // may need to add Vector3.up       
-        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
         Quaternion targetOrientation  = yawRotation * baseRotation;
