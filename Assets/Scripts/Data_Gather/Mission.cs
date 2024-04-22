@@ -574,8 +574,8 @@ public class MissionManager : MonoBehaviour
         // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
         // sec_drone.transform.position = new Vector3(100,80,100);
         // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-        main_drone.reset_drone();
-        sec_drone.reset_drone();
+        quadcopterController.reset_drone();
+        quadcopterController_Sec.reset_drone();
         
         missionActive = true;
         isRecording = true;

@@ -39,7 +39,7 @@ public class GridManager : MonoBehaviour
 
     // USED for raycasting
     public float maxDistance = 5.0f;
-    public float maxRadius = 0.40f;
+    public float maxRadius = 0.15f;
 
 
     void Start()

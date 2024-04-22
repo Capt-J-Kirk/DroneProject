@@ -428,7 +428,8 @@ public class ObjectTransform: MonoBehaviour
         Vector3 focusPoint = new Vector3(main_position.x, sec_position.y, main_position.z);
 
         Vector3 targetDirection = (focusPoint - sec_position).normalized;
-        // may need to add Vector3.up        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+        // may need to add Vector3.up       
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
         Quaternion targetOrientation  = yawRotation * baseRotation;
