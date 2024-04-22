@@ -110,7 +110,7 @@ public class RayCaster : MonoBehaviour
                 hit.distance < maxCleaningDistance
                 )
             {
-                foreach (TurbinePart itr in performanceCalc.parts)
+                foreach (PerformanceCalc.TurbinePart itr in performanceCalc.parts)
                 {
                     if (hit.collider.gameObject.name == itr.paint_GO.name) itr.wasHit = true;
                 }

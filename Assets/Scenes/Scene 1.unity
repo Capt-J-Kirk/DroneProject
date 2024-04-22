@@ -1994,7 +1994,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 1
+  m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -3445,7 +3445,7 @@ GameObject:
   - component: {fileID: 342960713}
   m_Layer: 0
   m_Name: Blades.003_Bounding_Box
-  m_TagString: Untagged
+  m_TagString: BoundingBox_1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3872,7 +3872,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 0
   m_HDR: 1
   m_AllowMSAA: 1
@@ -4655,7 +4655,7 @@ GameObject:
   - component: {fileID: 558132930}
   m_Layer: 0
   m_Name: Hub_Bounding_Box
-  m_TagString: Untagged
+  m_TagString: BoundingBox_1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7605,7 +7605,7 @@ GameObject:
   - component: {fileID: 835788001}
   m_Layer: 0
   m_Name: Tower_Bounding_Box
-  m_TagString: Untagged
+  m_TagString: BoundingBox_1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14024,11 +14024,11 @@ GameObject:
   - component: {fileID: 1040708236}
   m_Layer: 0
   m_Name: Blades.001_Bounding_Box
-  m_TagString: Untagged
+  m_TagString: BoundingBox_1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1040708235
 Transform:
   m_ObjectHideFlags: 0
@@ -14107,7 +14107,7 @@ GameObject:
   - component: {fileID: 1079114601}
   m_Layer: 0
   m_Name: Nacelle_Bounding_Box
-  m_TagString: Untagged
+  m_TagString: BoundingBox_1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14691,7 +14691,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1163569388}
   m_Layer: 0
-  m_Name: ---------- DIRT PAINTING --------
+  m_Name: ---------- DIRT PAINT & PERFORMANCE --------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17005,7 +17005,7 @@ GameObject:
   - component: {fileID: 1529965725}
   m_Layer: 0
   m_Name: Blades.002_Bounding_Box
-  m_TagString: Untagged
+  m_TagString: BoundingBox_1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19383,7 +19383,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1819538570
 Transform:
   m_ObjectHideFlags: 0
@@ -19411,6 +19411,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26130bebf217ff44b54bff94bc48b5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  totalVolume: 0
+  wingDirtImportanceRatio: 0.7
+  resolution: {x: 3, y: 3, z: 2}
   parts:
   - paint_GO: {fileID: 1846456156}
     inkCanvas: {fileID: 0}
@@ -19421,81 +19424,14 @@ MonoBehaviour:
     meshFilter: {fileID: 0}
     startTexture: {fileID: 0}
     currentTexture: {fileID: 0}
-    coordDirt_List: []
-    textureDirt_List: []
+    texCoord_List: []
+    zoneStartDirt_List: []
     startDirt: 0
     currDirt: 0
     wasHit: 0
-  - paint_GO: {fileID: 590993336}
-    inkCanvas: {fileID: 0}
-    material: {fileID: 2100000, guid: 2c441e5c175147247997fac7c7085f36, type: 2}
-    assigned: 0
-    updatePerformance: 0
-    timer: 0
-    meshFilter: {fileID: 0}
-    startTexture: {fileID: 0}
-    currentTexture: {fileID: 0}
-    coordDirt_List: []
-    textureDirt_List: []
-    startDirt: 0
-    currDirt: 0
-    wasHit: 0
-  - paint_GO: {fileID: 1501641477}
-    inkCanvas: {fileID: 0}
-    material: {fileID: 2100000, guid: bee0f9bb7986442459facf7e4cafa42b, type: 2}
-    assigned: 0
-    updatePerformance: 0
-    timer: 0
-    meshFilter: {fileID: 0}
-    startTexture: {fileID: 0}
-    currentTexture: {fileID: 0}
-    coordDirt_List: []
-    textureDirt_List: []
-    startDirt: 0
-    currDirt: 0
-    wasHit: 0
-  - paint_GO: {fileID: 1538554005}
-    inkCanvas: {fileID: 0}
-    material: {fileID: 2100000, guid: 2ceccb6357e736941b19a16fb277853f, type: 2}
-    assigned: 0
-    updatePerformance: 0
-    timer: 0
-    meshFilter: {fileID: 0}
-    startTexture: {fileID: 0}
-    currentTexture: {fileID: 0}
-    coordDirt_List: []
-    textureDirt_List: []
-    startDirt: 0
-    currDirt: 0
-    wasHit: 0
-  - paint_GO: {fileID: 407547634}
-    inkCanvas: {fileID: 0}
-    material: {fileID: 2100000, guid: 43ef006a9c306f7499f078b048599c95, type: 2}
-    assigned: 0
-    updatePerformance: 0
-    timer: 0
-    meshFilter: {fileID: 0}
-    startTexture: {fileID: 0}
-    currentTexture: {fileID: 0}
-    coordDirt_List: []
-    textureDirt_List: []
-    startDirt: 0
-    currDirt: 0
-    wasHit: 0
-  - paint_GO: {fileID: 328016117}
-    inkCanvas: {fileID: 0}
-    material: {fileID: 2100000, guid: 874a5c2c2fc77c94e876ea0ccfe599ee, type: 2}
-    assigned: 0
-    updatePerformance: 0
-    timer: 0
-    meshFilter: {fileID: 0}
-    startTexture: {fileID: 0}
-    currentTexture: {fileID: 0}
-    coordDirt_List: []
-    textureDirt_List: []
-    startDirt: 0
-    currDirt: 0
-    wasHit: 0
+    bounds: {x: 0, y: 0, z: 0}
+    boundsVolume: 0
+    normalizedStartDirt: 0
 --- !u!1 &1822172768
 GameObject:
   m_ObjectHideFlags: 0
@@ -47625,5 +47561,5 @@ SceneRoots:
   - {fileID: 634634684}
   - {fileID: 1163569388}
   - {fileID: 8366892408133813514}
-  - {fileID: 1829402620}
   - {fileID: 1819538570}
+  - {fileID: 1829402620}

@@ -9,6 +9,7 @@ TagManager:
   - WindTurbine
   - VanHosePoint
   - BoundingBox
+  - BoundingBox_1
   layers:
   - Default
   - TransparentFX
