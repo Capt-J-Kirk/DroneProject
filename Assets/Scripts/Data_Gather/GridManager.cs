@@ -16,6 +16,8 @@ public class GridManager : MonoBehaviour
     public GameObject grid1;
     public GameObject grid2;
     
+    public GameObject old_grid1;
+    public GameObject old_grid2;
     // filename data !
     public int type;
     public string name;
@@ -45,6 +47,8 @@ public class GridManager : MonoBehaviour
     void Start()
     {
        // GenerateGrid();
+       old_grid1.SetActive(false);
+       old_grid2.SetActive(false);
     }
 
     // make sure to setup the tag "cleaning" in the tags and layers setting!
