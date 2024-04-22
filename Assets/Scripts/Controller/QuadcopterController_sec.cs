@@ -41,9 +41,10 @@ public class QuadcopterController_sec: MonoBehaviour
     public UserInput inputController;
     
     // Tested to be good values
-    private float rollKp = 5.0f, rollKi = 0.3f, rollKd = 0.08f;
-    private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
-    private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f;
+    private float rollKp = 5.0f, rollKi = 0.3f, rollKd = 0.58f;
+    private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.58f;
+    private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.58f;
+    //private float yawKp = 5.82403f, yawKi = 10.3f, yawKd = 20f; 
 
     private float altitudeKp = 7.82403f, altitudeKi = 18.87807f, altitudeKd = 5f; 
     private float xKp = 7.82403f, xKi = 18.87807f, xKd = 5f; 
@@ -547,12 +548,12 @@ public class QuadcopterController_sec: MonoBehaviour
 
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
-        //rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
+        rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
 
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
-        //rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
+        rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
