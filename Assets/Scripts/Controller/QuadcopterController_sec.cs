@@ -624,8 +624,8 @@ public class QuadcopterController_sec: MonoBehaviour
     }
     public void reset_drone()
     {
-        rb.transform.velocity = 0f;
-        rb.transform.angularVelocity = 0f;
+        rb.velocity = new Vector3(0,0,0);
+        rb.angularVelocity = new Vector3(0,0,0);
         AltitudePID.ClearPID();
         pitchPIDQuaternion.ClearPID();
         yawPIDQuaternion.ClearPID();

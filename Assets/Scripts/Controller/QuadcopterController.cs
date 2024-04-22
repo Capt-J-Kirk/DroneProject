@@ -273,7 +273,7 @@ public class QuadcopterController: MonoBehaviour
 
 
         Vector3 currentDesiredPosition = desiredPosition;
-
+        float newYaw = 0;
         // find the distance to windblade
         Vector3 localPos = transform.InverseTransformPoint(windblade.position);
 
@@ -337,7 +337,7 @@ public class QuadcopterController: MonoBehaviour
                 newPitch = neutralOrientation.eulerAngles.x;
 
                 // To cancel out the forward momentum, make a Impuls for a counter momentum 
-                Vector3 counterTorque = new Vector3(-1*rb.angularVelocity.x,0,0);
+                //Vector3 counterTorque = new Vector3(-1*rb.angularVelocity.x,0,0);
                 //ApplyCounterTorque(counterTorque);
             
             }
@@ -360,14 +360,16 @@ public class QuadcopterController: MonoBehaviour
                 // Object is in up direction
                 Debug.Log("Object is too close in up direction! Moving down.");
                 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
-                Mathf.Clamp(currentDesiredPosition + newPositionChange, Mathf.Abs(currentDesiredPosition.y)-100f, Mathf.Abs(currentDesiredPosition.y));
+                desiredPosition = currentDesiredPosition + newPositionChange;
+                desiredPosition.y = Mathf.Clamp(currentDesiredPosition.y + newPositionChange.y, Mathf.Abs(currentDesiredPosition.y)-100f, Mathf.Abs(currentDesiredPosition.y));
             }
             else
             {
                 // Object is in down direction
                 Debug.Log("Object is too close in down direction! Moving up.");
                 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
-                desiredPosition = Mathf.Clamp(currentDesiredPosition + newPositionChange, Mathf.Abs(currentDesiredPosition.y), Mathf.Abs(currentDesiredPosition.y)+100f);
+                desiredPosition = currentDesiredPosition + newPositionChange;
+                desiredPosition.y = Mathf.Clamp(currentDesiredPosition.y + newPositionChange.y, Mathf.Abs(currentDesiredPosition.y), Mathf.Abs(currentDesiredPosition.y)+100f);
 
             }
         }
@@ -380,7 +382,7 @@ public class QuadcopterController: MonoBehaviour
 
         // update prewious Yew
         prewYaw = newYaw;
-        float newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity);
+        newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity);
         // only used for datacollector
         desiredEulerAngles = new Vector3(newPitch, newYaw, newRoll);
         //
@@ -1001,8 +1003,8 @@ public class QuadcopterController: MonoBehaviour
 
     public void reset_drone()
     {
-        rb.transform.velocity = 0f;
-        rb.transform.angularVelocity = 0f;
+        rb.velocity = new Vector3(0,0,0);
+        rb.angularVelocity = new Vector3(0,0,0);
         AltitudePID.ClearPID();
         pitchPIDQuaternion.ClearPID();
         yawPIDQuaternion.ClearPID();
