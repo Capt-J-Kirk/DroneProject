@@ -42,7 +42,8 @@ public class QuadcopterController: MonoBehaviour
 
     // Tested to be good values
     private float rollKp = 5.0f, rollKi = 0.3f, rollKd = 0.08f;
-    private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
+    //private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f;
+    private float pitchKp = 5.0f, pitchKi = 0.3f, pitchKd = 0.08f; 
     private float yawKp = 5.0f, yawKi = 0.3f, yawKd = 0.08f; 
     private float altitudeKp = 7.82403f, altitudeKi = 18.87807f, altitudeKd = 5f; 
     //private float xKp = 5.0f, xKi = 0.3f, xKd = 0.08f; 
@@ -116,14 +117,14 @@ public class QuadcopterController: MonoBehaviour
 
         // Starting the tuning process for altitude PID as an example
         isTuning = true;
-        // AltitudePID.proportionalGain = 0f;
-        // AltitudePID.integralGain = 0f;
-        // AltitudePID.derivativeGain = 0f;
+        // pitchPIDQuaternion.proportionalGain = 0f;
+        // pitchPIDQuaternion.integralGain = 0f;
+        // pitchPIDQuaternion.derivativeGain = 0f;
 
         // Reset tuning parameters
         stepInputApplied = false;
         lastOscillationTime = Time.time;
-        lastOutput = rb.transform.position.y;
+        lastOutput = rb.transform.rotation.eulerAngles.x;
         oscillationCounter = 0;
     }
 
@@ -133,6 +134,7 @@ public class QuadcopterController: MonoBehaviour
         // Use the altitude PID as an example, replace with other PID instances as needed
         // Apply a step input, i.e., set a desired altitude that is higher than current to induce error
         //desiredPosition.y += 5.0f; // This is a step change to start the tuning process
+        
         if (!tuningStarted)
             return;
 
@@ -143,8 +145,8 @@ public class QuadcopterController: MonoBehaviour
         float currentTime = Time.time;
 
         // Check for oscillations by seeing if the output crosses the last output
-        if ((lastOutput < desiredPosition.y && currentOutput >= desiredPosition.y) ||
-            (lastOutput > desiredPosition.y && currentOutput <= desiredPosition.y))
+        if ((lastOutput < desiredOrientation.eulerAngles.x && currentOutput >= desiredOrientation.eulerAngles.x) ||
+            (lastOutput > desiredOrientation.eulerAngles.x && currentOutput <= desiredOrientation.eulerAngles.x))
         {
             // We have an oscillation
             Pu = currentTime - lastOscillationTime; // Measure the period
@@ -155,26 +157,26 @@ public class QuadcopterController: MonoBehaviour
             if (oscillationCounter > 2)
             {
                 // The current Kp is approximately the ultimate gain
-                Ku = xPID.proportionalGain;
+                Ku = pitchPIDQuaternion.proportionalGain;
 
                 // Stop the tuning
                 isTuning = false;
 
                 // Set PID parameters based on Ziegler-Nichols formulas
-                xPID.proportionalGain = 0.6f * Ku;
-                xPID.integralGain = 2f * xPID.proportionalGain / Pu;
-                xPID.derivativeGain = xPID.proportionalGain * Pu / 8f;
+                pitchPIDQuaternion.proportionalGain = 0.6f * Ku;
+                pitchPIDQuaternion.integralGain = 2f * pitchPIDQuaternion.proportionalGain / Pu;
+                pitchPIDQuaternion.derivativeGain = pitchPIDQuaternion.proportionalGain * Pu / 8f;
 
                 // Log results for verification
                 Debug.Log($"Tuning complete: Ku = {Ku}, Pu = {Pu}");
-                Debug.Log($"Tuning complete: Kp = {xPID.proportionalGain}, Ki = { xPID.integralGain}, Kd = { xPID.derivativeGain}");
+                Debug.Log($"Tuning complete: Kp = {pitchPIDQuaternion.proportionalGain}, Ki = { pitchPIDQuaternion.integralGain}, Kd = { pitchPIDQuaternion.derivativeGain}");
             }
         }
 
         // Increment Kp after every oscillation and before reaching ultimate gain
         if (isTuning && oscillationCounter <= 2)
         {
-            xPID.proportionalGain += tuningKpIncrement;
+            pitchPIDQuaternion.proportionalGain += tuningKpIncrement;
         }
 
         lastOutput = currentOutput;
@@ -185,9 +187,9 @@ public class QuadcopterController: MonoBehaviour
         // used for PID tuning! 
 
         // Euler angles
-        float newPitch = 0;
+        float newPitch = 5f;
         float newRoll = 0;
-        float newYaw = 10;
+        float newYaw = 0;
            
         //Debug.Log("newPitch: " + newPitch);
         //Debug.Log("newRoll: " + newRoll);
@@ -687,7 +689,7 @@ public class QuadcopterController: MonoBehaviour
             if (!stepInputApplied)
             {
                 // Apply the step change only once to start the tuning process
-                desiredPosition.x += 5.0f; // Induce a significant error
+                //desiredPosition.x += 5.0f; // Induce a significant error
                 stepInputApplied = true; // Ensure the step change is not applied again
             }
 

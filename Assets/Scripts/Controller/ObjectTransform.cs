@@ -258,11 +258,11 @@ public class ObjectTransform: MonoBehaviour
 
         radius += roll * phiSensitivity; // horizontal movement
         theta += pitch * thetaSensitivity; // vertical movement
-        up_down += throttle * radiusSensitivity; // change radius 
+        up_down = throttle * radiusSensitivity; // change radius 
         
 
         // ADD A BASELINE for up/down main_drones.y location
-        up_down = Mathf.Clamp(up_down, main_position.y-minLow, maxHigh+main_position.y);
+        //up_down = Mathf.Clamp(main_position.y + up_down, main_position.y-minLow, maxHigh+main_position.y);
         radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
         yaw3 = yaw;
@@ -503,8 +503,8 @@ public class ObjectTransform: MonoBehaviour
         pitch2 = pitch;
         throttle2 = throttle;
         roll2 = roll;
-
-        updateSphericalParameters(roll, pitch, throttle, yaw);
+        updateCylindricalParameters(roll, pitch, throttle, yaw);
+        //updateSphericalParameters(roll, pitch, throttle, yaw);
 
         if (toggleDebug)
         {
