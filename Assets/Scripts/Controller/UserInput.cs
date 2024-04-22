@@ -417,6 +417,10 @@ public class UserInput : MonoBehaviour
             ScreenTWO.SetActive(switchScren);
             ScreenONE.SetActive(!switchScren);
         }
+        else
+        {
+            transformAdjustment.resetYaw();
+        }
         
         Debug.Log("X CLICKED!!!!");
     }

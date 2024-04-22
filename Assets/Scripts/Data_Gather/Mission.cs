@@ -241,6 +241,7 @@ public class MissionManager : MonoBehaviour
 
         if(runMission)
         {
+            Menu.SetActive(true);
             // select mission combination
             if (selectCombination)
             {
@@ -262,6 +263,7 @@ public class MissionManager : MonoBehaviour
             // load that combination in
             if (startMission && Input.GetKeyDown(KeyCode.S))
             {
+                Menu.SetActive(false);
                 LoadMission();
                 startMission = false;
                 inFlight = true;
@@ -590,7 +592,7 @@ public class MissionManager : MonoBehaviour
         test = false;
         missionActive = false;
         isRecording = false;
-        Debug.Log("3 minutes have passed.");
+        Debug.Log("Time out");
         // data 
         dataCollectionIntance.SaveDataToCSV();
         dataCollectionIntance.ClearDataList();
@@ -697,9 +699,9 @@ public class MissionManager : MonoBehaviour
 
     void PerformanceUpdate()
     {
-        if(inCleaning && userInput.isSpraying)
+        if(inCleaning)
         {
-            //Debug.Log("performanceCleaning called");
+            //Debug.Log("performanceCleaning cuserInput.isSprayingalled");
             //performanceCleaning.UpdateBoxValues();
             performanceCleaning.UpdateBoxValuesWithRayCast();
         } 

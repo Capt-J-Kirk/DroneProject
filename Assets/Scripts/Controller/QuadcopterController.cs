@@ -294,6 +294,9 @@ public class QuadcopterController: MonoBehaviour
                     newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), 0, maxRoll);
                 }
             }
+            else{
+                newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
+            }
             
             // Check if the target is within the safe distance in the right direction
             if (Mathf.Abs(localPos.x) < safeDistance)
@@ -312,6 +315,9 @@ public class QuadcopterController: MonoBehaviour
                     newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), 0, maxPitch);
                 }
             }
+            else{
+                newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
+            }
 
             // Check if the target is within the safe distance in the up direction
             if (Mathf.Abs(localPos.y) < safeDistance)
@@ -329,10 +335,17 @@ public class QuadcopterController: MonoBehaviour
                     // Object is in down direction
                     Debug.Log("Object is too close in down direction! Moving up.");
                     Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
-                    Mathf.Clamp(currentDesiredPosition.y + newPositionChange, currentDesiredPosition.y, currentDesiredPosition.y+100f);
-                
+                    desiredPosition = Mathf.Clamp(currentDesiredPosition.y + newPositionChange, currentDesiredPosition.y, currentDesiredPosition.y+100f);
+
                 }
             }
+            else{
+                
+                newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
+                  // Update desired position
+                desiredPosition = currentDesiredPosition + newPositionChange;
+            }
+
         }
         else
         {
@@ -405,6 +418,8 @@ public class QuadcopterController: MonoBehaviour
             //Vector3 newPositionChangeWorld = transform.TransformPoint(newPositionChangeLocal) - transform.position;
 
             Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
+            // Update desired position
+            desiredPosition = currentDesiredPosition + newPositionChange;
         }
        
 
@@ -428,8 +443,7 @@ public class QuadcopterController: MonoBehaviour
         }
 
        
-        // Update desired position
-        desiredPosition = currentDesiredPosition + newPositionChange;
+      
         //desiredPosition = currentDesiredPosition + newPositionChangeWorld;
        
     }

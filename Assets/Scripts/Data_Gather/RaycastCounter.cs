@@ -196,6 +196,10 @@ public class RaycastCounter : MonoBehaviour
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         RaycastHit hit;
 
+        // make a copy, use this for violin plot
+        Ray ray2 = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        RaycastHit hit2;
+
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 30, Color.green);
 
         if (Physics.Raycast(ray, out hit))
@@ -226,6 +230,8 @@ public class RaycastCounter : MonoBehaviour
             // Debug.Log("record: " + record);
             // hitRecords.Add(record);
             LayerMask TargetLayer = LayerMask.GetMask("baseTargetLayer");
+            int layer = 4;
+            int LayerMask = 1 << layer;
 
             Vector3 localHitPoint = new Vector3(0,0,0);
             //

@@ -24,7 +24,7 @@ public class GridManager : MonoBehaviour
     public string gridLocation;
     public string userInterface;
 
-
+    public UserInput userInput;
     // public summerized values for datacollector
     public float cleaningPercent = 0;
     public float maxCleanValuePossible = 0;
@@ -294,51 +294,56 @@ public class GridManager : MonoBehaviour
         Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * 10, Color.blue);
 
         float SumCleaningsFactor = 0.0f;
-
-        if (Physics.Raycast(ray, out hit, maxDistance))
+        if(userInput.isSpraying)
         {
-            // Calculate factors for decreasing value based on distance
-            float distanceFromRayOrigin = Vector3.Distance(Nozzle.transform.position, hit.point);
-            float valueFactor = 1 - (distanceFromRayOrigin / maxDistance);
-
-            // Perform an overlapping sphere check to simulate a cone spread
-            float radiusAtHit = Mathf.Lerp(0, maxRadius, hit.distance / maxDistance);
-            Collider[] hitColliders = Physics.OverlapSphere(hit.point, radiusAtHit);
-
-
-            foreach (Collider collider in hitColliders)
+            if (Physics.Raycast(ray, out hit, maxDistance))
             {
+                // Calculate factors for decreasing value based on distance
+                float distanceFromRayOrigin = Vector3.Distance(Nozzle.transform.position, hit.point);
+                float valueFactor = 1 - (distanceFromRayOrigin / maxDistance);
 
-                // Calculate radial factors for value decrement based on distance
-                float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
-                float radialFactor = 1 - (radialDistance / radiusAtHit);
-                float cleaningsFactor = (valueFactor * radialFactor)/10f; // scale down the cleaning factor by 10
+                // Perform an overlapping sphere check to simulate a cone spread
+                float radiusAtHit = Mathf.Lerp(0, maxRadius, hit.distance / maxDistance);
+                Collider[] hitColliders = Physics.OverlapSphere(hit.point, radiusAtHit);
 
-                // sum the cleaning effort for this time frame.
-                SumCleaningsFactor += cleaningsFactor;
 
-                //Debug.Log("cleaning value: " + cleaningsFactor);
-
-                BoxData boxData = collider.GetComponent<BoxData>(); 
-                if (boxData != null) //&& BoxList.Contains(collider.gameObject))
+                foreach (Collider collider in hitColliders)
                 {
-                    //Debug.Log("box data:");
-                    // Update the box cleanings status
-                    // using the value as the total amount of cleaning applied, there intencity if the real cleanliness of the box
-                    boxData.value += cleaningsFactor;
-                    boxData.intensity = Mathf.Clamp(boxData.intensity + cleaningsFactor, 0.0f, 1.0f);
-                    // set the flag, if box is 100p cleaned
-                    if (boxData.intensity == 1.0f)
+
+                    // Calculate radial factors for value decrement based on distance
+                    float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
+                    float radialFactor = 1 - (radialDistance / radiusAtHit);
+                    float cleaningsFactor = (valueFactor * radialFactor)/10f; // scale down the cleaning factor by 10
+
+                    // sum the cleaning effort for this time frame.
+                    SumCleaningsFactor += cleaningsFactor;
+
+                    //Debug.Log("cleaning value: " + cleaningsFactor);
+
+                    BoxData boxData = collider.GetComponent<BoxData>(); 
+                    if (boxData != null) //&& BoxList.Contains(collider.gameObject))
                     {
-                        boxData.flag = true;
+                        //Debug.Log("box data:");
+                        // Update the box cleanings status
+                        // using the value as the total amount of cleaning applied, there intencity if the real cleanliness of the box
+                        boxData.value += cleaningsFactor;
+                        boxData.intensity = Mathf.Clamp(boxData.intensity + cleaningsFactor, 0.0f, 1.0f);
+                        // set the flag, if box is 100p cleaned
+                        if (boxData.intensity == 1.0f)
+                        {
+                            boxData.flag = true;
+                        }
+                        // Update the color based on the new intensity
+                        Renderer boxRenderer = boxData.gameObject.GetComponent<Renderer>();
+                        boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
+            
                     }
-                    // Update the color based on the new intensity
-                    Renderer boxRenderer = boxData.gameObject.GetComponent<Renderer>();
-                    boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
-           
                 }
             }
         }
+        
+
+
         // get states of each box 
         cleaningPerSecond = SumCleaningsFactor;
         float temp = 0.0f;

@@ -76,10 +76,10 @@ public class ObjectTransform: MonoBehaviour
     // Waypoints in spherical coordinates (theta, phi)
     private Vector2[] waypointsSpherical = new Vector2[]
     {
-        new Vector2(-100, -10), // Point 1
+        new Vector2(-80, -10), // Point 1
         new Vector2(-155, -10), // Point 2
         new Vector2(155, 10),   // Point 3
-        new Vector2(100, 10)    // Point 4
+        new Vector2(80, 10)    // Point 4
     };
 
 
@@ -229,6 +229,10 @@ public class ObjectTransform: MonoBehaviour
     //     while (angle < -180) angle += 360;
     //     return angle;
     // }
+    public void resetYaw()
+    {
+        prewYaw = 0f;
+    }
     void updateSphericalParameters(float roll, float pitch, float throttle, float yaw)
     {
         // Spherical Orbit control 
@@ -261,7 +265,7 @@ public class ObjectTransform: MonoBehaviour
         up_down = Mathf.Clamp(up_down, main_position.y-minLow, maxHigh+main_position.y);
         radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
-        yaw3 += yaw;
+        yaw3 = yaw;
     }
     void Scheme_1_Spherical()
     {
@@ -297,7 +301,7 @@ public class ObjectTransform: MonoBehaviour
         // update prewious Yew
         prewYaw = newYaw;
         // possible add previous yaw, such it dosn't reset
-        newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
         newYaw = Mathf.Clamp(newYaw, -45f, 45f);
         //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
