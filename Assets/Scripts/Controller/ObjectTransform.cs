@@ -76,17 +76,17 @@ public class ObjectTransform: MonoBehaviour
     // Waypoints in spherical coordinates (theta, phi)
     private Vector2[] waypointsSpherical = new Vector2[]
     {
-        new Vector2(-80, -10), // Point 1
-        new Vector2(-155, -10), // Point 2
-        new Vector2(155, 10),   // Point 3
-        new Vector2(80, 10)    // Point 4
+        new Vector2(45, -10), // Point 1
+        new Vector2(120, -10), // Point 2
+        new Vector2(240, 10),   // Point 3
+        new Vector2(315, 10)    // Point 4
     };
 
 
 
     private float left_right = 0f; 
     private float up_down = 0f;  
-        
+    float currentAngle = 0f;
 
 
     void Start()
@@ -125,6 +125,11 @@ public class ObjectTransform: MonoBehaviour
                 // predefined spherical location, with varying radius and yaw for control
                 Scheme_2();
             }
+        }
+        if(Input.GetKeyDown(KeyCode.H))
+        {
+            changeInPosition = !changeInPosition;
+            Debug.Log("changeInPosition " + changeInPosition);
         }
     }
 
@@ -363,57 +368,59 @@ public class ObjectTransform: MonoBehaviour
         ApplyNewPose(targetPosition, targetOrientation);
     }    
 
-       void Scheme_2()
+    void Scheme_2()
     {
         Vector3 targetPosition = new Vector3(0, 0, 0);
+        float angle1 = 60f;
+        float angle2 = 300f;
+        
 
         if (initStart)
         {
-            //targetPosition =  SphericalToCartesian(waypointsSpherical[0].x, waypointsSpherical[0].y, radius);
-            targetPosition = PolarToCartesian(waypointsSpherical[currentWaypointIndex].x,radius);
+            //targetPosition = PolarToCartesian(angle1,radius);
             initStart = false;
+            Debug.Log("currentAngle " + angle1);
+            currentAngle = angle2;
         }
+
 
 
         // then flipping point
         if (changeInPosition)
         {
-            timer += Time.deltaTime;
-
-            if (timer >= waypointTimer)
+            // Check the direction and update the waypoint index accordingly
+            if (isReversing)
             {
-                timer = 0f; // Reset the timer
-                //targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
-                targetPosition = PolarToCartesian(waypointsSpherical[currentWaypointIndex].x,radius);
-                // Check the direction and update the waypoint index accordingly
-                if (isReversing)
+                currentAngle -= 5f;
+                targetPosition = PolarToCartesian(currentAngle,radius);
+                if (currentAngle <= angle1)
                 {
-                    currentWaypointIndex--;
-                    if (currentWaypointIndex <= 0)
-                    {
-                        // at index 0
-                        isReversing = false;
-                        changeInPosition = false; // Stop moving 
-                        currentWaypointIndex = 0; // Reset index
-                    }
-                }
-                else
-                {
-                    currentWaypointIndex++;
-                    if (currentWaypointIndex >= waypointsSpherical.Length)
-                    {
-                        // Reached the end point
-                        currentWaypointIndex = waypointsSpherical.Length - 2;
-                        isReversing = true;
-                        changeInPosition = false; // Stop moving
-                    }
+                    // 
+                    isReversing = false;
+                    changeInPosition = false; // Stop moving 
+                    currentAngle = angle1;
                 }
             }
+            else
+            {
+                currentAngle +=5f;
+                targetPosition = PolarToCartesian(currentAngle,radius);
+                if (currentAngle >= angle2)
+                {
+                    // Reached the end point
+                    isReversing = true;
+                    changeInPosition = false; // Stop moving
+                    currentAngle = angle2;
+                }
+            }
+            
         }
         else
         {
-            //targetPosition = SphericalToCartesian(waypointsSpherical[currentWaypointIndex].x, waypointsSpherical[currentWaypointIndex].y, radius);
-            targetPosition = PolarToCartesian(waypointsSpherical[currentWaypointIndex].x,radius);
+            currentAngle +=0.05f;
+            //currentAngle = Mathf.Clamp(currentAngle, angle1, angle2);
+            targetPosition = PolarToCartesian(currentAngle,radius);
+            Debug.Log("currentAngle " + currentAngle);
         }
      
         // Addded Yaw orientation lock +- 45degs from lock point
@@ -471,7 +478,7 @@ public class ObjectTransform: MonoBehaviour
 
 
         // set the hight offset
-        float y = main_position.y + 1f;
+        float y = main_position.y;
 
         return new Vector3(x, y, z);
     }

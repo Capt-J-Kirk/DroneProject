@@ -483,11 +483,11 @@ public class QuadcopterController_sec: MonoBehaviour
         float altitudeControlInput = altitudeError + gravityComp;
 
         // test
-        Debug.Log("yawControlInput: " + yawControlInput);
-        Debug.Log("desiredOrientation: " + desiredOrientation);
-        Debug.Log("currentOrientation: " + currentOrientation);
-        //Debug.Log("orientationDelta: " + orientationDelta);
-        Debug.Log("angularVelocityError: " + angularVelocityError);
+        // Debug.Log("yawControlInput: " + yawControlInput);
+        // Debug.Log("desiredOrientation: " + desiredOrientation);
+        // Debug.Log("currentOrientation: " + currentOrientation);
+        // //Debug.Log("orientationDelta: " + orientationDelta);
+        // Debug.Log("angularVelocityError: " + angularVelocityError);
         //rb.transform.rotation = desiredOrientation;
         // Apply control input 
         ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput, xControlInput, zControlInput);
@@ -558,8 +558,8 @@ public class QuadcopterController_sec: MonoBehaviour
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
         rb.AddTorque(transform.up * clampYaw, ForceMode.Force);
-        Debug.Log("yaw: " + yaw);
-        Debug.Log("yawForce: " + clampYaw);
+        // Debug.Log("yaw: " + yaw);
+        // Debug.Log("yawForce: " + clampYaw);
         //Debug.Log("clamplift: " + throttle2);
 
         if (toggleDebug)
@@ -619,7 +619,7 @@ public class QuadcopterController_sec: MonoBehaviour
         // Already calc by the transform script, for follow behaviour.
         desiredOrientation = rot;
         desiredPosition = pos;
-        if (true)//toggleDebug)
+        if (toggleDebug)
         {
             Debug.Log("pos modtaget: " + pos);
             Debug.Log("rot modtaget: " + rot);
