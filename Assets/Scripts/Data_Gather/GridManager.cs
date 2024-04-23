@@ -40,8 +40,8 @@ public class GridManager : MonoBehaviour
     public List<List<BoxData>> allGrids = new List<List<BoxData>>(); 
 
     // USED for raycasting
-    public float maxDistance = 10.0f;
-    public float maxRadius = 0.15f;
+    public float maxDistance = 8.0f;
+    public float maxRadius = 0.25f;
 
 
     void Start()
@@ -99,7 +99,8 @@ public class GridManager : MonoBehaviour
         csvBuilder.Append("Box"); // Or leave this empty if you want an empty first cell
         
         // Add the top headers
-        for (int i = 0; i < width * height; i++)
+        //for (int i = 0; i < width * height; i++)
+        for (int i = 0; i < BoxList.Count; i++)
         {
             csvBuilder.Append($",Box_{i}");
         }
@@ -145,7 +146,7 @@ public class GridManager : MonoBehaviour
     }
 
 
-      // This method will repopulate the BoxList with BoxData components from existing grid children
+    // This method will repopulate the BoxList with BoxData components from existing grid children
     public void PopulateBoxListFromExistingGrid()
     {
         // Clear the existing list to avoid duplicates
@@ -181,7 +182,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-
+        
    
     }
     // public void SaveToCSV()
@@ -254,7 +255,7 @@ public class GridManager : MonoBehaviour
         {
             // Increment or update properties as an example
             box.value +=0.01f;
-            box.intensity += 0.1f;
+            box.intensity += 0.01f;
             box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
             box.flag = !box.flag; // Toggle for example
 
@@ -293,9 +294,11 @@ public class GridManager : MonoBehaviour
     {
         //Debug.Log("inside raycast");
         // needs thr transform to be the nozzle of the watersprayer
+        //Vector3 castFromPosition = Nozzle.transform.position + new Vector3(0, -2,0);
+
         Ray ray = new Ray(Nozzle.transform.position, transform.forward* -1);
         RaycastHit hit;
-        Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * 10, Color.blue);
+        Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * maxDistance, Color.blue);
 
         float SumCleaningsFactor = 0.0f;
         if(true)//userInput.isSpraying)
@@ -317,7 +320,7 @@ public class GridManager : MonoBehaviour
                     // Calculate radial factors for value decrement based on distance
                     float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
                     float radialFactor = 1 - (radialDistance / radiusAtHit);
-                    float cleaningsFactor = (valueFactor * radialFactor)/10f; // scale down the cleaning factor by 10
+                    float cleaningsFactor = (valueFactor * radialFactor)/2f; // scale down the cleaning factor by 10
 
                     // sum the cleaning effort for this time frame.
                     SumCleaningsFactor += cleaningsFactor;
@@ -331,13 +334,15 @@ public class GridManager : MonoBehaviour
                         // Update the box cleanings status
                         // using the value as the total amount of cleaning applied, there intencity if the real cleanliness of the box
                         boxData.value += cleaningsFactor;
-                        boxData.intensity = Mathf.Clamp(boxData.intensity + cleaningsFactor, 0.0f, 1.0f);
+                        boxData.intensity += cleaningsFactor;
+                        boxData.intensity = Mathf.Clamp(boxData.intensity, 0.0f, 1.0f);
+                        Debug.Log("Intensitet " + boxData.intensity);
                         // set the flag, if box is 100p cleaned
                         if (boxData.intensity == 1.0f)
                         {
                             boxData.flag = true;
                         }
-                        // Update the color based on the new intensity
+                        // // Update the color based on the new intensity
                         Renderer boxRenderer = boxData.gameObject.GetComponent<Renderer>();
                         boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
             
@@ -374,13 +379,15 @@ public class GridManager : MonoBehaviour
             };
             currentGridState.Add(boxStateSnapshot);
             temp += box.intensity;
+            // Update the color based on the new intensity
+            // Renderer boxRenderer = boxData.gameObject.GetComponent<Renderer>();
+            // boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
         }
         currentCleanValue = temp;
         cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
-
+        Debug.Log("currentGridState " + currentGridState);
         // Append the snapshot of the current grid state to allGrids
         allGrids.Add(currentGridState);
-
         
     }
 

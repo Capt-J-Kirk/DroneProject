@@ -990,12 +990,12 @@ public class QuadcopterController: MonoBehaviour
         pitch = temp;
 
         // filter out small noise values from joystick
-        if (Mathf.Abs(roll) < 0.2f) roll = 0f;
-        if (Mathf.Abs(pitch) < 0.2f) pitch = 0f;
-        if (Mathf.Abs(yaw) < 0.2f) yaw = 0f;
-        if (Mathf.Abs(throttle) < 0.2f) throttle = 0f;
+        if (Mathf.Abs(roll) < 0.4f) roll = 0f;
+        if (Mathf.Abs(pitch) < 0.4f) pitch = 0f;
+        if (Mathf.Abs(yaw) < 0.4f) yaw = 0f;
+        if (Mathf.Abs(throttle) < 0.4f) throttle = 0f;
 
-        new_CalcDesiredPose(roll, pitch, yaw, throttle);
+        CalcDesiredPose(roll, pitch, yaw, throttle);
         //CalcDesiredPose(roll, pitch, yaw, throttle);
      
         if (toggleDebug)
@@ -1007,6 +1007,8 @@ public class QuadcopterController: MonoBehaviour
 
     public void reset_drone()
     {
+        desiredPosition = rb.transform.position;
+        neutralOrientation = rb.transform.rotation;
         rb.velocity = new Vector3(0,0,0);
         rb.angularVelocity = new Vector3(0,0,0);
         AltitudePID.ClearPID();
@@ -1016,8 +1018,7 @@ public class QuadcopterController: MonoBehaviour
         xPID.ClearPID();
         zPID.ClearPID();
         desiredOrientation = new Quaternion(0,0,0,0);
-        desiredPosition = rb.transform.position;
-        neutralOrientation = rb.transform.rotation;
+       
     }
 
 }

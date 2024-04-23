@@ -141,6 +141,10 @@ public class MissionManager : MonoBehaviour
 
     bool check = true;
 
+    float WaitTime = 3f;
+    float start_time = 0f;
+    private bool loadsetup = true;
+
     void Start()
     {
         //performanceCleaning.GenerateGrid();
@@ -163,7 +167,7 @@ public class MissionManager : MonoBehaviour
         ActiveScheme.text = controlScheme;
         // update timer
         timer += Time.fixedDeltaTime;
-
+        
         // Four states, RUN:
         // Menu
         // Tutorial
@@ -181,14 +185,14 @@ public class MissionManager : MonoBehaviour
             if(waithere && !id)
             {
                 // 
-               if(Input.GetKeyDown(KeyCode.Q))
-               {
-                    runTutorial = true;
-                    runMission = false;
-                    runDebugging = false;
-                    Debug.Log("runTutorial");
-               }
-               if(Input.GetKeyDown(KeyCode.W))
+            //    if(Input.GetKeyDown(KeyCode.Q))
+            //    {
+            //         runTutorial = true;
+            //         runMission = false;
+            //         runDebugging = false;
+            //         Debug.Log("runTutorial");
+            //    }
+               if(loadsetup && Input.GetKeyDown(KeyCode.W))
                {
                     runTutorial = false;
                     runMission = true;
@@ -196,21 +200,21 @@ public class MissionManager : MonoBehaviour
                     Debug.Log("runMission");
                     waithere = false;
                }
-               if(Input.GetKeyDown(KeyCode.E))
-               {
-                    runTutorial = false;
-                    runMission = false;
-                    runDebugging = true;
-                    Debug.Log("runDebugging");
-                    waithere = false;
-               }
+            //    if(Input.GetKeyDown(KeyCode.E))
+            //    {
+            //         runTutorial = false;
+            //         runMission = false;
+            //         runDebugging = true;
+            //         Debug.Log("runDebugging");
+            //         waithere = false;
+            //    }
 
 
-                if(runTutorial)
-                {
-                   waithere = RunTutorial();
+                // if(runTutorial)
+                // {
+                //    waithere = RunTutorial();
     
-                }
+                // }
 
 
             }
@@ -222,29 +226,38 @@ public class MissionManager : MonoBehaviour
             
         }
         
-           
-        
-        if (runTutorial)
-        {   // parse this to a text box
-            float timeLeft = Tutorial_Timer-timer;
-
-            if(timer >= Tutorial_Timer || Input.GetKeyDown(KeyCode.C))
+        if(loadsetup && Input.GetKeyDown(KeyCode.W))
+        {
+            runMission = true;
+            Debug.Log("runMission");
+            if(id)
             {
-                // set the correct booleans for toggling the menu to be active again
-                runMenu = true;
-                // stop running the tutorial
-                runTutorial = false;  
-                Debug.Log("Times up!");
-                 
+                IDgenerator();
             }
         }
+        
+        // if (runTutorial)
+        // {   // parse this to a text box
+        //     float timeLeft = Tutorial_Timer-timer;
+
+        //     if(timer >= Tutorial_Timer || Input.GetKeyDown(KeyCode.C))
+        //     {
+        //         // set the correct booleans for toggling the menu to be active again
+        //         runMenu = true;
+        //         // stop running the tutorial
+        //         runTutorial = false;  
+        //         Debug.Log("Times up!");
+                 
+        //     }
+        // }
 
         if(runMission)
         {
-            Menu.SetActive(true);
+            
             // select mission combination
             if (selectCombination)
             {
+                Menu.SetActive(true);
                 if(selectVALIDCombo)
                 {
                     SelectMission();
@@ -261,7 +274,7 @@ public class MissionManager : MonoBehaviour
             }
 
             // load that combination in
-            if (startMission && Input.GetKeyDown(KeyCode.S))
+            if (loadsetup && startMission && Input.GetKeyDown(KeyCode.S))
             {
                 Menu.SetActive(false);
                 LoadMission();
@@ -287,32 +300,49 @@ public class MissionManager : MonoBehaviour
             }
 
             // resets the current mission 
-            if(Input.GetKeyDown(KeyCode.R))
+            if(loadsetup && Input.GetKeyDown(KeyCode.R))
             {
                 ResetMission();
             }
         }
         
 
-        if(Input.GetKeyDown(KeyCode.Alpha7))
+        if(loadsetup && Input.GetKeyDown(KeyCode.Alpha7))
         {
+            start_time = timer;
             missionCombination = 1;
             LoadMission();
+            missionActive = false;
+            isRecording = false;
+            loadsetup = false;
         }
-        if(Input.GetKeyDown(KeyCode.Alpha8))
+        if(loadsetup && Input.GetKeyDown(KeyCode.Alpha8))
         {
+            start_time = timer;
             missionCombination = 6;//5;
             LoadMission();
+            missionActive = false;
+            isRecording = false;
+            loadsetup = false;
         }
-        if(Input.GetKeyDown(KeyCode.Alpha9))
+        if(loadsetup && Input.GetKeyDown(KeyCode.Alpha9))
         {
+            start_time = timer;
             missionCombination = 11;//9;
             LoadMission();
+            missionActive = false;
+            isRecording = false;
+            loadsetup = false;
+        }
+        // bottun bounser 
+        if(timer - start_time >= WaitTime)
+        {
+            loadsetup = true;
         }
         
         if(true)//runDebugging)
         {
-            if(Input.GetKeyDown(KeyCode.A))
+            if(loadsetup && Input.GetKeyDown(KeyCode.A))
             {
                 // Debugging 
                 dataCollectionIntance.SaveDataToCSV();
@@ -323,14 +353,14 @@ public class MissionManager : MonoBehaviour
                 performanceCleaning.ClearGridData();
             }
 
-            if(Input.GetKeyDown(KeyCode.M))
-            {
-                manualMenu = !manualMenu;
-                Menu.SetActive(manualMenu);
-            }
+            // if(loadsetup && Input.GetKeyDown(KeyCode.M))
+            // {
+            //     manualMenu = !manualMenu;
+            //     Menu.SetActive(manualMenu);
+            // }
         
                     
-            if(Input.GetKeyDown(KeyCode.G))
+            if(loadsetup && Input.GetKeyDown(KeyCode.G))
             {
                 test22 = !test22;
                 //performanceCleaning.ClearGeneratedGrid();
@@ -376,15 +406,13 @@ public class MissionManager : MonoBehaviour
             check = false;
             first = Random.Range(10,100);
             second = Random.Range(10,100);
-        }
-        if(Input.GetKeyDown(KeyCode.A))
-        {
             id = false;
         }
-        if(Input.GetKeyDown(KeyCode.D))
-        {
-            check = true;
-        }
+        // if(Input.GetKeyDown(KeyCode.A))
+        // {
+        //     id = false;
+        // }
+       
         
 
         string Id_name = first.ToString() + second.ToString();
@@ -483,7 +511,7 @@ public class MissionManager : MonoBehaviour
         {
             grid1.SetActive(true);
             grid2.SetActive(false);
-            performanceCleaning.ClearboxList();
+            //performanceCleaning.ClearboxList();
             performanceCleaning.PopulateBoxListFromExistingGrid();
             performanceCleaning.ClearGridData();
             //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
@@ -496,7 +524,7 @@ public class MissionManager : MonoBehaviour
         {
             grid1.SetActive(false);
             grid2.SetActive(true);
-            performanceCleaning.ClearboxList();
+            //performanceCleaning.ClearboxList();
             performanceCleaning.PopulateBoxListFromExistingGrid();
             performanceCleaning.ClearGridData();
             // performanceCleaning.width = 200;
@@ -694,8 +722,8 @@ public class MissionManager : MonoBehaviour
         if(true)//inCleaning)
         {
             //Debug.Log("performanceCleaning cuserInput.isSprayingalled");
-            //performanceCleaning.UpdateBoxValues();
-            performanceCleaning.UpdateBoxValuesWithRayCast();
+            performanceCleaning.UpdateBoxValues();
+            //performanceCleaning.UpdateBoxValuesWithRayCast();
         } 
     }
 

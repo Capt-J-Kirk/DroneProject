@@ -339,7 +339,7 @@ public class UserInput : MonoBehaviour
 
         throttleYawVector_prev = throttleYawVector;
         throttleYawVector = value.ReadValue<Vector2>();
-        Debug.Log("throttle/yaw " +throttleYawVector);
+        //Debug.Log("throttle/yaw " +throttleYawVector);
     }
 
     private void OnThrottleYawCancelled(InputAction.CallbackContext value)
