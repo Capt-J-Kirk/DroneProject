@@ -82,7 +82,7 @@ public class ObjectTransform: MonoBehaviour
         new Vector2(315, 10)    // Point 4
     };
 
-
+    private float maxAllowedYaw = 75f;
 
     private float left_right = 0f; 
     private float up_down = 0f;  
@@ -129,7 +129,8 @@ public class ObjectTransform: MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.H))
         {
-            changeInPosition =true;
+            resetYaw();
+            //changeInPosition =true;
             Debug.Log("changeInPosition " + changeInPosition);
         }
     }
@@ -237,7 +238,7 @@ public class ObjectTransform: MonoBehaviour
     // }
     public void resetYaw()
     {
-        prewYaw = 0f;
+        newYaw = 0f;
     }
     void updateSphericalParameters(float roll, float pitch, float throttle, float yaw)
     {
@@ -345,7 +346,7 @@ public class ObjectTransform: MonoBehaviour
         // possible add previous yaw, such it dosn't reset
         newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
-        newYaw = Mathf.Clamp(newYaw, -45f, 45f);
+        newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
         //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
 
@@ -414,6 +415,7 @@ public class ObjectTransform: MonoBehaviour
                     currentAngle = angle2;
                 }
             }
+            resetYaw();
             
         }
         else
@@ -432,9 +434,9 @@ public class ObjectTransform: MonoBehaviour
         // update prewious Yew
         prewYaw = newYaw;
         // possible add previous yaw, such it dosn't reset
-        newYaw = Sec_nuetralOrientation.eulerAngles.y + (yaw3 * yawSensitivity); // yaw can freely move
+        newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
-        newYaw = Mathf.Clamp(newYaw, -45f, 45f);
+        newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
         //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
 
