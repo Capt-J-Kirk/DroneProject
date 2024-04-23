@@ -34,14 +34,14 @@
 
 3. ## Scenes / GitHub repository branches.
  - At the time of writing the main branch of the repository has 2 scenes.
-** Scene 1**
+Scene 1
  - Has a Drone Controller based on Unity's built in methods of rotation and movement.
  - Has a performance measure based on the textures (visible ‘dirt’) of different parts of a wind turbine.
  - Has only a control scheme where 2 operators each control one drone - a Washing drone, and an Observing Drone.
-** Scene 2**
+Scene 2
  - Has different control schemes where the VR-player has two monitors attached to the hand, and control both drones. The secondary drone positions itself relative to the main drone.
  - This scene uses PID controllers for the drones.
-**Repository branch ‘Jannich’**
+Repository branch ‘Jannich’
  - Is the other option, in case Scene 2 on main is not fully functional.
 
 4. ## Launching the project:
@@ -49,4 +49,4 @@
  - Open the scene with double click.
  - Launce the Oculus link connection from the headset.
  - Click on the play/run game icon located at the top of the Unity window.
-** You should now be ready to test and interact with the Drone Project in a VR environment **
+ - You should now be ready to test and interact with the Drone Project in a VR environment.
