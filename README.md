@@ -2,7 +2,7 @@
 ## Unity Editor version 2022.3.10 ##
 ## Last updated 23rd April 2024 ##
 
-1. ## Installation of required software:
+## 1. Installation of required software:
 #### Unity Hub and Unity Editor ####
  - Download [Unity Hub] (https://unity.com/download) from the official Unity website.
  - Install Unity Hub and use it to install Unity Editor version 2022.3.10f1.
@@ -22,7 +22,7 @@
 - Locate the folder where you cloned the Drone Project and select it.
 - Load the project by clicking on the new entry in Unity Hub.
 
-2. ## VR Setup ##
+## 2. VR Setup ##
 #### Prepare the VR Equipment ####
 - Start the Oculus application on your PC.
 - Connect your VR headset to the PC (if using cable). Ensure it is listed as active in the Oculus application.
@@ -32,7 +32,7 @@
 - Often the issue was resolved by rebooting the headset and pressing play again in Unity.
 - If using the wireless Air Link connection, this issue might not be present.
 
-3. ## Scenes / GitHub repository branches ##
+## 3. Scenes / GitHub repository branches ##
  - At the time of writing the main branch of the repository has 2 scenes.
 #### Scene 1 ####
  - Has a Drone Controller based on Unity's built in methods of rotation and movement.
@@ -44,7 +44,7 @@
 #### Repository branch ‘Jannich’ ####
  - Is the other option, in case Scene 2 on main is not fully functional.
 
-4. ## Launching the project ##
+## 4. Launching the project ##
  - Within Unity, find the desired scene (in scenes folder).
  - Open the scene with double click.
  - Launce the Oculus link connection from the headset.
