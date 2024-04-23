@@ -3,20 +3,20 @@
 # Last updated 23rd April 2024
 
 1. ## Installation of required software:
- a) **Unity Hub and Unity Editor**
+**Unity Hub and Unity Editor**
  - Download [Unity Hub] (https://unity.com/download) from the official Unity website.
  - Install Unity Hub and use it to install Unity Editor version 2022.3.10f1.
- b) **Blender**
+**Blender**
  - Download and install [Blender] (https://www.blender.org/download/).
  -  *Note* Blender is used for rendering the meshes. If the meshes are not displaying correctly, right-click on the project folder within the open Unity project and select 'Re-import'.
  - *Note* There is a dependency between Unity and objects imported from Blender, so having it installed is necessary.  
- c) ** Oculus application**
+** Oculus application**
 - Download and install [Oculus Setup] (https://www.meta.com/dk/en/quest/setup/).
 - *Note* This software is necessary for running the Drone Project application directly from Unity, using Link Cable or Air Link.
 - After the installation a Meta account is needed to connect with the headset. Follow instructions in the software.
- d) **Clone the Repository**
+**Clone the Repository**
 - Go to the [Drone Project repository] (https://github.com/Capt-J-Kirk/DroneProject) (You might be there :-)) on GitHub and clone the project to your local machine.
- e) **Add the Project to Unity Hub**
+**Add the Project to Unity Hub**
 - Open Unity Hub, navigate to the 'Projects' tab.
 - Click on the drop-down menu next to the 'ADD' button at the top right and select 'Add project from disk'.
 - Locate the folder where you cloned the Drone Project and select it.
