@@ -122,11 +122,11 @@ public class RayCaster : MonoBehaviour
                     paintObject.Paint(brush, hit);
 
                 // #################################
-                // GameObject hitGO = hit.collider.gameObject;
-                // Debug.Log("Extends: " + hitGO.GetComponent<Renderer>().bounds.extents);
-                // Vector3 localHitPoint = hitGO.transform.InverseTransformPoint(hit.point) * hitGO.transform.parent.localScale.x;
-                // Vector3 boundingBox_BlenderAxes_Hit = new Vector3(localHitPoint.y, localHitPoint.z, localHitPoint.x);
-                // Debug.Log("Hit point. Object coordinate system: " + boundingBox_BlenderAxes_Hit);
+                //GameObject hitGO = hit.collider.gameObject;
+                //Debug.Log("Extends: " + hitGO.GetComponent<Renderer>().bounds.extents);
+                //Vector3 localHitPoint = hitGO.transform.InverseTransformPoint(hit.point); // * hitGO.transform.parent.localScale.x;
+                //Vector3 boundingBox_BlenderAxes_Hit = new Vector3(localHitPoint.y, localHitPoint.z, localHitPoint.x);
+                //Debug.Log("Hit point. Object coordinate system: " + boundingBox_BlenderAxes_Hit);
                 // #################################
             }
 

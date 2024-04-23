@@ -35,6 +35,7 @@ public class PerformanceCalc : MonoBehaviour
         public List<Vector3Int> zoneStartDirt_List = new();
         public Dictionary<Vector3Int, float> zoneStartDirt_Dict = new();
         public Dictionary<Vector3Int, float> zoneCurrDirt_Dict = new();
+        public Dictionary<Vector3Int, float> zoneCleanDone_Dict = new();
 
         // Overall measure for turbine part.
         public float startDirt = 0;
@@ -62,6 +63,7 @@ public class PerformanceCalc : MonoBehaviour
             itr.boundsVolume = itr.bounds.x * itr.bounds.y * itr.bounds.z;
             totalVolume += itr.boundsVolume;
             boundsGO.SetActive(false);
+            Debug.Log("bounds:" + itr.bounds);
         }
         Debug.Log("Total vol: " +  " = " + totalVolume);
     }
@@ -82,9 +84,8 @@ public class PerformanceCalc : MonoBehaviour
 
             if (itr.assigned && itr.timer > 1f && itr.wasHit)
             {
-                Debug.Log("Performance running.");
+                Debug.Log("Updating performance, " + itr.paint_GO.name + " ==============================================================");
                 UpdatePerformance(itr);
-                Debug.Log("Updating performance");
                 itr.timer = 0;
                 itr.wasHit = false;
             }
@@ -110,8 +111,8 @@ public class PerformanceCalc : MonoBehaviour
 
         // Find current dirt.
         // ----------------------------------------------------------------------------------------
-        itr.currDirt = 0;                                                                   // Resetting.
-        foreach (Vector3Int zone in itr.zoneStartDirt_List) itr.zoneCurrDirt_Dict[zone] = 0; // Resetting.
+        itr.currDirt = 0;                                                                      // Resetting.
+        foreach (Vector3Int zone in itr.zoneStartDirt_List) itr.zoneCurrDirt_Dict[zone] = 0;   // Resetting.
         // Updating 
         foreach (Vector2Int texCoord in itr.texCoord_List)
         {
@@ -123,10 +124,20 @@ public class PerformanceCalc : MonoBehaviour
             Vector3Int zone = itr.texCoordToZoneCoord_Dict[texCoord];
             itr.zoneCurrDirt_Dict[zone] += dirt;
         }
+        // Cleaning by zone.
+        foreach (Vector3Int zone in itr.zoneStartDirt_List)
+        {
+            float cleanDone = itr.zoneStartDirt_Dict[zone] - itr.zoneCurrDirt_Dict[zone];
+            if (!itr.zoneCleanDone_Dict.ContainsKey(zone)) itr.zoneCleanDone_Dict.Add(zone, cleanDone);
+            else itr.zoneCleanDone_Dict[zone] = cleanDone;
+
+            // Debug
+            Debug.Log("Zone: " + zone + ", clean done = " + cleanDone);
+        }
 
         // Debugging
-        Debug.Log("=================================================================================");
-        foreach (Vector3Int zone in itr.zoneStartDirt_List) Debug.Log("Dirt in zone " + zone + " = " + itr.zoneCurrDirt_Dict[zone]);
+        // Debug.Log("=================================================================================");
+        // foreach (Vector3Int zone in itr.zoneStartDirt_List) Debug.Log("Dirt in zone " + zone + " = " + itr.zoneCurrDirt_Dict[zone]);
     }
 
 

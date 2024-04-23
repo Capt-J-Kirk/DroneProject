@@ -40,6 +40,8 @@ namespace Es.InkPainter.Sample
 				{
 					Debug.Log("Mouse painter hit with raycast, I hit: " + hitInfo.collider.name);
 
+					Debug.Log("Local point:" + hitInfo.transform.InverseTransformPoint(hitInfo.point));
+
 					var paintObject = hitInfo.transform.GetComponent<InkCanvas>();
 					if(paintObject != null)
 						switch(useMethodType)

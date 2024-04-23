@@ -151,17 +151,10 @@ public class DroneControl: MonoBehaviour
         {
             // Yaw
             if (Mathf.Abs(throttleYawVector.x) < 0.2f) throttleYawVector.x = 0f;
-            rb.AddRelativeTorque(new Vector3(0f, throttleYawVector.x * (rotateTimer / timeToMaxAngularSpeed), 0f),ForceMode.Impulse);
+            rb.AddRelativeTorque(new Vector3(0f, throttleYawVector.x * (rotateTimer / timeToMaxAngularSpeed), 0f));
 
             // Capping angular y_velocity
             if (Mathf.Abs(rb.angularVelocity.y) > maxRadPerSec) rb.angularVelocity = new Vector3(rb.angularVelocity.x, maxRadPerSec * (rb.angularVelocity.y/ Mathf.Abs(rb.angularVelocity.y)), rb.angularVelocity.z);
-
-            if (!(transform.localEulerAngles.x < 20 || transform.localEulerAngles.x > 340))
-            {
-            }
-            if (!(transform.localEulerAngles.z < 20 || transform.localEulerAngles.z > 340))
-            {
-            }
 
             // Pitch
             if (Mathf.Abs(transform.rotation.eulerAngles.x) < maxDegPitchRoll || Mathf.Abs(transform.rotation.eulerAngles.x) > 360f - maxDegPitchRoll)
