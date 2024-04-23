@@ -88,6 +88,7 @@ public class ObjectTransform: MonoBehaviour
     private float up_down = 0f;  
     float currentAngle = 0f;
 
+    public float testAngle = 45f;
 
     void Start()
     {
@@ -128,7 +129,7 @@ public class ObjectTransform: MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.H))
         {
-            changeInPosition = !changeInPosition;
+            changeInPosition =true;
             Debug.Log("changeInPosition " + changeInPosition);
         }
     }
@@ -358,10 +359,10 @@ public class ObjectTransform: MonoBehaviour
         Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
         // Adding yaw adjustment 45-degree yaw
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
-        //Quaternion targetOrientation  = yawRotation * baseRotation;
-        Quaternion targetOrientation = baseRotation;
-        Debug.Log("targetOrientation:" + targetOrientation.eulerAngles);
-        Debug.Log("Quadcopter_secondary:" + Quadcopter_secondary.transform.rotation.eulerAngles);
+        Quaternion targetOrientation  = yawRotation * baseRotation;
+        //Quaternion targetOrientation = baseRotation;
+        //Debug.Log("targetOrientation:" + targetOrientation.eulerAngles);
+        //Debug.Log("Quadcopter_secondary:" + Quadcopter_secondary.transform.rotation.eulerAngles);
         //Quadcopter_secondary.transform.rotation = Quaternion.Euler(0, 45f, 0);
         //Debug.Log("Quadcopter_secondary:" + Quadcopter_secondary.transform.rotation.eulerAngles);
         // Apply to drone controller
@@ -371,8 +372,8 @@ public class ObjectTransform: MonoBehaviour
     void Scheme_2()
     {
         Vector3 targetPosition = new Vector3(0, 0, 0);
-        float angle1 = 60f;
-        float angle2 = 300f;
+        float angle1 = 160f;
+        float angle2 = 380f;
         
 
         if (initStart)
@@ -380,7 +381,7 @@ public class ObjectTransform: MonoBehaviour
             //targetPosition = PolarToCartesian(angle1,radius);
             initStart = false;
             Debug.Log("currentAngle " + angle1);
-            currentAngle = angle2;
+            currentAngle = angle1;
         }
 
 
@@ -391,7 +392,7 @@ public class ObjectTransform: MonoBehaviour
             // Check the direction and update the waypoint index accordingly
             if (isReversing)
             {
-                currentAngle -= 5f;
+                currentAngle -= 1f;
                 targetPosition = PolarToCartesian(currentAngle,radius);
                 if (currentAngle <= angle1)
                 {
@@ -403,7 +404,7 @@ public class ObjectTransform: MonoBehaviour
             }
             else
             {
-                currentAngle +=5f;
+                currentAngle +=1f;
                 targetPosition = PolarToCartesian(currentAngle,radius);
                 if (currentAngle >= angle2)
                 {
@@ -417,10 +418,11 @@ public class ObjectTransform: MonoBehaviour
         }
         else
         {
-            currentAngle +=0.05f;
+            //currentAngle +=0.05f;
             //currentAngle = Mathf.Clamp(currentAngle, angle1, angle2);
             targetPosition = PolarToCartesian(currentAngle,radius);
-            Debug.Log("currentAngle " + currentAngle);
+            //targetPosition = PolarToCartesian(testAngle,radius);
+            //Debug.Log("currentAngle " + currentAngle);
         }
      
         // Addded Yaw orientation lock +- 45degs from lock point
@@ -468,10 +470,11 @@ public class ObjectTransform: MonoBehaviour
     }
 
 
-
     
     private Vector3 PolarToCartesian(float theta, float radius)
     {
+        // Normalize the angle to stay within 0 to 360 degrees
+        theta %= 360;
         // Calculate Cartesian coordinates
         float x = main_position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
         float z = main_position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
