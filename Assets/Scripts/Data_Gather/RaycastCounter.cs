@@ -237,6 +237,7 @@ public class RaycastCounter : MonoBehaviour
             //
             if (Physics.Raycast(ray2, out hit2, Mathf.Infinity, LayerMask))
             {
+
                 // Access the hit object's transform
                 Transform hitTransform = hit2.transform;
 
@@ -244,13 +245,13 @@ public class RaycastCounter : MonoBehaviour
                 localHitPoint = hitTransform.InverseTransformPoint(hit2.point);
 
                 // Debug output to the console
-                Debug.Log("Local hit point: " + localHitPoint);
+                //Debug.Log("Local hit point: " + localHitPoint);
             }
 
 
             if(hit.collider.CompareTag("TrackableObject"))
             {
-                Debug.Log("i Hit " + hit.collider.gameObject.name);
+                //Debug.Log("i Hit " + hit.collider.gameObject.name);
                 string objectName = hit.transform.name;
 
                 string transition = "No transition";
@@ -269,7 +270,7 @@ public class RaycastCounter : MonoBehaviour
                 // Prepare the record string
                 string record = PrepareRecord(objectName, transition, hasTransitioned, localHitPoint);
                 // Add the record to the list
-                Debug.Log("record: " + record);
+                //Debug.Log("record: " + record);
                 hitRecords.Add(record);
             }
 
@@ -283,7 +284,7 @@ public class RaycastCounter : MonoBehaviour
     }
     string PrepareRecord(string hitObject, string transition, bool flag, Vector3 localhit)
     {
-        Debug.Log("PrepareRecord ");
+        //Debug.Log("PrepareRecord ");
 
         string time = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         string test = time + "},{" + hitObject + "},{" + transition + "},{" + flag + "},{" + localhit.x + "},{" + localhit.y + "},{" + localhit.z;

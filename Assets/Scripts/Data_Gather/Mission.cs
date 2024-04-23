@@ -130,7 +130,7 @@ public class MissionManager : MonoBehaviour
     bool id = true;
 
     // 2 minuts per tutorial run
-    private float Tutorial_Timer = 120;
+    private float Tutorial_Timer = 180;
     private float Inflight_Timer = 0.0f;
 
     private int first = 0;
@@ -228,7 +228,7 @@ public class MissionManager : MonoBehaviour
         {   // parse this to a text box
             float timeLeft = Tutorial_Timer-timer;
 
-            if(timer >= Tutorial_Timer)
+            if(timer >= Tutorial_Timer || Input.GetKeyDown(KeyCode.C))
             {
                 // set the correct booleans for toggling the menu to be active again
                 runMenu = true;
@@ -583,6 +583,7 @@ public class MissionManager : MonoBehaviour
         test = false;
         missionActive = false;
         isRecording = false;
+        inCleaning = false;
         Debug.Log("Time out");
         // data 
         dataCollectionIntance.SaveDataToCSV();
@@ -690,7 +691,7 @@ public class MissionManager : MonoBehaviour
 
     void PerformanceUpdate()
     {
-        if(inCleaning)
+        if(true)//inCleaning)
         {
             //Debug.Log("performanceCleaning cuserInput.isSprayingalled");
             //performanceCleaning.UpdateBoxValues();

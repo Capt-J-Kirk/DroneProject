@@ -40,7 +40,7 @@ public class GridManager : MonoBehaviour
     public List<List<BoxData>> allGrids = new List<List<BoxData>>(); 
 
     // USED for raycasting
-    public float maxDistance = 5.0f;
+    public float maxDistance = 10.0f;
     public float maxRadius = 0.15f;
 
 
@@ -298,7 +298,7 @@ public class GridManager : MonoBehaviour
         Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * 10, Color.blue);
 
         float SumCleaningsFactor = 0.0f;
-        if(userInput.isSpraying)
+        if(true)//userInput.isSpraying)
         {
             if (Physics.Raycast(ray, out hit, maxDistance))
             {
