@@ -190,7 +190,13 @@ public class MissionManager : MonoBehaviour
         ActiveScheme.text = controlScheme;
         // update timer
         timer += Time.fixedDeltaTime;
-        
+         
+
+
+        if(inCleaning)
+        {
+            Debug.Log("incleaning");
+        }
         // Four states, RUN:
         // Menu
         // Tutorial
@@ -628,7 +634,12 @@ public class MissionManager : MonoBehaviour
 
         quadcopterController.reset_drone();
         quadcopterController_Sec.reset_drone();
-        
+
+
+        // Set userinterface controlleren to master
+        userInput.togglesecondarDrone = false;
+        objectTransform.toggleFollow = true;
+        objectTransform.prewYaw = 0f;
         missionActive = true;
         isRecording = true;
 
@@ -680,7 +691,7 @@ public class MissionManager : MonoBehaviour
         // remenber to set the tag "inCleaning"
         if (inChange.CompareTag("inCleaning"))
         {
-            Debug.Log("changing state to inCleaning!");
+            Debug.Log("NOT IN HERE changing state to inCleaning!");
             inCleaning = true;
             inFlight = false;
         }

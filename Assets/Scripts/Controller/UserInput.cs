@@ -42,6 +42,8 @@ public class UserInput : MonoBehaviour
     // defauld is scren 1 (main drone)
     public bool switchCamFeed = false;
 
+    public GameObject grid;
+    private GridManager cleaning;
     public GameObject secDrone;
     public GameObject mainDrone;
     ObjectTransform transformAdjustment;
@@ -80,6 +82,15 @@ public class UserInput : MonoBehaviour
         var main = droneSpray.main;
         main.loop = true;
         //GCInstance = this;
+        if (grid != null)
+        {
+            cleaning = grid.GetComponent<GridManager>();
+            
+        }
+        else
+        {
+            Debug.Log("set ref to grid: ");
+        }
      
     }
 
@@ -187,8 +198,9 @@ public class UserInput : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        quadcopterController_sec.manual = ManualControl;
         if (Input.GetKeyDown(KeyCode.C))
         {
             switchScren = !switchScren;
@@ -468,11 +480,13 @@ public class UserInput : MonoBehaviour
         {
             droneSpray.Play();
             isSpraying = true;
+            cleaning.toClean = true;
         }
         else
         {
             droneSpray.Stop();
             isSpraying = false;
+            cleaning.toClean = false;
         }
     }
     private void OnSprayCancelled(InputAction.CallbackContext value)

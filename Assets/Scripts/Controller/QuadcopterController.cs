@@ -112,6 +112,11 @@ public class QuadcopterController: MonoBehaviour
     float newPositionChangeX = 0f;
     float newPositionChangeZ = 0f;
 
+
+    private float safeDistance = 9f;
+    private float notSafeDistance = 3f;
+    private float criticalDistance = 1.6f;
+
     void StartTuningPID()
     {
         // Set the flag to start the tuning process
@@ -244,6 +249,69 @@ public class QuadcopterController: MonoBehaviour
         desiredPosition = currentDesiredPosition + newPositionChangeWorld;
 
     }
+
+    private void ModifiedCalcDesiredPose(float rollChange, float pitchChange, float yawChange, float throttleChange)
+    {
+        // Sensitivity factors (determine how much each input affects the pose)
+        float yawSensitivity = 5.0f;
+        float altitudeSensitivity = 0.80f;
+    
+        float speed = 5f;
+        float minSafeDistance = 2.0f;
+
+
+        // set the movement 
+        float xMovement = pitchChange * speed * Time.deltaTime;
+        float zMovement = rollChange * speed * Time.deltaTime;
+
+        // apply on individual axis for object avoidance check
+        Vector3 newXPosition = transform.position + new Vector3(xMovement, 0, 0);
+        Vector3 newZPosition = transform.position + new Vector3(0, 0, zMovement);
+        
+        // Move in x direction, if safe distance 
+        if (Vector3.Distance(newXPosition, windblade.position) >= minSafeDistance)
+        {
+            transform.Translate(xMovement, 0, 0, Space.Self); // space.self is local space
+        }
+
+        // Move in z direction, if safe distance
+        if (Vector3.Distance(newZPosition, windblade.position) >= minSafeDistance)
+        {
+            transform.Translate(0, 0, zMovement, Space.Self);
+        }
+
+        // // Converting neutral orientation from Quaternion to euler angles
+        Vector3 neutralEulerAngles = neutralOrientation.eulerAngles;
+   
+        // may need to be the current orientation of the drone, to be able to spin 360
+        float newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity); // yaw can freely move
+    
+        // update prewious Yew
+        prewYaw = newYaw;
+        // only used for datacollector
+        desiredEulerAngles = new Vector3(0, newYaw, 0);
+    
+
+        //Update desired orientation
+        desiredOrientation = Quaternion.Euler(0, newYaw, 0);
+       
+
+
+        //Debug.Log("desiredOrientation euler: " + desiredOrientation.eulerAngles);
+    
+        // current position should be the desired position, as its the starting position. 
+
+        Vector3 currentDesiredPosition = desiredPosition;
+
+        Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
+        // Update desired position
+        desiredPosition = currentDesiredPosition + newPositionChange;
+        //desiredPosition = currentDesiredPosition + newPositionChangeWorld;
+       
+    }
+
+
+
     private void new_CalcDesiredPose(float rollChange, float pitchChange, float yawChange, float throttleChange)
     {
         // Sensitivity factors (determine how much each input affects the pose)
@@ -733,14 +801,14 @@ public class QuadcopterController: MonoBehaviour
             //     ONE_t_main_dist.text = "Dist safe";
             //     ONE_i_main_dist.color =  Color.green;
             // }
-            if (distanceToObject < 3f)
+            if (distanceToObject < notSafeDistance)
             {
                 shouldBlink = true;
                 StartBlinking(Color.red);
                 TWO_t_main_dist.text = "Dist Extreme Close";
                 ONE_t_main_dist.text = "Dist Extreme Close";
             }
-            else if (distanceToObject < 8f)
+            else if (distanceToObject < safeDistance)
             {
                 shouldBlink = false;
                 StopBlinking();
@@ -945,12 +1013,12 @@ public class QuadcopterController: MonoBehaviour
 
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
-        rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
+        //rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
 
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
-        rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
+        //rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
@@ -995,7 +1063,8 @@ public class QuadcopterController: MonoBehaviour
         if (Mathf.Abs(yaw) < 0.4f) yaw = 0f;
         if (Mathf.Abs(throttle) < 0.4f) throttle = 0f;
 
-        CalcDesiredPose(roll, pitch, yaw, throttle);
+        ModifiedCalcDesiredPose(roll, pitch, yaw, throttle);
+        //CalcDesiredPose(roll, pitch, yaw, throttle);
         //CalcDesiredPose(roll, pitch, yaw, throttle);
      
         if (toggleDebug)

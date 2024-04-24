@@ -17,17 +17,17 @@ public class ObjectTransform: MonoBehaviour
     public QuadcopterController_sec ControlInput;
 
     // Transformation matrix for rotation and translation
-    private Matrix4x4 transformationMatrix;
+    //private Matrix4x4 transformationMatrix;
 
     // Set up transformation parameters
     private Vector3 translationVector =  new Vector3(0.0f, 0.0f, 0.0f); 
     private Vector3 rotationVector =  new Vector3(0.0f, 0.0f, 0.0f); 
 
-    public float fixedDistance = 10.0f; // desired distance offset 
+    //public float fixedDistance = 10.0f; // desired distance offset 
     // Fixed angles
-    public float fixedYawDegrees = 20; // Fixed left-right angle
-    public float fixedPitchDegrees = 20; // Fixed up-down angle
-    private Vector3 direction; 
+    //public float fixedYawDegrees = 20; // Fixed left-right angle
+    //public float fixedPitchDegrees = 20; // Fixed up-down angle
+    //private Vector3 direction; 
 
     public int ControlScheme = 1;
     
@@ -42,17 +42,17 @@ public class ObjectTransform: MonoBehaviour
     private float pitch2;
     private float roll2;
     private float throttle2; // used to set the distance 
-    private bool SettingParameterValues = false;
-    private bool settingDistance = false;
-    private bool settingYaw = false;
-    private bool settingPitch = false;
+    //private bool SettingParameterValues = false;
+    //private bool settingDistance = false;
+    //private bool settingYaw = false;
+    //private bool settingPitch = false;
     public bool toggleDebug = false;
 
     // Used for control scheme 1
     public float radius = 5f; // Sphere's radius
     public float theta = 0f; // Horizontal angle
     public float phi = Mathf.PI / 2; // Vertical angle, starting vertically upwards
-    private float prewYaw = 0f;
+    public float prewYaw = 0f;
     private float yaw3 = 0f;
     public float newYaw = 0f;
 
@@ -62,33 +62,33 @@ public class ObjectTransform: MonoBehaviour
     public int point = 0;
     private float starttime =0;
     private int count = 0;
-    private float minRadius = 1.5f;
-    private float maxRadius = 5f;
+    private float minRadius = 3f;
+    private float maxRadius = 6f;
 
     private float minLow = 3f;
     private float maxHigh = 3f;
 
     private bool isReversing = false;
     private bool initStart = true;
-    private float waypointTimer = 0.5f; // Time between waypoint changes
+    //private float waypointTimer = 0.5f; // Time between waypoint changes
     private float timer; // Current timer
-    private int currentWaypointIndex = 0;
+    //private int currentWaypointIndex = 0;
     // Waypoints in spherical coordinates (theta, phi)
-    private Vector2[] waypointsSpherical = new Vector2[]
-    {
-        new Vector2(45, -10), // Point 1
-        new Vector2(120, -10), // Point 2
-        new Vector2(240, 10),   // Point 3
-        new Vector2(315, 10)    // Point 4
-    };
+    // private Vector2[] waypointsSpherical = new Vector2[]
+    // {
+    //     new Vector2(45, -10), // Point 1
+    //     new Vector2(120, -10), // Point 2
+    //     new Vector2(240, 10),   // Point 3
+    //     new Vector2(315, 10)    // Point 4
+    // };
 
     private float maxAllowedYaw = 75f;
 
-    private float left_right = 0f; 
+    //private float left_right = 0f; 
     private float up_down = 0f;  
     float currentAngle = 0f;
 
-    public float testAngle = 45f;
+    //public float testAngle = 45f;
 
     void Start()
     {
@@ -256,24 +256,6 @@ public class ObjectTransform: MonoBehaviour
         yaw3 += yaw;
     }
 
-    void updateCylindricalParameters(float roll, float pitch, float throttle, float yaw)
-    {
-        // Spherical Orbit control 
-        float thetaSensitivity = 2.0f;
-        float phiSensitivity = 2.0f;
-        float radiusSensitivity = 2.0f;
-
-        radius += roll * phiSensitivity; // horizontal movement
-        theta += pitch * thetaSensitivity; // vertical movement
-        up_down = throttle * radiusSensitivity; // change radius 
-        
-
-        // ADD A BASELINE for up/down main_drones.y location
-        //up_down = Mathf.Clamp(main_position.y + up_down, main_position.y-minLow, maxHigh+main_position.y);
-        radius = Mathf.Clamp(radius, minRadius, maxRadius);
-
-        yaw3 = yaw;
-    }
     void Scheme_1_Spherical()
     {
         // fejl fundet. fixed  yaw, so it dosn't rotate all the time. fixed it to nuatral point
@@ -286,7 +268,7 @@ public class ObjectTransform: MonoBehaviour
         // theta += roll * thetaSensitivity; // horizontal movement
         // phi += pitch * phiSensitivity; // vertical movement
         // radius += throttle * radiusSensitivity; // change radius 
-
+        radius = Mathf.Clamp(radius, minRadius, maxRadius);
         // Calculate desired positions on sphere
         float x = main_position.x + radius * Mathf.Sin(phi * Mathf.Deg2Rad) * Mathf.Cos(theta * Mathf.Deg2Rad);
         float y = main_position.y + radius * Mathf.Sin(phi * Mathf.Deg2Rad) * Mathf.Sin(theta * Mathf.Deg2Rad);
@@ -326,6 +308,24 @@ public class ObjectTransform: MonoBehaviour
         ApplyNewPose(targetPosition, targetOrientation);
     }
 
+    void updateCylindricalParameters(float roll, float pitch, float throttle, float yaw)
+    {
+        // Spherical Orbit control 
+        float thetaSensitivity = 2.0f;
+        float phiSensitivity = 2.0f;
+        float radiusSensitivity = 4.0f;
+
+        radius += roll * phiSensitivity; // horizontal movement
+        theta += pitch * thetaSensitivity; // vertical movement
+        up_down = throttle * radiusSensitivity; // change radius 
+        
+
+        // ADD A BASELINE for up/down main_drones.y location
+        //up_down = Mathf.Clamp(main_position.y + up_down, main_position.y-minLow, maxHigh+main_position.y);
+        radius = Mathf.Clamp(radius, minRadius, maxRadius);
+
+        yaw3 = yaw;
+    }
     void Scheme_1_Cylindrical()
     {
         // phi in this case is the vertical movement from the joystick
@@ -388,16 +388,14 @@ public class ObjectTransform: MonoBehaviour
             currentAngle = angle1;
         }
 
-
-
         // then flipping point
         if (changeInPosition)
         {
-            // Check the direction and update the waypoint index accordingly
+            // Check the direction and update accordingly
             if (isReversing)
             {
                 currentAngle -= 1f;
-                targetPosition = PolarToCartesian(currentAngle,radius);
+                targetPosition = newPolarToCartesian(currentAngle,radius);
                 if (currentAngle <= angle1)
                 {
                     // 
@@ -409,7 +407,7 @@ public class ObjectTransform: MonoBehaviour
             else
             {
                 currentAngle +=1f;
-                targetPosition = PolarToCartesian(currentAngle,radius);
+                targetPosition = newPolarToCartesian(currentAngle,radius);
                 if (currentAngle >= angle2)
                 {
                     // Reached the end point
@@ -423,15 +421,10 @@ public class ObjectTransform: MonoBehaviour
         }
         else
         {
-            //currentAngle +=0.05f;
-            //currentAngle = Mathf.Clamp(currentAngle, angle1, angle2);
-            targetPosition = PolarToCartesian(currentAngle,radius);
-            //targetPosition = PolarToCartesian(testAngle,radius);
-            //Debug.Log("currentAngle " + currentAngle);
+            targetPosition = newPolarToCartesian(currentAngle,radius);
         }
      
         // Addded Yaw orientation lock +- 45degs from lock point
-
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
         // update prewious Yew
@@ -440,8 +433,7 @@ public class ObjectTransform: MonoBehaviour
         newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
         newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
-        //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
-        
+               
 
         // face towards the main drone
         // use the alitude from the secondary drone itself
@@ -459,22 +451,6 @@ public class ObjectTransform: MonoBehaviour
 
     }
 
-
-    private Vector3 SphericalToCartesian(float theta, float phi, float radius)
-    {
-        // Convert angles from degrees to radians
-        float phiRadian = phi * Mathf.Deg2Rad;
-        float thetaRadian = theta * Mathf.Deg2Rad;
-
-        // Calculate Cartesian coordinates
-        float x = main_position.x + radius * Mathf.Sin(phiRadian) * Mathf.Cos(thetaRadian);
-        float y = main_position.y + radius * Mathf.Sin(phiRadian) * Mathf.Sin(thetaRadian);
-        float z = main_position.z + radius * Mathf.Cos(phiRadian);
-
-        return new Vector3(x, y, z);
-    }
-
-
     
     private Vector3 PolarToCartesian(float theta, float radius)
     {
@@ -487,6 +463,37 @@ public class ObjectTransform: MonoBehaviour
 
         // set the hight offset
         float y = main_position.y;
+
+        return new Vector3(x, y, z);
+    }
+
+    private Vector3 newPolarToCartesian(float theta, float radius)
+    {
+        // Convert polar coordinates to Cartesian, but offset around main drone
+        // Normalize angle within 0-360 degrees
+        theta %= 360;  
+        Vector3 offset = new Vector3(
+            radius * Mathf.Cos(theta * Mathf.Deg2Rad),
+            0,  
+            radius * Mathf.Sin(theta * Mathf.Deg2Rad)
+        );
+
+        offset = main_rotation * offset;
+        return main_position + offset;
+    }
+
+
+
+    private Vector3 SphericalToCartesian(float theta, float phi, float radius)
+    {
+        // Convert angles from degrees to radians
+        float phiRadian = phi * Mathf.Deg2Rad;
+        float thetaRadian = theta * Mathf.Deg2Rad;
+
+        // Calculate Cartesian coordinates
+        float x = main_position.x + radius * Mathf.Sin(phiRadian) * Mathf.Cos(thetaRadian);
+        float y = main_position.y + radius * Mathf.Sin(phiRadian) * Mathf.Sin(thetaRadian);
+        float z = main_position.z + radius * Mathf.Cos(phiRadian);
 
         return new Vector3(x, y, z);
     }

@@ -3,9 +3,21 @@ using UnityEngine;
 public class EnterTrigger : MonoBehaviour
 {
     // These variables should be defined if you're using them in your script
-    private bool inCleaning = false;
-    private bool inFlight = false;
+    // private bool inCleaning = false;
+    // private bool inFlight = false;
+    private GameObject mission;
+    private MissionManager mis;
 
+    void Start()
+    {
+        mission = GameObject.Find("Mission");
+        if (mission == null)
+        {
+            Debug.LogError("Please assign the mission");
+            return;
+        }
+        mis = mission.GetComponent<MissionManager>();
+    }
     // OnTriggerEnter is called when another collider enters the trigger collider attached to this GameObject
     private void OnTriggerEnter(Collider other)
     {
@@ -13,8 +25,10 @@ public class EnterTrigger : MonoBehaviour
         if (other.CompareTag("inCleaning"))
         {
             Debug.Log("Changing state to inCleaning!");
-            inCleaning = true;
-            inFlight = false;
+            // inCleaning = true;
+            // inFlight = false;
+            mis.inCleaning = true;
+            mis.inFlight = false;
         }
     }
 }

@@ -54,10 +54,10 @@ public class GridManager : MonoBehaviour
 
     // USED for raycasting
     public float maxDistance = 8.0f;
-    public float maxRadius = 0.15f;
+    public float maxRadius = 0.12f;
 
 
-
+    public bool toClean = false; 
 
 
     void Awake()
@@ -332,7 +332,7 @@ public class GridManager : MonoBehaviour
         Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * maxDistance, Color.blue);
 
         float SumCleaningsFactor = 0.0f;
-        if(true)//userInput.isSpraying)
+        if(toClean)//userInput.isSpraying)
         {
             if (Physics.Raycast(ray, out hit, maxDistance))
             {
@@ -351,7 +351,7 @@ public class GridManager : MonoBehaviour
                     // Calculate radial factors for value decrement based on distance
                     float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
                     float radialFactor = 1 - (radialDistance / radiusAtHit);
-                    float cleaningsFactor = Mathf.Abs(valueFactor * radialFactor); // scale down the cleaning factor by 10
+                    float cleaningsFactor = Mathf.Abs(valueFactor * radialFactor)/2f; // scale down the cleaning factor by 10
 
                     
 
