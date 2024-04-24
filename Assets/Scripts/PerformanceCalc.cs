@@ -1,7 +1,9 @@
 using Es.InkPainter;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.FilePathAttribute;
 
@@ -12,6 +14,10 @@ public class PerformanceCalc : MonoBehaviour
     public float wingDirtImportanceRatio = 0.7f;
     public Vector3Int resolution = new Vector3Int(3, 3, 2);
     public List<TurbinePart> parts;
+
+    // Data saving.
+    public bool saveData = true;
+    private readonly string dataFolderPath = Application.dataPath + "/Data";
 
 
     [Serializable]
@@ -38,8 +44,8 @@ public class PerformanceCalc : MonoBehaviour
         public Dictionary<Vector3Int, float> zoneCleanDone_Dict = new();
 
         // Overall measure for turbine part.
-        public float startDirt = 0;
-        public float currDirt = 0;
+        public float startNormTotDirt = 0;
+        public float currNormTotDirt = 0;
 
         // Hit by raycast
         public bool wasHit = false;
@@ -47,7 +53,8 @@ public class PerformanceCalc : MonoBehaviour
         // Normalize performance
         public Vector3 bounds;
         public float boundsVolume;
-        public float normalizedStartDirt;
+        public int pixelCount;
+        public float surfacePixelRatio;
     }
 
 
@@ -63,13 +70,15 @@ public class PerformanceCalc : MonoBehaviour
             itr.boundsVolume = itr.bounds.x * itr.bounds.y * itr.bounds.z;
             totalVolume += itr.boundsVolume;
             boundsGO.SetActive(false);
-            Debug.Log("bounds:" + itr.bounds);
+            //Debug.Log("bounds:" + itr.bounds);
         }
-        Debug.Log("Total vol: " +  " = " + totalVolume);
+        //Debug.Log("Total vol: " +  " = " + totalVolume);
     }
+
 
     private void FixedUpdate()
     {
+        
         foreach (TurbinePart itr in parts)
         {
             itr.timer += Time.deltaTime;
@@ -78,6 +87,7 @@ public class PerformanceCalc : MonoBehaviour
             {
                 Debug.Log("Wind turbine, " + itr.paint_GO.name + " texture BEGINNING assign.");
                 Assign(itr);
+                NormalizePart(itr);
                 Debug.Log("Wind turbine, " + itr.paint_GO.name + " texture SUCCESSFULLY assigned.");
                 itr.timer = 0;
             }
@@ -89,6 +99,25 @@ public class PerformanceCalc : MonoBehaviour
                 itr.timer = 0;
                 itr.wasHit = false;
             }
+        }
+    }
+
+
+    void NormalizePart(TurbinePart itr)
+    {
+        itr.surfacePixelRatio =
+            (2 * itr.bounds.x * itr.bounds.y +
+             2 * itr.bounds.y * itr.bounds.z +
+             2 * itr.bounds.x * itr.bounds.z
+            ) / itr.pixelCount;
+
+        itr.startNormTotDirt *= itr.surfacePixelRatio;
+        itr.currNormTotDirt *= itr.surfacePixelRatio;
+        foreach (Vector3Int zone in itr.zoneStartDirt_List)
+        {
+            itr.zoneStartDirt_Dict[zone] *= itr.surfacePixelRatio;
+            itr.zoneCurrDirt_Dict[zone] *= itr.surfacePixelRatio;
+            Debug.Log(itr.paint_GO.name + ": " + zone + " = " + itr.zoneCurrDirt_Dict[zone]);
         }
     }
 
@@ -111,14 +140,14 @@ public class PerformanceCalc : MonoBehaviour
 
         // Find current dirt.
         // ----------------------------------------------------------------------------------------
-        itr.currDirt = 0;                                                                      // Resetting.
+        itr.currNormTotDirt = 0;                                                               // Resetting.
         foreach (Vector3Int zone in itr.zoneStartDirt_List) itr.zoneCurrDirt_Dict[zone] = 0;   // Resetting.
         // Updating 
         foreach (Vector2Int texCoord in itr.texCoord_List)
         {
             Color color = itr.currentTexture.GetPixel(texCoord.x, texCoord.y);
-            float dirt = 1 - color.grayscale;
-            itr.currDirt += dirt;
+            float dirt = (1 - color.grayscale) * itr.surfacePixelRatio;
+            itr.currNormTotDirt += dirt;
 
             // Updating zone dirt
             Vector3Int zone = itr.texCoordToZoneCoord_Dict[texCoord];
@@ -169,21 +198,24 @@ public class PerformanceCalc : MonoBehaviour
 
         //Debug.Log("Start texture w/h: " + itr.startTexture.width + "/" + itr.startTexture.height);
 
+        // Iterate over the entire texture.
+        int pixelCounter = 0;
         for (int i = 0; i < itr.startTexture.width; i++)
         {
             for (int j = 0; j < itr.startTexture.height; j++)
             {
-                Color color = itr.startTexture.GetPixel(i, j);
+                Vector2 uvCoordinate = new Vector2((float)i / itr.startTexture.width, (float)j / itr.startTexture.height);
+                Vector3 coordinate = GetLocalCoordinateFromUV(itr, uvCoordinate);
 
-                if (color.grayscale != 1)
+                if (coordinate != Vector3.zero)  // The uv-coordinate is mapped to the mesh.
                 {
-                    Vector2 uvCoordinate = new Vector2((float)i / itr.startTexture.width, (float)j / itr.startTexture.height);
-                    Vector3 coordinate = GetLocalCoordinateFromUV(itr, uvCoordinate);
-                    if (coordinate != Vector3.zero)
+                    pixelCounter++;
+                    Color color = itr.startTexture.GetPixel(i, j);
+                    if (color.grayscale != 1)   // Is not completely white.
                     {
                         float dirt = 1 - color.grayscale;
-                        itr.startDirt += dirt;
-                        itr.currDirt += dirt;
+                        itr.startNormTotDirt += dirt;
+                        itr.currNormTotDirt += dirt;
 
                         // Texture coordinates and local coordinates.
                         Vector2Int texCoord = new Vector2Int(i, j);
@@ -193,7 +225,8 @@ public class PerformanceCalc : MonoBehaviour
                         // Zone dirt --------------------------------------------------------------------------------------------
                         Vector3Int zoneCoord = new();
                         // x coord
-                        for (int r=0; r<resolution.x; r++) {
+                        for (int r = 0; r < resolution.x; r++)
+                        {
                             float coord = localCoord.x;
                             if (coord >= r * itr.bounds.x / resolution.x && coord < (r + 1) * itr.bounds.x / resolution.x)
                             {
@@ -226,7 +259,7 @@ public class PerformanceCalc : MonoBehaviour
                             itr.zoneCurrDirt_Dict[zoneCoord] += dirt;
                         }
                         // ------------------------------------------------------------------------------------------------------
-                        itr.texCoordToZoneCoord_Dict.Add(texCoord, zoneCoord);  // Find object zones from texure coordinates.
+                        itr.texCoordToZoneCoord_Dict.Add(texCoord, zoneCoord);  // Find object zones from texure coordinates.                        
                     }
                 }
             }
@@ -237,7 +270,9 @@ public class PerformanceCalc : MonoBehaviour
         itr.zoneStartDirt_List = itr.zoneStartDirt_List.OrderBy(v => v.x).ToList();
         itr.zoneStartDirt_List = itr.zoneStartDirt_List.OrderBy(v => v.y).ToList();
         itr.zoneStartDirt_List = itr.zoneStartDirt_List.OrderBy(v => v.z).ToList();
+        itr.pixelCount = pixelCounter;
     }
+
 
 
     Vector3 GetLocalCoordinateFromUV(TurbinePart itr, Vector2 uvCoordinate)
@@ -289,6 +324,48 @@ public class PerformanceCalc : MonoBehaviour
             ((v3.y - v1.y) * (v2.x - v3.x) + (v1.x - v3.x) * (v2.y - v3.y));
         B.z = 1 - B.x - B.y;
         return B;
+    }
+
+
+    void SaveGameData(bool createFolder)
+    {
+        if (!saveData) return;
+
+        string playerData = "";
+
+
+        if (createFolder)
+        {
+            DirectoryInfo dir = new DirectoryInfo(dataFolderPath);
+            DirectoryInfo[] info = dir.GetDirectories("*.*");
+            int count = dir.GetDirectories().Length;
+
+            // for (int i = 0; i < count; i++) Debug.Log("Found Directory: " + info[i]);
+
+
+        }
+
+
+
+        if (!Directory.Exists(dataFolderPath)) Directory.CreateDirectory(dataFolderPath);
+
+
+
+
+        int fileCount = Directory.GetFiles(dataFolderPath).Length / 2;
+
+        string dateTime = DateTime.Now.ToString();
+        string newDateTime = dateTime.Replace("/", "-");
+        newDateTime = newDateTime.Replace(" ", "_");
+        newDateTime = newDateTime.Replace(":", "-");
+        Debug.Log(newDateTime);
+
+        string filePath = Path.Combine(dataFolderPath, fileCount.ToString() + "_GameData_" + newDateTime + ".txt");
+
+        File.WriteAllText(filePath, playerData);
+
+        // Refresh the AssetDatabase to make sure Unity detects the newly created file
+        UnityEditor.AssetDatabase.Refresh();
     }
 
 }
