@@ -950,7 +950,7 @@ public class QuadcopterController: MonoBehaviour
 
         // roll, left and right
         float clampRoll = Mathf.Clamp(roll, -maxVelRoll, maxVelRoll);
-        rb.AddTorque(transform.forward * clampRoll, ForceMode.Force); // might need to invert roll. 
+        rb.AddTorque(transform.forward * -clampRoll, ForceMode.Force); // might need to invert roll. 
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);

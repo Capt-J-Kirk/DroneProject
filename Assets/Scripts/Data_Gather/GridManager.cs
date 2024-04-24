@@ -4,6 +4,19 @@ using System.Globalization;
 using System.Text;
 using System.IO;
 
+
+
+public class BoxUpdate 
+{
+    public float value;       // Example property
+    public float intensity; // New property
+    public bool flag;       // New property
+
+}
+
+
+
+
 public class GridManager : MonoBehaviour
 {
     public GameObject boxPrefab;
@@ -16,8 +29,8 @@ public class GridManager : MonoBehaviour
     public GameObject grid1;
     public GameObject grid2;
     
-    public GameObject old_grid1;
-    public GameObject old_grid2;
+    // public GameObject old_grid1;
+    // public GameObject old_grid2;
     // filename data !
     public int type;
     public string name;
@@ -37,18 +50,34 @@ public class GridManager : MonoBehaviour
 
     //private List<BoxData> boxList = new List<BoxData>();
     private List<BoxData> BoxList = new List<BoxData>();
-    public List<List<BoxData>> allGrids = new List<List<BoxData>>(); 
+    private List<List<BoxUpdate>> allGrids = new List<List<BoxUpdate>>(); 
 
     // USED for raycasting
     public float maxDistance = 8.0f;
-    public float maxRadius = 0.25f;
+    public float maxRadius = 0.15f;
 
+
+
+
+
+    void Awake()
+    {
+      
+    }
 
     void Start()
     {
        // GenerateGrid();
-       old_grid1.SetActive(false);
-       old_grid2.SetActive(false);
+    //    old_grid1.SetActive(false);
+    //    old_grid2.SetActive(false);
+        // grid1 = GameObject.Find("Grid1");
+        // grid2 = GameObject.Find("Grid2");
+
+        // if (grid1 == null || grid2 == null)
+        // {
+        //     Debug.LogError("Please assign the grids!");
+        //     return;
+        // }
     }
 
     // make sure to setup the tag "cleaning" in the tags and layers setting!
@@ -87,7 +116,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        allGrids.Add(BoxList);
+        //allGrids.Add(BoxList);
     }
 
     
@@ -151,7 +180,7 @@ public class GridManager : MonoBehaviour
     {
         // Clear the existing list to avoid duplicates
         BoxList.Clear();
-
+        maxCleanValuePossible = 0f;
         // Iterate through all children of the 'Grid' GameObject (this.transform assumes this script is attached to 'Grid')
 
         // make a check to select which grid should be loaded
@@ -167,6 +196,7 @@ public class GridManager : MonoBehaviour
                     // Add the BoxData component to the BoxList
                     BoxList.Add(boxData);
                 }
+                maxCleanValuePossible += 1f;
             }
         }  
         else
@@ -180,6 +210,7 @@ public class GridManager : MonoBehaviour
                     // Add the BoxData component to the BoxList
                     BoxList.Add(boxData);
                 }
+                maxCleanValuePossible += 1f;
             }
         }
         
@@ -268,11 +299,11 @@ public class GridManager : MonoBehaviour
 
 
         // used to take a snapshot and store it
-        List<BoxData> currentGridState = new List<BoxData>();
+        List<BoxUpdate> currentGridState = new List<BoxUpdate>();
         foreach (var box in BoxList)
         {
             // Clone the box data to keep a snapshot of its current state
-            BoxData boxStateSnapshot = new BoxData()
+            BoxUpdate boxStateSnapshot = new BoxUpdate()
             {
                 value = box.value,
                 intensity = box.intensity,
@@ -320,10 +351,9 @@ public class GridManager : MonoBehaviour
                     // Calculate radial factors for value decrement based on distance
                     float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
                     float radialFactor = 1 - (radialDistance / radiusAtHit);
-                    float cleaningsFactor = (valueFactor * radialFactor)/2f; // scale down the cleaning factor by 10
+                    float cleaningsFactor = Mathf.Abs(valueFactor * radialFactor); // scale down the cleaning factor by 10
 
-                    // sum the cleaning effort for this time frame.
-                    SumCleaningsFactor += cleaningsFactor;
+                    
 
                     //Debug.Log("cleaning value: " + cleaningsFactor);
 
@@ -336,13 +366,18 @@ public class GridManager : MonoBehaviour
                         boxData.value += cleaningsFactor;
                         boxData.intensity += cleaningsFactor;
                         boxData.intensity = Mathf.Clamp(boxData.intensity, 0.0f, 1.0f);
-                        Debug.Log("Intensitet " + boxData.intensity);
+                        //Debug.Log("Intensitet " + boxData.intensity);
                         // set the flag, if box is 100p cleaned
+                        if (boxData.intensity != 1.0f)
+                        {
+                            // sum the cleaning effort for this time frame.
+                            SumCleaningsFactor += cleaningsFactor;
+                        }
                         if (boxData.intensity == 1.0f)
                         {
                             boxData.flag = true;
                         }
-                        // // Update the color based on the new intensity
+                        // // Update the color based on the new intensity 
                         Renderer boxRenderer = boxData.gameObject.GetComponent<Renderer>();
                         boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
             
@@ -367,11 +402,12 @@ public class GridManager : MonoBehaviour
         // append the boxlist current states to the list
         //allGrids.Add(BoxList);
 
-        List<BoxData> currentGridState = new List<BoxData>();
+        List<BoxUpdate> currentGridState = new List<BoxUpdate>();
+
         foreach (var box in BoxList)
         {
             // Clone the box data to keep a snapshot of its current state
-            BoxData boxStateSnapshot = new BoxData()
+            BoxUpdate boxStateSnapshot = new BoxUpdate()
             {
                 value = box.value,
                 intensity = box.intensity,
@@ -384,9 +420,13 @@ public class GridManager : MonoBehaviour
             // boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
         }
         currentCleanValue = temp;
-        cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
-        Debug.Log("currentGridState " + currentGridState);
+        cleaningPercent = (currentCleanValue / maxCleanValuePossible) * 100.0f;
+        //cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
+        //Debug.Log("currentGridState " + currentGridState);
         // Append the snapshot of the current grid state to allGrids
+
+        // PARSE THIS TO THE MISSION SCRIPT
+
         allGrids.Add(currentGridState);
         
     }

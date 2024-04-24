@@ -280,6 +280,8 @@ public class QuadcopterController_sec: MonoBehaviour
         //Update desired orientation
         desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
 
+
+
         Vector3 currentDesiredPosition = desiredPosition;
 
         Vector3 newPositionChangeLocal = new Vector3(
@@ -458,7 +460,7 @@ public class QuadcopterController_sec: MonoBehaviour
             directionFromObject.Normalize();  // Normalize the direction vector
 
             // Set the new desired position to maintain at least minDistance
-            //desiredPosition = closestPoint + directionFromObject * minDistance;
+            desiredPosition = closestPoint + directionFromObject * minDistance;
         }
 
 

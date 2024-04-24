@@ -48,7 +48,8 @@ public class MissionManager : MonoBehaviour
     public QuadcopterController_sec quadcopterController_Sec;
     public ObjectTransform objectTransform;
 
-    public GridManager performanceCleaning;
+    //private GridManager performanceCleaning = new GridManager();
+    private GridManager performanceCleaning;
 
     public UserInput userInput;
     
@@ -130,7 +131,7 @@ public class MissionManager : MonoBehaviour
     bool id = true;
 
     // 2 minuts per tutorial run
-    private float Tutorial_Timer = 180;
+    private float Tutorial_Timer = 120;
     private float Inflight_Timer = 0.0f;
 
     private int first = 0;
@@ -145,14 +146,36 @@ public class MissionManager : MonoBehaviour
     float start_time = 0f;
     private bool loadsetup = true;
 
+    bool populate = false;
+    void Awake()
+    {
+        if (grid != null)
+        {
+            performanceCleaning = grid.GetComponent<GridManager>();
+            
+        }
+        else
+        {
+            Debug.Log("set ref to grid: ");
+        }
+    }
+
     void Start()
     {
         //performanceCleaning.GenerateGrid();
         dataCollectionIntance.type = missionCombination;
+        // if (grid != null)
+        // {
+        //     performanceCleaning = grid.GetComponent<GridManager>();
+            
+        // }
+        // else
+        // {
+        //     Debug.Log("set ref to grid: ");
+        // }
         InvokeRepeating("DataUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("TrackingUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("PerformanceUpdate", 0.05f, 0.05f); // call 1/20 a sec 
-        
     }
    
     void FixedUpdate()
@@ -228,6 +251,7 @@ public class MissionManager : MonoBehaviour
         
         if(loadsetup && Input.GetKeyDown(KeyCode.W))
         {
+            start_time = timer;
             runMission = true;
             Debug.Log("runMission");
             if(id)
@@ -276,6 +300,7 @@ public class MissionManager : MonoBehaviour
             // load that combination in
             if (loadsetup && startMission && Input.GetKeyDown(KeyCode.S))
             {
+                start_time = timer;
                 Menu.SetActive(false);
                 LoadMission();
                 startMission = false;
@@ -340,7 +365,7 @@ public class MissionManager : MonoBehaviour
             loadsetup = true;
         }
         
-        if(true)//runDebugging)
+        if(false)//runDebugging)
         {
             if(loadsetup && Input.GetKeyDown(KeyCode.A))
             {
@@ -349,6 +374,7 @@ public class MissionManager : MonoBehaviour
                 dataCollectionIntance.ClearDataList();
                 raycastCounter.SaveHitRecords();
                 raycastCounter.ClearhitRecords();
+                //performanceCleaning.saveData = true;
                 performanceCleaning.SaveToCSV();
                 performanceCleaning.ClearGridData();
             }
@@ -368,8 +394,8 @@ public class MissionManager : MonoBehaviour
                 {
                     Debug.Log("grid 1");
                     //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
-                    performanceCleaning.width = 30;
-                    performanceCleaning.height = 20;
+                    // performanceCleaning.width = 30;
+                    // performanceCleaning.height = 20;
                     //grid.transform.position = new Vector3(395,116,638);
                     //grid.transform.rotation = Quaternion.Euler(90,180,0);
                     grid.transform.position = new Vector3(399.839996f,131.279999f,638f);
@@ -464,6 +490,7 @@ public class MissionManager : MonoBehaviour
     private void LoadMission()
     {
         // Look up the combination
+        populate = true;
         ALLCombinations(missionCombination);
         Debug.Log("Mission combination: "+ missionCombination);
 
@@ -491,7 +518,7 @@ public class MissionManager : MonoBehaviour
             // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
             // sec_drone.transform.position = new Vector3(100,80,100);
             // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-            Windmill.transform.position = new Vector3(405.799988f,60.7999992f,680.799988f);
+            Windmill.transform.position = new Vector3(405.799988f,60.7999992f,656.400024f);
             Windmill.transform.rotation = Quaternion.Euler(0,-90,0);
             
         }
@@ -501,7 +528,7 @@ public class MissionManager : MonoBehaviour
             // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
             // sec_drone.transform.position = new Vector3(100,80,100);
             // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-            Windmill.transform.position = new Vector3(405.799988f,60.7999992f,680.799988f);
+            Windmill.transform.position = new Vector3(405.799988f,60.7999992f,656.400024f);
             Windmill.transform.rotation = Quaternion.Euler(0,120,0);
         }
 
@@ -512,11 +539,14 @@ public class MissionManager : MonoBehaviour
             grid1.SetActive(true);
             grid2.SetActive(false);
             //performanceCleaning.ClearboxList();
+            //performanceCleaning.gameObject.grid1 = grid1;
             performanceCleaning.PopulateBoxListFromExistingGrid();
             performanceCleaning.ClearGridData();
             //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
             // performanceCleaning.width = 10;
             // performanceCleaning.height = 10;
+            // grid.transform.position = grid1.transform.position;
+            // grid.transform.rotation = grid1.transform.rotation;
             // grid.transform.position = new Vector3(395,116,638);
             // grid.transform.rotation = Quaternion.Euler(90,180,0);
         }
@@ -525,12 +555,15 @@ public class MissionManager : MonoBehaviour
             grid1.SetActive(false);
             grid2.SetActive(true);
             //performanceCleaning.ClearboxList();
+          
             performanceCleaning.PopulateBoxListFromExistingGrid();
             performanceCleaning.ClearGridData();
             // performanceCleaning.width = 200;
             // performanceCleaning.height = 10;
-            // grid.transform.position = new Vector3(395,116,638);
-            // grid.transform.rotation = Quaternion.Euler(90,180,0);
+            // grid.transform.position = grid2.transform.position;
+            // grid.transform.rotation = grid2.transform.rotation;
+            //grid.transform.position = new Vector3(395,116,638);
+            //grid.transform.rotation = Quaternion.Euler(90,180,0);
         }
         // clear old grid
         //performanceCleaning.ClearGeneratedGrid();
@@ -719,11 +752,11 @@ public class MissionManager : MonoBehaviour
 
     void PerformanceUpdate()
     {
-        if(true)//inCleaning)
+        if(inCleaning)
         {
             //Debug.Log("performanceCleaning cuserInput.isSprayingalled");
-            performanceCleaning.UpdateBoxValues();
-            //performanceCleaning.UpdateBoxValuesWithRayCast();
+            //performanceCleaning.UpdateBoxValues();
+            performanceCleaning.UpdateBoxValuesWithRayCast();
         } 
     }
 

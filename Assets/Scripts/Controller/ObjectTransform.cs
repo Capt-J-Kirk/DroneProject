@@ -333,7 +333,10 @@ public class ObjectTransform: MonoBehaviour
         float x = main_position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
         float z = main_position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
         
-        float y = main_position.y + up_down;
+        // added the sec drones y component
+        float temp = sec_position.y + up_down;
+        float y = Mathf.Clamp(temp, main_position.y-maxHigh, main_position.y+maxHigh);
+        //float y = main_position.y + up_down;
         
         Vector3 targetPosition = new Vector3(x, y, z);
 
