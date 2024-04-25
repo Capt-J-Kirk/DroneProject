@@ -195,7 +195,7 @@ public class MissionManager : MonoBehaviour
 
         if(inCleaning)
         {
-            Debug.Log("incleaning");
+            //Debug.Log("incleaning");
         }
         // Four states, RUN:
         // Menu
@@ -308,6 +308,7 @@ public class MissionManager : MonoBehaviour
             {
                 start_time = timer;
                 Menu.SetActive(false);
+                Debug.Log("started mission: " +missionCombination);
                 LoadMission();
                 startMission = false;
                 inFlight = true;
@@ -327,6 +328,7 @@ public class MissionManager : MonoBehaviour
                 {
                     OnTimeOut();
                     selectCombination = true;
+                    selectVALIDCombo = true;
                 }
             }
 
@@ -334,6 +336,7 @@ public class MissionManager : MonoBehaviour
             if(loadsetup && Input.GetKeyDown(KeyCode.R))
             {
                 ResetMission();
+                startMission = true;
             }
         }
         
@@ -359,7 +362,7 @@ public class MissionManager : MonoBehaviour
         if(loadsetup && Input.GetKeyDown(KeyCode.Alpha9))
         {
             start_time = timer;
-            missionCombination = 11;//9;
+            missionCombination = 15;//9;
             LoadMission();
             missionActive = false;
             isRecording = false;
@@ -489,6 +492,10 @@ public class MissionManager : MonoBehaviour
             selectVALIDCombo = false; // Break the loop
             count += 1;
             selectCombination = false;
+            if(count == 17)
+            {
+                Debug.Log("Finish, well done! ");
+            }
         }
     
     }
@@ -582,11 +589,13 @@ public class MissionManager : MonoBehaviour
         {
             TwoScreen.SetActive(true);
             OneScreen.SetActive(false);
+            userInput.screen1 = "2screen";
         }
         if(userInterface == "1screen")
         {
             TwoScreen.SetActive(false);
             OneScreen.SetActive(true);
+            userInput.screen1 = "1screen";
         }
 
         // set control scheme

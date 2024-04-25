@@ -254,15 +254,15 @@ public class QuadcopterController: MonoBehaviour
     {
         // Sensitivity factors (determine how much each input affects the pose)
         float yawSensitivity = 5.0f;
-        float altitudeSensitivity = 0.80f;
+        float altitudeSensitivity = 0.40f;
     
         float speed = 5f;
         float minSafeDistance = 2.0f;
 
 
         // set the movement 
-        float xMovement = pitchChange * speed * Time.deltaTime;
-        float zMovement = rollChange * speed * Time.deltaTime;
+        float xMovement = rollChange * speed * Time.deltaTime;
+        float zMovement = pitchChange * speed * Time.deltaTime;
 
         // apply on individual axis for object avoidance check
         Vector3 newXPosition = transform.position + new Vector3(xMovement, 0, 0);

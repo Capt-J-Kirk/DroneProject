@@ -215,15 +215,15 @@ public class QuadcopterController_sec: MonoBehaviour
     {
         // Sensitivity factors (determine how much each input affects the pose)
         float yawSensitivity = 5.0f;
-        float altitudeSensitivity = 0.80f;
+        float altitudeSensitivity = 0.40f;
     
         float speed = 5f;
         float minSafeDistance = 2.0f;
 
 
         // set the movement 
-        float xMovement = pitchChange * speed * Time.deltaTime;
-        float zMovement = rollChange * speed * Time.deltaTime;
+        float xMovement = rollChange * speed * Time.deltaTime;
+        float zMovement = pitchChange * speed * Time.deltaTime;
 
         // apply on individual axis for object avoidance check
         Vector3 newXPosition = transform.position + new Vector3(xMovement, 0, 0);
@@ -612,7 +612,14 @@ public class QuadcopterController_sec: MonoBehaviour
             rb.AddForce(transform.up * throttle2, ForceMode.Force);
         }
     
+        // Vector3 controlForceWorld = new Vector3(x, lift2, z);
+        // Vector3 controlForceLocal = controlForceWorld;//transform.InverseTransformDirection(controlForceWorld);
 
+        // // apply force in x, y, and z
+        // controlForceLocal.x = Mathf.Clamp(controlForceLocal.x, -maxVelocity, maxVelocity);
+        // controlForceLocal.y = Mathf.Clamp(controlForceLocal.y, -maxVelocity, maxVelocity);
+        // controlForceLocal.z = Mathf.Clamp(controlForceLocal.z, -maxVelocity, maxVelocity);
+        // rb.AddForce(controlForceLocal, ForceMode.Force);
 
 
         // float xforce = Mathf.Clamp(x, -maxVelocity, maxVelocity);
@@ -625,7 +632,7 @@ public class QuadcopterController_sec: MonoBehaviour
 
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
-        rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
+        //rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
 
 
         // roll, left and right
@@ -634,7 +641,7 @@ public class QuadcopterController_sec: MonoBehaviour
 
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
-        //rb.AddTorque(transform.up * clampYaw, ForceMode.Force);
+        rb.AddTorque(transform.up * clampYaw, ForceMode.Force);
         // Debug.Log("yaw: " + yaw);
         // Debug.Log("yawForce: " + clampYaw);
         //Debug.Log("clamplift: " + throttle2);
@@ -673,10 +680,10 @@ public class QuadcopterController_sec: MonoBehaviour
         pitch = temp;
 
         // filter out small noise values from joystick
-        if (Mathf.Abs(roll) < 0.2f) roll = 0f;
-        if (Mathf.Abs(pitch) < 0.2f) pitch = 0f;
-        if (Mathf.Abs(yaw) < 0.2f) yaw = 0f;
-        if (Mathf.Abs(throttle) < 0.2f) throttle = 0f;
+        if (Mathf.Abs(roll) < 0.4f) roll = 0f;
+        if (Mathf.Abs(pitch) < 0.4f) pitch = 0f;
+        if (Mathf.Abs(yaw) < 0.4f) yaw = 0f;
+        if (Mathf.Abs(throttle) < 0.4f) throttle = 0f;
 
         ModifiedCalcDesiredPose(roll, pitch, yaw, throttle);
         //CalcDesiredPose(roll, pitch, yaw, throttle);

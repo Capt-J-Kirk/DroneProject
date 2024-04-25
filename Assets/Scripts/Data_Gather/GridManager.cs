@@ -53,7 +53,7 @@ public class GridManager : MonoBehaviour
     private List<List<BoxUpdate>> allGrids = new List<List<BoxUpdate>>(); 
 
     // USED for raycasting
-    public float maxDistance = 8.0f;
+    public float maxDistance = 7.50f;
     public float maxRadius = 0.12f;
 
 
@@ -326,13 +326,13 @@ public class GridManager : MonoBehaviour
         //Debug.Log("inside raycast");
         // needs thr transform to be the nozzle of the watersprayer
         //Vector3 castFromPosition = Nozzle.transform.position + new Vector3(0, -2,0);
-
-        Ray ray = new Ray(Nozzle.transform.position, transform.forward* -1);
+        Ray ray = new Ray(Nozzle.transform.position, Nozzle.transform.forward);
+        //Ray ray = new Ray(Nozzle.transform.position, Nozzle.transform.forward* -1);
         RaycastHit hit;
         Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * maxDistance, Color.blue);
 
         float SumCleaningsFactor = 0.0f;
-        if(toClean)//userInput.isSpraying)
+        if(true)//userInput.isSpraying)
         {
             if (Physics.Raycast(ray, out hit, maxDistance))
             {

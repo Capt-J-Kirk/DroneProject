@@ -53,7 +53,8 @@ public class UserInput : MonoBehaviour
     public GameObject ScreenONE;
     bool switchScren = true;
 
-
+    public Image ONE_i_main_blurr;
+    public Image TWO_i_main_blurr;
 
     // UserInterface's infobars TWO SCREEN 
     public TMP_Text TWO_t_main_active;
@@ -75,6 +76,7 @@ public class UserInput : MonoBehaviour
 
     public string screen1 = ""; 
 
+
     private void Awake()
     {
         inputDPad = new DPad_Control();
@@ -91,7 +93,7 @@ public class UserInput : MonoBehaviour
         {
             Debug.Log("set ref to grid: ");
         }
-     
+        
     }
 
 
@@ -165,6 +167,18 @@ public class UserInput : MonoBehaviour
 
     }
 
+
+    void SetTransparency(Image image, float alpha)
+    {
+        if (image != null)
+        {
+            Color newColor = image.color;
+            newColor.a = alpha; // alpha should be 0.3 for 70% transparency
+            image.color = newColor;
+        }
+    }
+
+
     // Start is called before the first frame update
  
     void Start()
@@ -195,6 +209,9 @@ public class UserInput : MonoBehaviour
         {
             Debug.Log("didn't work: ");
         }
+
+        SetTransparency(ONE_i_main_blurr, 0.0f);
+        SetTransparency(TWO_i_main_blurr, 0.0f);
 
     }
 
@@ -481,12 +498,30 @@ public class UserInput : MonoBehaviour
             droneSpray.Play();
             isSpraying = true;
             cleaning.toClean = true;
+            if(screen1 == "1screen")
+            {
+                SetTransparency(ONE_i_main_blurr, 0.9f);
+      
+            }
+            else{
+                SetTransparency(TWO_i_main_blurr, 0.9f);
+            }
+
+        
         }
         else
         {
             droneSpray.Stop();
             isSpraying = false;
             cleaning.toClean = false;
+            if(screen1 == "1screen")
+            {
+                SetTransparency(ONE_i_main_blurr, 0.0f);
+      
+            }
+            else{
+                SetTransparency(TWO_i_main_blurr, 0.0f);
+            }
         }
     }
     private void OnSprayCancelled(InputAction.CallbackContext value)
