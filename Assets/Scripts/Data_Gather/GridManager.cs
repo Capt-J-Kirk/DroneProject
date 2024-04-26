@@ -332,7 +332,7 @@ public class GridManager : MonoBehaviour
         Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * maxDistance, Color.blue);
 
         float SumCleaningsFactor = 0.0f;
-        if(true)//userInput.isSpraying)
+        if(toClean)//userInput.isSpraying)
         {
             if (Physics.Raycast(ray, out hit, maxDistance))
             {

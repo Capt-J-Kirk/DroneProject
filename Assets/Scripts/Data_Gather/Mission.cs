@@ -362,7 +362,7 @@ public class MissionManager : MonoBehaviour
         if(loadsetup && Input.GetKeyDown(KeyCode.Alpha9))
         {
             start_time = timer;
-            missionCombination = 15;//9;
+            missionCombination = 15;//12;//9;
             LoadMission();
             missionActive = false;
             isRecording = false;
@@ -609,6 +609,7 @@ public class MissionManager : MonoBehaviour
         {
             userInput.ManualControl = false;
             objectTransform.ControlScheme = 1;
+            objectTransform.InitTheta = true;
         }
         if(controlScheme == "scheme2")
         {
@@ -638,7 +639,7 @@ public class MissionManager : MonoBehaviour
         main_drone.transform.position = new Vector3(411.408539f,79.9533463f,613.304993f);
         main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
     
-        sec_drone.transform.position = new Vector3(410.037994f,80.4376144f,615.354004f);
+        sec_drone.transform.position = new Vector3(410.037994f,79.9533463f,615.354004f);
         sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
 
         quadcopterController.reset_drone();

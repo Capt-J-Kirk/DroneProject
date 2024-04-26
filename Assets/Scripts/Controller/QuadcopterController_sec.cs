@@ -214,7 +214,7 @@ public class QuadcopterController_sec: MonoBehaviour
     private void ModifiedCalcDesiredPose(float rollChange, float pitchChange, float yawChange, float throttleChange)
     {
         // Sensitivity factors (determine how much each input affects the pose)
-        float yawSensitivity = 5.0f;
+        float yawSensitivity = 4.0f;
         float altitudeSensitivity = 0.40f;
     
         float speed = 5f;

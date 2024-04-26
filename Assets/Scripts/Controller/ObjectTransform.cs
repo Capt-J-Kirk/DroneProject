@@ -66,7 +66,9 @@ public class ObjectTransform: MonoBehaviour
     private float maxRadius = 6f;
 
     private float minLow = 3f;
-    private float maxHigh = 3f;
+    private float maxHigh = 1.5f;
+
+    public bool InitTheta = true;
 
     private bool isReversing = false;
     private bool initStart = true;
@@ -314,9 +316,20 @@ public class ObjectTransform: MonoBehaviour
         float thetaSensitivity = 2.0f;
         float phiSensitivity = 2.0f;
         float radiusSensitivity = 4.0f;
+        float minAngle = 170f;
+        float maxAngle = 370f;
+
+        // filter out small noise values from joystick
+        if (Mathf.Abs(roll) < 0.4f) roll = 0f;
+        if (Mathf.Abs(pitch) < 0.4f) pitch = 0f;
+        if (Mathf.Abs(yaw) < 0.4f) yaw = 0f;
+        if (Mathf.Abs(throttle) < 0.4f) throttle = 0f;
+
 
         radius += roll * phiSensitivity; // horizontal movement
         theta += pitch * thetaSensitivity; // vertical movement
+        // limit theta angle
+        theta = Mathf.Clamp(theta, minAngle, maxAngle);
         up_down = throttle * radiusSensitivity; // change radius 
         
 
@@ -328,17 +341,30 @@ public class ObjectTransform: MonoBehaviour
     }
     void Scheme_1_Cylindrical()
     {
+        if(InitTheta)
+        {
+            // start the follow mode at:
+            theta = 270f;
+            InitTheta = false;
+        }
         // phi in this case is the vertical movement from the joystick
         // Calculate desired positions for cylindrical coordinates
-        float x = main_position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
-        float z = main_position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
+
+
+        Vector3 targetPosition = newPolarToCartesian(theta,radius);
+
+
+        // float x = main_position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
+        // float z = main_position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
         
         // added the sec drones y component
         float temp = sec_position.y + up_down;
         float y = Mathf.Clamp(temp, main_position.y-maxHigh, main_position.y+maxHigh);
+
+        targetPosition.y = y;
         //float y = main_position.y + up_down;
         
-        Vector3 targetPosition = new Vector3(x, y, z);
+        //Vector3 targetPosition = new Vector3(x, y, z);
 
         // Addded Yaw orientation lock +- 45degs from lock point
 
@@ -349,9 +375,11 @@ public class ObjectTransform: MonoBehaviour
         // possible add previous yaw, such it dosn't reset
         newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
-        newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
+        //newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
         //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
         
+        // Correct any potential wrap-around issues
+        newYaw = newYaw % 360;
 
         // face towards the main drone
         // use the alitude from the secondary drone itself
@@ -376,8 +404,8 @@ public class ObjectTransform: MonoBehaviour
     void Scheme_2()
     {
         Vector3 targetPosition = new Vector3(0, 0, 0);
-        float angle1 = 160f;
-        float angle2 = 380f;
+        float angle1 = 170f;
+        float angle2 = 370f;
         
 
         if (initStart)
@@ -432,8 +460,11 @@ public class ObjectTransform: MonoBehaviour
         // possible add previous yaw, such it dosn't reset
         newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
         //newYaw = WrapAngle(newYaw);
-        newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
-               
+        //newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
+        
+        // Correct any potential wrap-around issues
+        newYaw = newYaw % 360;
+
 
         // face towards the main drone
         // use the alitude from the secondary drone itself

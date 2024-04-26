@@ -71,7 +71,7 @@ public class UserInput : MonoBehaviour
     public Image ONE_i_sec_active;
     public TMP_Text ONE_t_follow;
     public Image ONE_i_follow;
-
+    public TMP_Text ONE_t_CamFeed;
 
 
     public string screen1 = ""; 
@@ -400,11 +400,22 @@ public class UserInput : MonoBehaviour
     {
         // enable the adjustment of the secondary drones position
         switchScren = !switchScren;
-        //SetActive()
+        //SetActive()  ONE_t_follow.text = "Follow: "+"\n"+" OFF";
+
+        // screenTWO = master
         if(screen1 == "1screen")
         {
             ScreenTWO.SetActive(switchScren);
             ScreenONE.SetActive(!switchScren);
+            if(switchScren)
+            {
+                ONE_t_CamFeed.text = "Cam: "+"\n"+ "Master" ;
+            }
+            if(!switchScren)
+            {
+                ONE_t_CamFeed.text = "Cam: "+"\n"+ "Secondary";
+            }
+           
         }
         else
         {
@@ -498,13 +509,14 @@ public class UserInput : MonoBehaviour
             droneSpray.Play();
             isSpraying = true;
             cleaning.toClean = true;
+
             if(screen1 == "1screen")
             {
-                SetTransparency(ONE_i_main_blurr, 0.9f);
+                SetTransparency(ONE_i_main_blurr, 0.93f);
       
             }
             else{
-                SetTransparency(TWO_i_main_blurr, 0.9f);
+                SetTransparency(TWO_i_main_blurr, 0.93f);
             }
 
         
