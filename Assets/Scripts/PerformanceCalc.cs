@@ -16,8 +16,12 @@ public class PerformanceCalc : MonoBehaviour
     public List<TurbinePart> parts;
 
     // Data saving.
-    public bool saveData = true;
+    public float dataSaveTimer = 0;
+    public int partsReady = 0;
+    public bool writingFirstTime = true;
     private readonly string dataFolderPath = Application.dataPath + "/Data";
+    private readonly string dataFilePrefix = "Game_";
+    private string filePath = "";
 
 
     [Serializable]
@@ -30,25 +34,25 @@ public class PerformanceCalc : MonoBehaviour
         public bool assigned = false;
         public bool updatePerformance = false;
         public float timer = 0;
+        public float globalTimer = 0;
         public MeshFilter meshFilter;
         public Texture2D startTexture;
         public Texture2D currentTexture;
 
+        // Hit by raycast
+        public bool wasHit = false;
+        public bool wasHitOnce = false;
+
         // Dirt info containers
         public List<Vector2Int> texCoord_List = new();
         public Dictionary<Vector2Int, Vector3Int> texCoordToZoneCoord_Dict = new();
-        //
+        // - Overall measure for turbine part.
+        public float startNormTotDirt = 0;
+        public float currNormTotDirt = 0;
+        // - Measure for zones in part.
         public List<Vector3Int> zoneStartDirt_List = new();
         public Dictionary<Vector3Int, float> zoneStartDirt_Dict = new();
         public Dictionary<Vector3Int, float> zoneCurrDirt_Dict = new();
-        public Dictionary<Vector3Int, float> zoneCleanDone_Dict = new();
-
-        // Overall measure for turbine part.
-        public float startNormTotDirt = 0;
-        public float currNormTotDirt = 0;
-
-        // Hit by raycast
-        public bool wasHit = false;
 
         // Normalize performance
         public Vector3 bounds;
@@ -78,6 +82,7 @@ public class PerformanceCalc : MonoBehaviour
 
     private void FixedUpdate()
     {
+        dataSaveTimer += Time.deltaTime;
         
         foreach (TurbinePart itr in parts)
         {
@@ -90,21 +95,42 @@ public class PerformanceCalc : MonoBehaviour
                 NormalizePart(itr);
                 Debug.Log("Wind turbine, " + itr.paint_GO.name + " texture SUCCESSFULLY assigned.");
                 itr.timer = 0;
+                partsReady++;
             }
 
             if (itr.assigned && itr.timer > 1f && itr.wasHit)
             {
                 Debug.Log("Updating performance, " + itr.paint_GO.name + " ==============================================================");
                 UpdatePerformance(itr);
-                itr.timer = 0;
+                itr.timer = 0;  // Will not be updated again, even if hit before 1 sec.
                 itr.wasHit = false;
+                itr.wasHitOnce = true;
+                partsReady++;
             }
+
+            // The part performance timer starts now.
+            if (itr.wasHitOnce) itr.globalTimer += Time.deltaTime;
+        }
+
+
+        if (writingFirstTime && partsReady == parts.Count)
+        {
+            SaveData();
+        }
+
+        // If something was hit and timer expired we save.
+        if (partsReady > parts.Count && dataSaveTimer > 1f)
+        {
+            partsReady = parts.Count;
+            dataSaveTimer = 0;
+            SaveData();
         }
     }
 
 
     void NormalizePart(TurbinePart itr)
     {
+        // Esthablish
         itr.surfacePixelRatio =
             (2 * itr.bounds.x * itr.bounds.y +
              2 * itr.bounds.y * itr.bounds.z +
@@ -146,25 +172,14 @@ public class PerformanceCalc : MonoBehaviour
         foreach (Vector2Int texCoord in itr.texCoord_List)
         {
             Color color = itr.currentTexture.GetPixel(texCoord.x, texCoord.y);
-            float dirt = (1 - color.grayscale) * itr.surfacePixelRatio;
+            float dirt = (1 - color.grayscale) * itr.surfacePixelRatio;  // White = 1, so 1 - white is no dirt.
             itr.currNormTotDirt += dirt;
 
             // Updating zone dirt
             Vector3Int zone = itr.texCoordToZoneCoord_Dict[texCoord];
             itr.zoneCurrDirt_Dict[zone] += dirt;
         }
-        // Cleaning by zone.
-        foreach (Vector3Int zone in itr.zoneStartDirt_List)
-        {
-            float cleanDone = itr.zoneStartDirt_Dict[zone] - itr.zoneCurrDirt_Dict[zone];
-            if (!itr.zoneCleanDone_Dict.ContainsKey(zone)) itr.zoneCleanDone_Dict.Add(zone, cleanDone);
-            else itr.zoneCleanDone_Dict[zone] = cleanDone;
 
-            // Debug
-            Debug.Log("Zone: " + zone + ", clean done = " + cleanDone);
-        }
-
-        // Debugging
         // Debug.Log("=================================================================================");
         // foreach (Vector3Int zone in itr.zoneStartDirt_List) Debug.Log("Dirt in zone " + zone + " = " + itr.zoneCurrDirt_Dict[zone]);
     }
@@ -327,45 +342,48 @@ public class PerformanceCalc : MonoBehaviour
     }
 
 
-    void SaveGameData(bool createFolder)
+    void SaveData()
     {
-        if (!saveData) return;
-
-        string playerData = "";
-
-
-        if (createFolder)
+        // Create data root folder if not existing.
+        if (writingFirstTime)
         {
-            DirectoryInfo dir = new DirectoryInfo(dataFolderPath);
-            DirectoryInfo[] info = dir.GetDirectories("*.*");
-            int count = dir.GetDirectories().Length;
+            writingFirstTime = false;
+            if (!Directory.Exists(dataFolderPath)) Directory.CreateDirectory(dataFolderPath);
+            // Refresh the AssetDatabase to make sure Unity detects the newly created folder.
+            UnityEditor.AssetDatabase.Refresh();
 
-            // for (int i = 0; i < count; i++) Debug.Log("Found Directory: " + info[i]);
+            // Constructing file path.
+            DateTime now = DateTime.Now;
+            string timeString = "";
+            timeString += now.Year.ToString() + '-';
+            timeString += now.Month.ToString("D2") + '-';
+            timeString += now.Day.ToString("D2") + '_';
+            timeString += now.Hour.ToString("D2") + '-';
+            timeString += now.Minute.ToString("D2") + '-';
+            timeString += now.Second.ToString("D2");
+            filePath = Path.Combine(dataFolderPath, dataFilePrefix + timeString + ".csv");
 
-
+            // Creating the empty file.
+            File.WriteAllText(filePath, "");
+            UnityEditor.AssetDatabase.Refresh();
+            return;
         }
 
-
-
-        if (!Directory.Exists(dataFolderPath)) Directory.CreateDirectory(dataFolderPath);
-
-
-
-
-        int fileCount = Directory.GetFiles(dataFolderPath).Length / 2;
-
-        string dateTime = DateTime.Now.ToString();
-        string newDateTime = dateTime.Replace("/", "-");
-        newDateTime = newDateTime.Replace(" ", "_");
-        newDateTime = newDateTime.Replace(":", "-");
-        Debug.Log(newDateTime);
-
-        string filePath = Path.Combine(dataFolderPath, fileCount.ToString() + "_GameData_" + newDateTime + ".txt");
-
-        File.WriteAllText(filePath, playerData);
-
-        // Refresh the AssetDatabase to make sure Unity detects the newly created file
-        UnityEditor.AssetDatabase.Refresh();
+        // Constructing file content.
+        string dat = "";
+        foreach (TurbinePart part in parts)
+        {
+            dat += part.paint_GO.name + ',' + part.globalTimer.ToString("0.00") + ',';
+            foreach (Vector3Int itr in part.zoneStartDirt_List)
+            {
+                dat += itr.x.ToString() + ',' + itr.y.ToString() + ',' + itr.z.ToString() + ',';
+                dat += part.zoneCurrDirt_Dict[itr].ToString("0.00") + ',';
+            }
+            dat = dat.Remove(dat.Length-1);
+            dat += "\n";
+        }
+        File.AppendAllText(filePath, dat);
     }
+
 
 }

@@ -18250,102 +18250,123 @@ MonoBehaviour:
     assigned: 0
     updatePerformance: 0
     timer: 0
+    globalTimer: 0
     meshFilter: {fileID: 0}
     startTexture: {fileID: 0}
     currentTexture: {fileID: 0}
-    texCoord_List: []
-    zoneStartDirt_List: []
-    startDirt: 0
-    currDirt: 0
     wasHit: 0
+    wasHitOnce: 0
+    texCoord_List: []
+    startNormTotDirt: 0
+    currNormTotDirt: 0
+    zoneStartDirt_List: []
     bounds: {x: 0, y: 0, z: 0}
     boundsVolume: 0
-    normalizedStartDirt: 0
+    pixelCount: 0
+    surfacePixelRatio: 0
   - paint_GO: {fileID: 1994594350918000771}
     inkCanvas: {fileID: 0}
     material: {fileID: 2100000, guid: 2c441e5c175147247997fac7c7085f36, type: 2}
     assigned: 0
     updatePerformance: 0
     timer: 0
+    globalTimer: 0
     meshFilter: {fileID: 0}
     startTexture: {fileID: 0}
     currentTexture: {fileID: 0}
-    texCoord_List: []
-    zoneStartDirt_List: []
-    startDirt: 0
-    currDirt: 0
     wasHit: 0
+    wasHitOnce: 0
+    texCoord_List: []
+    startNormTotDirt: 0
+    currNormTotDirt: 0
+    zoneStartDirt_List: []
     bounds: {x: 0, y: 0, z: 0}
     boundsVolume: 0
-    normalizedStartDirt: 0
+    pixelCount: 0
+    surfacePixelRatio: 0
   - paint_GO: {fileID: 6790160093998791667}
     inkCanvas: {fileID: 0}
     material: {fileID: 2100000, guid: bee0f9bb7986442459facf7e4cafa42b, type: 2}
     assigned: 0
     updatePerformance: 0
     timer: 0
+    globalTimer: 0
     meshFilter: {fileID: 0}
     startTexture: {fileID: 0}
     currentTexture: {fileID: 0}
-    texCoord_List: []
-    zoneStartDirt_List: []
-    startDirt: 0
-    currDirt: 0
     wasHit: 0
+    wasHitOnce: 0
+    texCoord_List: []
+    startNormTotDirt: 0
+    currNormTotDirt: 0
+    zoneStartDirt_List: []
     bounds: {x: 0, y: 0, z: 0}
     boundsVolume: 0
-    normalizedStartDirt: 0
+    pixelCount: 0
+    surfacePixelRatio: 0
   - paint_GO: {fileID: 1239905778802369467}
     inkCanvas: {fileID: 0}
     material: {fileID: 2100000, guid: 2ceccb6357e736941b19a16fb277853f, type: 2}
     assigned: 0
     updatePerformance: 0
     timer: 0
+    globalTimer: 0
     meshFilter: {fileID: 0}
     startTexture: {fileID: 0}
     currentTexture: {fileID: 0}
-    texCoord_List: []
-    zoneStartDirt_List: []
-    startDirt: 0
-    currDirt: 0
     wasHit: 0
+    wasHitOnce: 0
+    texCoord_List: []
+    startNormTotDirt: 0
+    currNormTotDirt: 0
+    zoneStartDirt_List: []
     bounds: {x: 0, y: 0, z: 0}
     boundsVolume: 0
-    normalizedStartDirt: 0
+    pixelCount: 0
+    surfacePixelRatio: 0
   - paint_GO: {fileID: 4694314698094146152}
     inkCanvas: {fileID: 0}
     material: {fileID: 2100000, guid: 43ef006a9c306f7499f078b048599c95, type: 2}
     assigned: 0
     updatePerformance: 0
     timer: 0
+    globalTimer: 0
     meshFilter: {fileID: 0}
     startTexture: {fileID: 0}
     currentTexture: {fileID: 0}
-    texCoord_List: []
-    zoneStartDirt_List: []
-    startDirt: 0
-    currDirt: 0
     wasHit: 0
+    wasHitOnce: 0
+    texCoord_List: []
+    startNormTotDirt: 0
+    currNormTotDirt: 0
+    zoneStartDirt_List: []
     bounds: {x: 0, y: 0, z: 0}
     boundsVolume: 0
-    normalizedStartDirt: 0
+    pixelCount: 0
+    surfacePixelRatio: 0
   - paint_GO: {fileID: 7923559139369235464}
     inkCanvas: {fileID: 0}
     material: {fileID: 2100000, guid: 874a5c2c2fc77c94e876ea0ccfe599ee, type: 2}
     assigned: 0
     updatePerformance: 0
     timer: 0
+    globalTimer: 0
     meshFilter: {fileID: 0}
     startTexture: {fileID: 0}
     currentTexture: {fileID: 0}
-    texCoord_List: []
-    zoneStartDirt_List: []
-    startDirt: 0
-    currDirt: 0
     wasHit: 0
+    wasHitOnce: 0
+    texCoord_List: []
+    startNormTotDirt: 0
+    currNormTotDirt: 0
+    zoneStartDirt_List: []
     bounds: {x: 0, y: 0, z: 0}
     boundsVolume: 0
-    normalizedStartDirt: 0
+    pixelCount: 0
+    surfacePixelRatio: 0
+  dataSaveTimer: 0
+  partsReady: 0
+  writingFirstTime: 1
 --- !u!1 &1822172768
 GameObject:
   m_ObjectHideFlags: 0
@@ -21619,7 +21640,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &417695214802165624
 GameObject:
   m_ObjectHideFlags: 0
@@ -28370,7 +28391,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!33 &1559125848191777130
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -29478,7 +29499,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!33 &2153177191812181970
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -38090,7 +38111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &4130796310769458527
 GameObject:
   m_ObjectHideFlags: 0
@@ -40701,7 +40722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!33 &5632586537220364284
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -42013,7 +42034,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &6520937786253874123
 GameObject:
   m_ObjectHideFlags: 0
