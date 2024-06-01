@@ -11,9 +11,7 @@ public class QuadcopterController: MonoBehaviour
     private float drag = 0.5f; // Drag coefficient
     //private float mass = 5f; // Mass of the quadcopter
     private float maxAngularVelocity = 5f; // Maximum angular velocity
-    //private float maxAngularAcceleration = 2f; // Maximum angular acceleration
-    //public Vector3 thrustForce = new Vector3(0f, 5f, 0f); // Thrust force
-    //private float speed = 5.0f;
+
 
     // Max angle
     public float maxYaw = 20.0f;
@@ -52,11 +50,7 @@ public class QuadcopterController: MonoBehaviour
     private float xKp = 7.82403f, xKi = 18.87807f, xKd = 5f; 
     //private float zKp = 5.0f, zKi = 0.3f, zKd = 0.08f; 
     private float zKp = 7.82403f, zKi = 18.87807f, zKd = 5f; 
-    // // needs fine tuning! 
-    // public float rollKp = 1.0f, rollKi = 0.1f, rollKd = 0.01f;
-    // public float pitchKp = 1.0f, pitchKi = 0.1f, pitchKd = 0.01f;
-    // public float yawKp = 1.0f, yawKi = 0.1f, yawKd = 0.01f;
-    // public float altitudeKp = 2.0f, altitudeKi = 0.1f, altitudeKd = 0.01f;    
+
 
     // desired pose
     public Vector3 desiredPosition;
@@ -138,8 +132,6 @@ public class QuadcopterController: MonoBehaviour
     void TunePID()
     {
         // Ziegler-Nichols tuning 
-        // Use the altitude PID as an example, replace with other PID instances as needed
-        // Apply a step input, i.e., set a desired altitude that is higher than current to induce error
         //desiredPosition.y += 5.0f; // This is a step change to start the tuning process
         
         if (!tuningStarted)
@@ -198,33 +190,15 @@ public class QuadcopterController: MonoBehaviour
         float newRoll = 0;
         float newYaw = 0;
            
-        //Debug.Log("newPitch: " + newPitch);
-        //Debug.Log("newRoll: " + newRoll);
-        //Debug.Log("newYaw: " + newYaw);
-        //Debug.Log("newYaw: " + newYaw);
+
         Vector3 neutralEulerAngles = neutralOrientation.eulerAngles;
         newPitch = Mathf.Clamp(neutralEulerAngles.x + newPitch, -maxPitch, maxPitch);
         newRoll = Mathf.Clamp(neutralEulerAngles.z + newRoll, -maxRoll, maxRoll);
 
         newYaw = neutralEulerAngles.y + newYaw; // yaw can freely move
-        //float newYaw = yawChange * yawSensitivity; // yaw can freely move
-        // newPitch = WrapAngle(newPitch);
-        // newRoll = WrapAngle(newRoll);
-        // newYaw = WrapAngle(newYaw);
-        // update prewious Yew
-        //prewYaw = newYaw;
-        //Debug.Log("DesiredPitch: " + newPitch);
-        //Debug.Log("DesiredYaw: " + newYaw);
+       
         desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
-        // Debug.Log("altitudeKp: " + altitudeKp);
-        // Debug.Log("altitudeKi: " + altitudeKi);
-        // Debug.Log("altitudeKd: " + altitudeKd);
-
-        //Vector3 currentDesiredPosition = new Vector3(0, 80f, 0);
-        //Debug.Log("currentDesiredPosition: " + currentDesiredPosition);
-        //Vector3 newPositionChange = Vector3.up * (currentDesiredPosition.y + 10f); // Assumes altitudeChange controls vertical movement
-        //Debug.Log("newPositionChange: " + newPositionChange);
-        //desiredPosition = newPositionChange;
+    
         
         float xSensitivity = 1.0f;
         float ySensitivity = 1.0f;
@@ -295,9 +269,6 @@ public class QuadcopterController: MonoBehaviour
         //Update desired orientation
         desiredOrientation = Quaternion.Euler(0, newYaw, 0);
        
-
-
-        //Debug.Log("desiredOrientation euler: " + desiredOrientation.eulerAngles);
     
         // current position should be the desired position, as its the starting position. 
 
@@ -335,12 +306,8 @@ public class QuadcopterController: MonoBehaviour
         float safeDistance = 1.2f;
 
         // // Converting neutral orientation from Quaternion to euler angles
-         Vector3 neutralEulerAngles = neutralOrientation.eulerAngles;
+        Vector3 neutralEulerAngles = neutralOrientation.eulerAngles;
 
-        // // Calculate new angles by applying the userInput changes to the neutral orientation and limiting the angle 
-        // float newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
-        // float newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
-        // float newYaw = neutralEulerAngles.y + (yawChange * yawSensitivity); // yaw can freely move
         Vector3 newPositionChange = new Vector3(0,0,0);
 
 
@@ -371,18 +338,15 @@ public class QuadcopterController: MonoBehaviour
             if (rollChange == 0)
             {
                 newRoll = neutralOrientation.eulerAngles.z;
-                // To cancel out the left/right momentum, make a Impuls for a counter momentum
-                //Vector3 counterTorque = new Vector3(0,0,-1*rb.angularVelocity.z);
-                //ApplyCounterTorque(counterTorque);
+                
                 
             }
             else
             {
                 newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
-                //float newRoll = Mathf.Clamp(rollChange * rollSensitivity, -maxRoll, maxRoll);
-                //newRoll = WrapAngle(newRoll);
+               
             }
-            //newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
+           
         }
         
         // Check if the target is within the safe distance in the right direction
@@ -408,19 +372,16 @@ public class QuadcopterController: MonoBehaviour
                 // No input detected, set desiredOrientation to neutralOrientation
                 newPitch = neutralOrientation.eulerAngles.x;
 
-                // To cancel out the forward momentum, make a Impuls for a counter momentum 
-                //Vector3 counterTorque = new Vector3(-1*rb.angularVelocity.x,0,0);
-                //ApplyCounterTorque(counterTorque);
+            
             
             }
             else
             {
                 // Calculate new angles directly within bounds
                 newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
-                //float newPitch = Mathf.Clamp(pitchChange * pitchSensitivity, -maxPitch, maxPitch);
-                //newPitch = WrapAngle(newPitch);
+               
             }
-            //newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
+           
         }
 
         // Check if the target is within the safe distance in the up direction
@@ -465,88 +426,6 @@ public class QuadcopterController: MonoBehaviour
 
     
     
-        // if (pitchChange == 0)
-        // {
-        //     // No input detected, set desiredOrientation to neutralOrientation
-        //     newPitch = neutralOrientation.eulerAngles.x;
-
-        //     // To cancel out the forward momentum, make a Impuls for a counter momentum 
-        //     Vector3 counterTorque = new Vector3(-1*rb.angularVelocity.x,0,0);
-        //     //ApplyCounterTorque(counterTorque);
-        
-        // }
-        // else
-        // {
-        //     // Calculate new angles directly within bounds
-        //     newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
-        //     //float newPitch = Mathf.Clamp(pitchChange * pitchSensitivity, -maxPitch, maxPitch);
-        //     //newPitch = WrapAngle(newPitch);
-        // }
-
-        // if (rollChange == 0)
-        // {
-        //     newRoll = neutralOrientation.eulerAngles.z;
-        //     // To cancel out the left/right momentum, make a Impuls for a counter momentum
-        //     Vector3 counterTorque = new Vector3(0,0,-1*rb.angularVelocity.z);
-        //     //ApplyCounterTorque(counterTorque);
-            
-        // }
-        // else
-        // {
-        //     newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
-        //     //float newRoll = Mathf.Clamp(rollChange * rollSensitivity, -maxRoll, maxRoll);
-        //     //newRoll = WrapAngle(newRoll);
-        // }
-
-
-        // // update prewious Yew
-        // prewYaw = newYaw;
-        // float newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity);
-        // // only used for datacollector
-        // desiredEulerAngles = new Vector3(newPitch, newYaw, newRoll);
-        // //
-
-        // //Update desired orientation
-        // desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
-    
-        //Debug.Log("desiredOrientation euler: " + desiredOrientation.eulerAngles);
-    
-        // current position should be the desired position, as its the starting position. 
-
-        //Vector3 currentDesiredPosition = desiredPosition;
-
-        // // x
-        // float newPositionChangeX = currentDesiredPosition.x + pitchChange * pitch_x;
-        // // y
-        // float newPositionChangeY = currentDesiredPosition.y + throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
-        // // z 
-        // float newPositionChangeZ = currentDesiredPosition.z + rollChange * roll_z;
-        // Vector3 newPositionChangeLocal = new Vector3(
-        //     xlocalChange * xSensitivity,
-        //     ylocalChange * ySensitivity,
-        //     zlocalChange * zSensitivity);
-
-        // newPositionChangeX = xlocalChange * xSensitivity;
-        // // float newPositionChangeY = ylocalChange * ySensitivity;
-        // newPositionChangeZ = zlocalChange * zSensitivity;
-
-        // // Convert local position change to world space
-        // //Vector3 newPositionChangeWorld = transform.TransformPoint(newPositionChangeLocal) - transform.position;
-
-        // Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
-        // // Update desired position
-        // desiredPosition = currentDesiredPosition + newPositionChange;
-    
-    
-
-
-        // 270 
-        
-        // may need to be the current orientation of the drone, to be able to spin 360
-         // yaw can freely move
-        //float newYaw = transform.rotation.eulerAngles.y + (yawChange * yawSensitivity); // yaw can freely move
-        //float newYaw = yawChange * yawSensitivity; // yaw can freely move
-        //newYaw = WrapAngle(newYaw);
           
         if (toggleDebug)
         {
@@ -558,9 +437,6 @@ public class QuadcopterController: MonoBehaviour
             Debug.Log("currentRoll: " + rb.transform.rotation.eulerAngles.z);
         }
 
-       
-      
-        //desiredPosition = currentDesiredPosition + newPositionChangeWorld;
        
     }
 
@@ -580,69 +456,52 @@ public class QuadcopterController: MonoBehaviour
         float ySensitivity = 0.50f;
         float zSensitivity = 0.50f;
 
-        // quick mapping
-        // float xlocalChange = pitchChange;
-        // float ylocalChange = throttleChange;
-        // float zlocalChange = rollChange;
+       
 
 
 
         // // Converting neutral orientation from Quaternion to euler angles
         Vector3 neutralEulerAngles = neutralOrientation.eulerAngles;
-        // // Calculate new angles by applying the userInput changes to the neutral orientation and limiting the angle 
-        // float newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
-        // float newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
-        // float newYaw = neutralEulerAngles.y + (yawChange * yawSensitivity); // yaw can freely move
+       
 
         if (pitchChange == 0)
         {
             // No input detected, set desiredOrientation to neutralOrientation
             newPitch = neutralOrientation.eulerAngles.x;
 
-            // To cancel out the forward momentum, make a Impuls for a counter momentum 
-            //Vector3 counterTorque = new Vector3(-1*rb.angularVelocity.x,0,0);
-            //ApplyCounterTorque(counterTorque);
+           
            
         }
         else
         {
             // Calculate new angles directly within bounds
             newPitch = Mathf.Clamp(neutralEulerAngles.x + (pitchChange * pitchSensitivity), -maxPitch, maxPitch);
-            //float newPitch = Mathf.Clamp(pitchChange * pitchSensitivity, -maxPitch, maxPitch);
-            //newPitch = WrapAngle(newPitch);
+          
         }
 
         if (rollChange == 0)
         {
             newRoll = neutralOrientation.eulerAngles.z;
-            // To cancel out the left/right momentum, make a Impuls for a counter momentum
-            //Vector3 counterTorque = new Vector3(0,0,-1*rb.angularVelocity.z);
-            //ApplyCounterTorque(counterTorque);
+           
             
         }
         else
         {
             newRoll = Mathf.Clamp(neutralEulerAngles.z + (rollChange * rollSensitivity), -maxRoll, maxRoll);
             
-            //float newRoll = Mathf.Clamp(rollChange * rollSensitivity, -maxRoll, maxRoll);
-            //newRoll = WrapAngle(newRoll);
+            
         }
 
 
-        // 270 
+
         
         // may need to be the current orientation of the drone, to be able to spin 360
         float newYaw = neutralEulerAngles.y + prewYaw + (yawChange * yawSensitivity); // yaw can freely move
-        //float newYaw = transform.rotation.eulerAngles.y + (yawChange * yawSensitivity); // yaw can freely move
-        //float newYaw = yawChange * yawSensitivity; // yaw can freely move
-        //newYaw = WrapAngle(newYaw);
+       
           
         if (toggleDebug)
         {
-            //Debug.Log("DesiredPitch: " + newPitch);
-            //Debug.Log("currentPitch: " + rb.transform.rotation.eulerAngles.x);
-            //Debug.Log("DesiredYaw: " + newYaw);
-            // Debug.Log("PrewYaw: " + prewYaw);
+         
             Debug.Log("DesiredRoll: " + newRoll);
             Debug.Log("currentRoll: " + rb.transform.rotation.eulerAngles.z);
         }
@@ -656,34 +515,12 @@ public class QuadcopterController: MonoBehaviour
         //Update desired orientation
         desiredOrientation = Quaternion.Euler(newPitch, newYaw, newRoll);
        
-        //Debug.Log("desiredOrientation euler: " + desiredOrientation.eulerAngles);
-    
-        // current position should be the desired position, as its the starting position. 
-
         Vector3 currentDesiredPosition = desiredPosition;
-
-        // // x
-        // float newPositionChangeX = currentDesiredPosition.x + pitchChange * pitch_x;
-        // // y
-        // float newPositionChangeY = currentDesiredPosition.y + throttleChange * altitudeSensitivity; // Assumes altitudeChange controls vertical movement
-        // // z 
-        // float newPositionChangeZ = currentDesiredPosition.z + rollChange * roll_z;
-        // Vector3 newPositionChangeLocal = new Vector3(
-        //     xlocalChange * xSensitivity,
-        //     ylocalChange * ySensitivity,
-        //     zlocalChange * zSensitivity);
-
-        // newPositionChangeX = xlocalChange * xSensitivity;
-        // // float newPositionChangeY = ylocalChange * ySensitivity;
-        // newPositionChangeZ = zlocalChange * zSensitivity;
-
-        // Convert local position change to world space
-        //Vector3 newPositionChangeWorld = transform.TransformPoint(newPositionChangeLocal) - transform.position;
 
         Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
         // Update desired position
         desiredPosition = currentDesiredPosition + newPositionChange;
-        //desiredPosition = currentDesiredPosition + newPositionChangeWorld;
+       
        
     }
 
@@ -777,30 +614,6 @@ public class QuadcopterController: MonoBehaviour
             // Calculate the distance from this GameObject's position to the closest point
             distanceToObject = Vector3.Distance(transform.position, closestPoint);
 
-
-
-            // Update the state based on the distance
-            // if (distanceToObject < 1f)
-            // {
-            //     TWO_t_main_dist.text = "Dist Extreme Close";
-            //     TWO_i_main_dist.color = Color.red;
-            //     ONE_t_main_dist.text = "Dist Extreme Close";
-            //     ONE_i_main_dist.color =  Color.red;
-            // }
-            // else if (distanceToObject < 3f)
-            // {
-            //     TWO_t_main_dist.text = "Dist Close";
-            //     TWO_i_main_dist.color = Color.yellow;
-            //     ONE_t_main_dist.text = "Dist Close";
-            //     ONE_i_main_dist.color =  Color.yellow;
-            // }
-            // else
-            // {
-            //     TWO_t_main_dist.text = "Dist safe";
-            //     TWO_i_main_dist.color = Color.green;
-            //     ONE_t_main_dist.text = "Dist safe";
-            //     ONE_i_main_dist.color =  Color.green;
-            // }
             if (distanceToObject < notSafeDistance)
             {
                 shouldBlink = true;
@@ -839,7 +652,7 @@ public class QuadcopterController: MonoBehaviour
             TWO_i_main_dist.color = blinkColor;
             ONE_i_main_dist.color = blinkColor;
             yield return new WaitForSeconds(0.5f); // Blink interval
-            TWO_i_main_dist.color = Color.clear; // Choose the off color, e.g., clear or white
+            TWO_i_main_dist.color = Color.clear; // Choose the off color
             ONE_i_main_dist.color = Color.clear;
             yield return new WaitForSeconds(0.5f);
         }
@@ -865,35 +678,20 @@ public class QuadcopterController: MonoBehaviour
     void UpdatePID()
     {
     
-        // visual show pitch and roll rotation
-        //rb.transform.rotation = Quaternion.Euler(desiredEulerAngles.x, 0, desiredEulerAngles.z);
+     
 
         // get time since last update 
         float deltaTime = Time.fixedDeltaTime;
 
         // Get current state from sensors 
         Vector3 currentPosition = rb.transform.position;        
-        //Vector3 currentEulerAngles = transform.eulerAngles;
-
+    
         // Quaternion-based PID control
         Quaternion currentOrientation = rb.transform.rotation; // current orientation
-        //Quaternion currentOrientation = transform.localRotation;
-        //Quaternion desiredOrientation = Quaternion.Euler(desiredEulerAngles);
-        
-        //Debug.Log("desiredOrientation euler current: " + currentOrientation.eulerAngles);
+
 
 
         Vector3 angularVelocityError = AngularVelocities(currentOrientation, desiredOrientation, deltaTime);
-
-
-        // Calc orientation delta
-        //Quaternion orientationDelta = Quaternion.Inverse(currentOrientation) * desiredOrientation;
-
-
-        // Convert orientation delta to angular velocity vector (for linearity)
-        //Vector3 angularVelocityError = slerp_OrientationDeltaToAngularVelocity(orientationDelta, deltaTime);
-        //Vector3 angularVelocityError = OrientationDeltaToAngularVelocity(orientationDelta);
-       
 
         // get current angularVelocity 
         Vector3 currentAngularVelocity = rb.angularVelocity;
@@ -934,11 +732,6 @@ public class QuadcopterController: MonoBehaviour
         Vector3 currentVelocity = rb.velocity;
 
 
-        // Debug.Log("desiredPosition: " + desiredPosition);
-        // Debug.Log("currentPosition: " + currentPosition);
-        // Debug.Log("Targetvelocity: " + Targetvelocity);
-        // Debug.Log("currentVelocity: " + currentVelocity);
-
         // PID control on the angular velocity error (closed feedback loop)
 
         float rollControlInput = rollPIDQuaternion.UpdateAA(angularVelocityError.z, currentAngularVelocity.z, deltaTime);
@@ -947,13 +740,13 @@ public class QuadcopterController: MonoBehaviour
     
         // x
         float xControlInput = xPID.UpdateAA(Targetvelocity.x, currentVelocity.x, deltaTime);
-        //float xControlInput = xPID.UpdateAA(desiredPosition.x, currentPosition.x, deltaTime);
+       
         // y
-        //float altitudeError = AltitudePID.UpdateAA(desiredPosition.y, currentPosition.y, deltaTime);
+       
         float altitudeError = AltitudePID.UpdateAA(Targetvelocity.y, currentVelocity.y, deltaTime);
         // z
         float zControlInput = zPID.UpdateAA(Targetvelocity.z, currentVelocity.z, deltaTime);
-        //float zControlInput = xPID.UpdateAA(desiredPosition.z, currentPosition.z, deltaTime);
+       
         // Gravity compensation 
         float altitudeControlInput = altitudeError + gravityComp;
 
@@ -1064,8 +857,7 @@ public class QuadcopterController: MonoBehaviour
         if (Mathf.Abs(throttle) < 0.4f) throttle = 0f;
 
         ModifiedCalcDesiredPose(roll, pitch, yaw, throttle);
-        //CalcDesiredPose(roll, pitch, yaw, throttle);
-        //CalcDesiredPose(roll, pitch, yaw, throttle);
+        
      
         if (toggleDebug)
         {

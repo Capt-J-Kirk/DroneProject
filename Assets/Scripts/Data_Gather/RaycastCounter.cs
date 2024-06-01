@@ -45,109 +45,6 @@ public class RaycastCounter : MonoBehaviour
     public string gridLocation;
     public string userInterface;
 
-
-
-//     public bool StartRaycast()
-//     {
-//         return isRecording = true;
-//     }
-//     public bool StopRaycast()
-//     {
-//         return isRecording = false;
-//     }
-//     public void ClearObjectTransitions()
-//     {
-//         objectTransitions.Clear();
-//         Debug.Log("objectTransitions list cleared.");
-//     }
-//     // Toggle recording on and off
-//     public void ToggleRaycast()
-//     {
-//         isRecording = !isRecording;
-//         if (isRecording)
-//         {
-//             Debug.Log("Recording started.");
-//         }
-//         else
-//         {
-//             Debug.Log("Recording stopped.");
-//             SaveDetectedObjectsHits();
-//         }
-//     }
-//     void Start()
-//     {
-    
-//     }
-// //FIX THIS FUNCTION TO incorporate the START AND STOP functions 
-//     void Update()
-//     {
-        
-//         if (Input.GetKeyDown(KeyCode.R))
-//         {
-//             isRecording = !isRecording; //toggle the state
-//             if(!isRecording)
-//             {
-//                 SaveDetectedObjectsHits();
-//                 Debug.Log("Recording stopped.");
-//                 wasPressed = true;
-//             }
-//         }
-
-//         if (isRecording)
-//         {
-//             PerformRaycast();
-//             if (wasPressed)
-//             {
-//                 Debug.Log("Recording started.");
-//                 wasPressed = false;
-//             }
-            
-//         }
-//         // else
-//         // {   
-//         //     SaveDetectedObjectsHits();
-//         //     Debug.Log("Recording stopped.");
-//         // }
-    
-
-       
-//     }
-
-    // void PerformRaycast()
-    // {
-    //     if(rightHandController && rightHandController.enableInputActions)
-    //     {
-    //         //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //         Ray ray = new Ray(rightHandController.transform.position, rightHandController.transform.forward);
-            
-    //         if (Physics.Raycast(ray, out hit))
-    //         {
-    //             if (hit.collider.CompareTag("TrackableObject"))
-    //             {
-    //                 string objectName = hit.transform.name;
-    //                 Debug.Log("Hit " + hit.collider.gameObject.name);
-    //                 // Update hits count
-    //                 if (hitsCount.ContainsKey(objectName))
-    //                 {
-    //                     hitsCount[objectName]++;
-    //                 }
-    //                 else
-    //                 {
-    //                     hitsCount.Add(objectName, 1);
-    //                 }
-
-    //                 // Check and record object transition
-    //                 if (lastHitObject != null && lastHitObject.name != objectName)
-    //                 {
-    //                     string transition = $"{lastHitObject.name} to {objectName}";
-    //                     objectTransitions.Add(transition);
-    //                 }
-
-    //                 lastHitObject = hit.collider.gameObject; // Update last hit object
-    //             }
-    //         }
-    //     }
-    // }
     void oldPerformRaycast()
     {
         // gp væk fra screenPointToRay
@@ -205,31 +102,7 @@ public class RaycastCounter : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
 
-             // Debug.Log("sending raycast");
-            // Debug.Log("i Hit " + hit.collider.gameObject.name);
-
-            // // testing
-            // string objectName = hit.transform.name;
-
-            // string transition = "No transition";
-            // if (lastHitObject != null && lastHitObject.name != objectName)
-            // {
-            //     transition = $"{lastHitObject.name} to {objectName}";
-            //     hasTransitioned = true;
-            // }
-            // else
-            // {
-            //     hasTransitioned = false;
-            // }
-
-            // lastHitObject = hit.collider.gameObject; // Update last hit object
-
-            // // Prepare the record string
-            // string record = PrepareRecord(objectName, transition, hasTransitioned);
-            // // Add the record to the list
-            // Debug.Log("record: " + record);
-            // hitRecords.Add(record);
-            //LayerMask TargetLayer = LayerMask.GetMask("baseTargetLayer");
+        
             int layer = 3;
             int LayerMask = 1 << layer;
 
@@ -244,8 +117,7 @@ public class RaycastCounter : MonoBehaviour
                 // Convert the world position of the hit to a local position
                 localHitPoint = hitTransform.InverseTransformPoint(hit2.point);
 
-                // Debug output to the console
-                //Debug.Log("Local hit point: " + localHitPoint);
+                
             }
 
 
@@ -324,31 +196,5 @@ public class RaycastCounter : MonoBehaviour
         Debug.Log("hitRecords list cleared.");
     }
 
-    // private void SaveDetectedObjectsHits()
-    // {
-    //     string hitsFileName = $"ObjectHitsData_{System.DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
-    //     string transitionsFileName = $"ObjectTransitionsData_{System.DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
-    //     string hitsFilePath = Path.Combine(Application.persistentDataPath, hitsFileName);
-    //     string transitionsFilePath = Path.Combine(Application.persistentDataPath, transitionsFileName);
-
-    //     // Save hits
-    //     using (StreamWriter writer = new StreamWriter(hitsFilePath))
-    //     {
-    //         foreach (KeyValuePair<string, int> pair in hitsCount)
-    //         {
-    //             writer.WriteLine($"{pair.Key}: {pair.Value}");
-    //         }
-    //     }
-
-    //     // Save transitions
-    //     using (StreamWriter writer = new StreamWriter(transitionsFilePath))
-    //     {
-    //         foreach (string transition in objectTransitions)
-    //         {
-    //             writer.WriteLine(transition);
-    //         }
-    //     }
-
-    //     Debug.Log($"Data saved to {hitsFilePath} and {transitionsFilePath}");
-    // }
+  
 }

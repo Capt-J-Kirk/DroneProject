@@ -10,9 +10,7 @@ public class DataCollector : MonoBehaviour
     public int type = 0;
     public bool startDataCollection = false;
 
-    // allocation of each list, limit memory reallocation during testing. 
-    //private int frequency = 20; // how often is the data logged
-    //private int Duration  = 240; // 4 minuts (buffer) total planned mission time
+
     private int expectedSize = 20 * 240;
     // Lists to hold data
     private List<DroneData> dataList = new List<DroneData>(20*240);
@@ -47,8 +45,7 @@ public class DataCollector : MonoBehaviour
    
      public void SaveDataToCSV()
     {
-        // Example: Use the first data entry to generate part of the file name
-        // Ensure dataList is not empty to avoid errors
+        
         if (dataList.Count == 0)
         {
             Debug.LogError("Data list is empty. No data to save.");
@@ -75,18 +72,7 @@ public class DataCollector : MonoBehaviour
         // Convert each DroneData instance to a CSV row and append
         foreach (var data in dataList)
         {
-            // string csvLine = $"{data.name},{data.controlScheme},{data.startPose},{data.gridLocation},{data.userInterface}," +
-            //         $"{data.main_pos.x},{data.main_pos.y},{data.main_pos.z}," +
-            //         $"{data.main_rot.x},{data.main_rot.y},{data.main_rot.z},{data.main_rot.w}," +
-            //         $"{data.sec_pos.x},{data.sec_pos.y},{data.sec_pos.z}," +
-            //         $"{data.sec_rot.x},{data.sec_rot.y},{data.sec_rot.z},{data.sec_rot.w}," +
-            //         $"{data.inFlight},{data.inCleaning}," +
-            //         $"{data.cleaningPercent},{data.maxCleanValuePossible},{data.currentCleanValue},{data.cleaningPerSecond}," +
-            //         $"{data.throttle1},{data.pitch1},{data.yaw1},{data.roll1}," +
-            //         $"{data.throttle2},{data.pitch2},{data.yaw2},{data.roll2}," +
-            //         $"{data.radius},{data.theta},{data.phi}," +
-            //         $"{data.followMode},{data.switchDrone},{data.controlMainDrone},{data.switchCamFeed}," +
-            //         $"{data.isSpraying},{data.distanceToObject1},{data.distanceToObject2}";
+           
             string csvLine = $"{data.name},{data.controlScheme},{data.startPose},{data.gridLocation},{data.userInterface}," +
                         $"{data.main_pos.x.ToString(CultureInfo.InvariantCulture)},{data.main_pos.y.ToString(CultureInfo.InvariantCulture)},{data.main_pos.z.ToString(CultureInfo.InvariantCulture)}," +
                         $"{data.main_rot.x.ToString(CultureInfo.InvariantCulture)},{data.main_rot.y.ToString(CultureInfo.InvariantCulture)},{data.main_rot.z.ToString(CultureInfo.InvariantCulture)},{data.main_rot.w.ToString(CultureInfo.InvariantCulture)}," +

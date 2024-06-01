@@ -67,17 +67,7 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-       // GenerateGrid();
-    //    old_grid1.SetActive(false);
-    //    old_grid2.SetActive(false);
-        // grid1 = GameObject.Find("Grid1");
-        // grid2 = GameObject.Find("Grid2");
 
-        // if (grid1 == null || grid2 == null)
-        // {
-        //     Debug.LogError("Please assign the grids!");
-        //     return;
-        // }
     }
 
     // make sure to setup the tag "cleaning" in the tags and layers setting!
@@ -101,15 +91,14 @@ public class GridManager : MonoBehaviour
                 BoxList.Add(boxData);
                 
                 // Initialize properties
-                boxData.value = 0.0f;//Random.Range(0, 100); // Example initialization
-                boxData.intensity = 0.0f; //Random.Range(0.0f, 1.0f); // Example initialization
-                boxData.flag = false; //Random.value > 0.5f; // Example initialization
+                boxData.value = 0.0f;//Random.Range(0, 100); 
+                boxData.intensity = 0.0f; //Random.Range(0.0f, 1.0f); 
+                boxData.flag = false; //Random.value > 0.5f; 
                 // Set the color based on intensity
                 Renderer boxRenderer = newBox.GetComponent<Renderer>();
                 boxRenderer.material = new Material(boxRenderer.material); // This is necessary if you're not using shared materials
                 boxRenderer.material.color = Color.Lerp(Color.black, Color.white, boxData.intensity);
-                // Add a BoxCollider to the box
-                //newBox.AddComponent<BoxCollider>();
+              
             
                 maxCleanValuePossible += 1.0f; 
 
@@ -124,10 +113,10 @@ public class GridManager : MonoBehaviour
     {
         StringBuilder csvBuilder = new StringBuilder();
 
-        // Start with an empty string for the first cell if you want headers to start from the second column
-        csvBuilder.Append("Box"); // Or leave this empty if you want an empty first cell
+       
+        csvBuilder.Append("Box"); 
         
-        // Add the top headers
+
         //for (int i = 0; i < width * height; i++)
         for (int i = 0; i < BoxList.Count; i++)
         {
@@ -138,27 +127,27 @@ public class GridManager : MonoBehaviour
         // Write the data of each grid
         foreach (var grid in allGrids)
         {
-            // Values Row with its property name
-            csvBuilder.Append("Value"); // This will go into the first column of the new row
+            // Values 
+            csvBuilder.Append("Value"); 
             foreach (var box in grid)
             {
-                csvBuilder.Append($",{box.value.ToString(CultureInfo.InvariantCulture)}"); // Ensure to start with a comma
+                csvBuilder.Append($",{box.value.ToString(CultureInfo.InvariantCulture)}"); 
             }
             csvBuilder.AppendLine();
 
-            // Intensity Row with its property name
+            // Intensity 
             csvBuilder.Append("Intensity");
             foreach (var box in grid)
             {
-                csvBuilder.Append($",{box.intensity.ToString(CultureInfo.InvariantCulture):F2}"); // Ensure to start with a comma
+                csvBuilder.Append($",{box.intensity.ToString(CultureInfo.InvariantCulture):F2}"); 
             }
             csvBuilder.AppendLine();
 
-            // Flag Row with its property name
+            // Flag 
             csvBuilder.Append("Flag");
             foreach (var box in grid)
             {
-                csvBuilder.Append($",{box.flag}"); // Ensure to start with a comma
+                csvBuilder.Append($",{box.flag}"); 
             }
             csvBuilder.AppendLine();
         }
@@ -181,9 +170,9 @@ public class GridManager : MonoBehaviour
         // Clear the existing list to avoid duplicates
         BoxList.Clear();
         maxCleanValuePossible = 0f;
-        // Iterate through all children of the 'Grid' GameObject (this.transform assumes this script is attached to 'Grid')
+        
 
-        // make a check to select which grid should be loaded
+       
 
         if(gridLocation == "grid1")
         {
@@ -216,50 +205,7 @@ public class GridManager : MonoBehaviour
         
    
     }
-    // public void SaveToCSV()
-    // {
-    //     StringBuilder csvBuilder = new StringBuilder();
-
-    //     // Add the top headers only once, at the start
-    //     for (int i = 0; i < width * height; i++)
-    //     {
-    //         csvBuilder.Append($",Box_{i}");
-    //     }
-    //     csvBuilder.AppendLine();
-
-    //     // Write the data of each grid in blocks of three rows per grid
-    //     foreach (var grid in allGrids)
-    //     {
-    //         // Values Row with its property name
-    //         csvBuilder.Append("Value");
-    //         foreach (var box in grid)
-    //         {
-    //             csvBuilder.Append($", {box.value}");
-    //         }
-    //         csvBuilder.AppendLine();
-
-    //         // Intensity Row with its property name
-    //         csvBuilder.Append("Intensity");
-    //         foreach (var box in grid)
-    //         {
-    //             csvBuilder.Append($", {box.intensity:F2}");
-    //         }
-    //         csvBuilder.AppendLine();
-
-    //         // Flag Row with its property name
-    //         csvBuilder.Append("Flag");
-    //         foreach (var box in grid)
-    //         {
-    //             csvBuilder.Append($", {box.flag}");
-    //         }
-    //         csvBuilder.AppendLine();
-    //     }
-
-    //     string filePath = Path.Combine(Application.persistentDataPath, "box_data.csv");
-    //     File.WriteAllText(filePath, csvBuilder.ToString());
-
-    //     Debug.Log($"Data saved to {filePath}");
-    // }
+   
 
 
     public void UpdateAndSaveData()
@@ -268,15 +214,7 @@ public class GridManager : MonoBehaviour
         SaveToCSV();
     }
 
-    // void Update()
-    // {
-    //     UpdateBoxValues();
-    //     if (Input.GetKeyDown(KeyCode.W))
-    //     {
-    //         UpdateBoxValues();
-    //         SaveToCSV();
-    //     }
-    // }
+  
     
 
     public void UpdateBoxValues()
@@ -284,18 +222,18 @@ public class GridManager : MonoBehaviour
         // used to update the values
         foreach (var box in BoxList)
         {
-            // Increment or update properties as an example
+            // update properties 
             box.value +=0.01f;
             box.intensity += 0.01f;
             box.intensity = Mathf.Clamp(box.intensity, 0.0f, 1.0f);
-            box.flag = !box.flag; // Toggle for example
+            box.flag = !box.flag;
 
             // Update the color based on the new intensity
             Renderer boxRenderer = box.GetComponent<Renderer>();
             boxRenderer.material.color = Color.Lerp(Color.black, Color.white, box.intensity);
    
         }
-        // allGrids.Add(BoxList);
+       
 
 
         // used to take a snapshot and store it
@@ -324,10 +262,9 @@ public class GridManager : MonoBehaviour
     public void UpdateBoxValuesWithRayCast()
     {
         //Debug.Log("inside raycast");
-        // needs thr transform to be the nozzle of the watersprayer
-        //Vector3 castFromPosition = Nozzle.transform.position + new Vector3(0, -2,0);
+   
         Ray ray = new Ray(Nozzle.transform.position, Nozzle.transform.forward);
-        //Ray ray = new Ray(Nozzle.transform.position, Nozzle.transform.forward* -1);
+      
         RaycastHit hit;
         Debug.DrawRay(Nozzle.transform.position, transform.forward* -1 * maxDistance, Color.blue);
 
@@ -351,7 +288,7 @@ public class GridManager : MonoBehaviour
                     // Calculate radial factors for value decrement based on distance
                     float radialDistance = Vector3.Distance(hit.point, collider.transform.position);
                     float radialFactor = 1 - (radialDistance / radiusAtHit);
-                    float cleaningsFactor = Mathf.Abs(valueFactor * radialFactor)/2f; // scale down the cleaning factor by 10
+                    float cleaningsFactor = Mathf.Abs(valueFactor * radialFactor)/2f; // scale down the cleaning factor by 2
 
                     
 
@@ -362,7 +299,6 @@ public class GridManager : MonoBehaviour
                     {
                         //Debug.Log("box data:");
                         // Update the box cleanings status
-                        // using the value as the total amount of cleaning applied, there intencity if the real cleanliness of the box
                         boxData.value += cleaningsFactor;
                         boxData.intensity += cleaningsFactor;
                         boxData.intensity = Mathf.Clamp(boxData.intensity, 0.0f, 1.0f);
@@ -391,16 +327,7 @@ public class GridManager : MonoBehaviour
         // get states of each box 
         cleaningPerSecond = SumCleaningsFactor;
         float temp = 0.0f;
-        // foreach (var box in BoxList)
-        // {
-           
-        //     temp += box.intensity;
-            
-        // }
-
-        
-        // append the boxlist current states to the list
-        //allGrids.Add(BoxList);
+       
 
         List<BoxUpdate> currentGridState = new List<BoxUpdate>();
 
@@ -421,10 +348,7 @@ public class GridManager : MonoBehaviour
         }
         currentCleanValue = temp;
         cleaningPercent = (currentCleanValue / maxCleanValuePossible) * 100.0f;
-        //cleaningPercent = (maxCleanValuePossible / 100.0f) * currentCleanValue;
-        //Debug.Log("currentGridState " + currentGridState);
-        // Append the snapshot of the current grid state to allGrids
-
+   
         // PARSE THIS TO THE MISSION SCRIPT
 
         allGrids.Add(currentGridState);

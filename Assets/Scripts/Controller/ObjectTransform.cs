@@ -16,18 +16,12 @@ public class ObjectTransform: MonoBehaviour
     public GameObject Quadcopter_secondary;
     public QuadcopterController_sec ControlInput;
 
-    // Transformation matrix for rotation and translation
-    //private Matrix4x4 transformationMatrix;
 
     // Set up transformation parameters
     private Vector3 translationVector =  new Vector3(0.0f, 0.0f, 0.0f); 
     private Vector3 rotationVector =  new Vector3(0.0f, 0.0f, 0.0f); 
 
-    //public float fixedDistance = 10.0f; // desired distance offset 
-    // Fixed angles
-    //public float fixedYawDegrees = 20; // Fixed left-right angle
-    //public float fixedPitchDegrees = 20; // Fixed up-down angle
-    //private Vector3 direction; 
+  
 
     public int ControlScheme = 1;
     
@@ -42,10 +36,7 @@ public class ObjectTransform: MonoBehaviour
     private float pitch2;
     private float roll2;
     private float throttle2; // used to set the distance 
-    //private bool SettingParameterValues = false;
-    //private bool settingDistance = false;
-    //private bool settingYaw = false;
-    //private bool settingPitch = false;
+
     public bool toggleDebug = false;
 
     // Used for control scheme 1
@@ -74,15 +65,7 @@ public class ObjectTransform: MonoBehaviour
     private bool initStart = true;
     //private float waypointTimer = 0.5f; // Time between waypoint changes
     private float timer; // Current timer
-    //private int currentWaypointIndex = 0;
-    // Waypoints in spherical coordinates (theta, phi)
-    // private Vector2[] waypointsSpherical = new Vector2[]
-    // {
-    //     new Vector2(45, -10), // Point 1
-    //     new Vector2(120, -10), // Point 2
-    //     new Vector2(240, 10),   // Point 3
-    //     new Vector2(315, 10)    // Point 4
-    // };
+
 
     private float maxAllowedYaw = 75f;
 
@@ -181,63 +164,10 @@ public class ObjectTransform: MonoBehaviour
             count = 0;
             Debug.Log("changing pose " + changeInPosition);
 
-            // if (point == 0)
-            // {
-            //     point = 1;
-            // }
-            // else
-            // {
-            //     point = 0;
-            // }
+           
         }
     }
-    // void GetParameterUpdate()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.J))
-    //     {
-    //         settingDistance = !settingDistance;
-    //         Debug.Log("Updating fixedDistance");
-    //     }
-    //     if (Input.GetKeyDown(KeyCode.K))
-    //     {
-    //         settingYaw = !settingYaw;
-    //          Debug.Log("Updating fixedYaw");
-    //     }
-    //     if (Input.GetKeyDown(KeyCode.L))
-    //     {
-    //         settingPitch = !settingPitch;
-    //         Debug.Log("Updating fixedPitch");
-    //     }
-
-    //     if (settingDistance == true || settingPitch == true || settingYaw == true)
-    //     {
-    //         SettingParameterValues = true;
-    //     }
-    //     else
-    //     {
-    //         SettingParameterValues = false;
-    //     }
-
-    //     if (settingDistance)
-    //     {
-    //         UpdateFixedDistance();
-    //     }
-    //     if (settingPitch)
-    //     {
-    //         UpdatefixedPitchDegrees();
-    //     }
-    //     if (settingYaw)
-    //     {
-    //         UpdatefixedYawDegrees();
-    //     }
-
-    // }
-    // float WrapAngle(float angle)
-    // {
-    //     while (angle > 180) angle -= 360;
-    //     while (angle < -180) angle += 360;
-    //     return angle;
-    // }
+   
     public void resetYaw()
     {
         newYaw = 0f;
@@ -260,31 +190,16 @@ public class ObjectTransform: MonoBehaviour
 
     void Scheme_1_Spherical()
     {
-        // fejl fundet. fixed  yaw, so it dosn't rotate all the time. fixed it to nuatral point
         
-        // Spherical Orbit control 
-        // float thetaSensitivity = 2.0f;
-        // float phiSensitivity = 2.0f;
-        // float radiusSensitivity = 2.0f;
-
-        // theta += roll * thetaSensitivity; // horizontal movement
-        // phi += pitch * phiSensitivity; // vertical movement
-        // radius += throttle * radiusSensitivity; // change radius 
+        
+  
         radius = Mathf.Clamp(radius, minRadius, maxRadius);
         // Calculate desired positions on sphere
         float x = main_position.x + radius * Mathf.Sin(phi * Mathf.Deg2Rad) * Mathf.Cos(theta * Mathf.Deg2Rad);
         float y = main_position.y + radius * Mathf.Sin(phi * Mathf.Deg2Rad) * Mathf.Sin(theta * Mathf.Deg2Rad);
         float z = main_position.z + radius * Mathf.Cos(phi * Mathf.Deg2Rad);
         Vector3 targetPosition = new Vector3(x, y, z);
-        //Debug.Log("targetPosition: " + targetPosition); 
-        //Debug.Log("actual pos: " + sec_position);
-
- 
-        // test this out; xz is the horizontal plane and y is vertical 
-        //float x = radius * Mathf.Sin(phi) * Mathf.Cos(theta);
-        //float y = radius * Mathf.Sin(phi) * Mathf.Sin(theta);
-        //float z = radius * Mathf.Cos(phi);
-
+       
         // Addded Yaw orientation lock +- 45degs from lock point
 
         // Calculate desired orientation
@@ -333,7 +248,7 @@ public class ObjectTransform: MonoBehaviour
         up_down = throttle * radiusSensitivity; // change radius 
         
 
-        // ADD A BASELINE for up/down main_drones.y location
+        
         //up_down = Mathf.Clamp(main_position.y + up_down, main_position.y-minLow, maxHigh+main_position.y);
         radius = Mathf.Clamp(radius, minRadius, maxRadius);
 
@@ -352,51 +267,41 @@ public class ObjectTransform: MonoBehaviour
 
 
         Vector3 targetPosition = newPolarToCartesian(theta,radius);
-
-
-        // float x = main_position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
-        // float z = main_position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
         
         // added the sec drones y component
         float temp = sec_position.y + up_down;
         float y = Mathf.Clamp(temp, main_position.y-maxHigh, main_position.y+maxHigh);
 
         targetPosition.y = y;
-        //float y = main_position.y + up_down;
-        
-        //Vector3 targetPosition = new Vector3(x, y, z);
 
-        // Addded Yaw orientation lock +- 45degs from lock point
+
+
+
+        Vector3 focusPoint = new Vector3(main_position.x, sec_position.y, main_position.z);
+        Vector3 targetDirection = (focusPoint - sec_position).normalized;
+
+        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
+
+
 
         // Calculate desired orientation
         float yawSensitivity = 5.0f;
         // update prewious Yew
         prewYaw = newYaw;
         // possible add previous yaw, such it dosn't reset
+     
         newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
-        //newYaw = WrapAngle(newYaw);
-        //newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
-        //Quaternion targetOrientation = Quaternion.Euler(0, newYaw, 0);
-        
+
         // Correct any potential wrap-around issues
         newYaw = newYaw % 360;
 
         // face towards the main drone
         // use the alitude from the secondary drone itself
-        // if the focus point should be ahead of the main drone, add to the x axis
-        Vector3 focusPoint = new Vector3(main_position.x, sec_position.y, main_position.z);
 
-        Vector3 targetDirection = (focusPoint - sec_position).normalized;
-        // may need to add Vector3.up
-        Quaternion baseRotation = Quaternion.LookRotation(targetDirection);
-        // Adding yaw adjustment 45-degree yaw
+       
         Quaternion yawRotation = Quaternion.Euler(0, newYaw, 0); 
         Quaternion targetOrientation  = yawRotation * baseRotation;
-        //Quaternion targetOrientation = baseRotation;
-        //Debug.Log("targetOrientation:" + targetOrientation.eulerAngles);
-        //Debug.Log("Quadcopter_secondary:" + Quadcopter_secondary.transform.rotation.eulerAngles);
-        //Quadcopter_secondary.transform.rotation = Quaternion.Euler(0, 45f, 0);
-        //Debug.Log("Quadcopter_secondary:" + Quadcopter_secondary.transform.rotation.eulerAngles);
+       
         // Apply to drone controller
         ApplyNewPose(targetPosition, targetOrientation);
     }    
@@ -459,13 +364,9 @@ public class ObjectTransform: MonoBehaviour
         prewYaw = newYaw;
         // possible add previous yaw, such it dosn't reset
         newYaw = Sec_nuetralOrientation.eulerAngles.y + prewYaw + (yaw3 * yawSensitivity); // yaw can freely move
-        //newYaw = WrapAngle(newYaw);
-        //newYaw = Mathf.Clamp(newYaw, -maxAllowedYaw, maxAllowedYaw);
+       
         
-        // Correct any potential wrap-around issues
-        newYaw = newYaw % 360;
-
-
+    
         // face towards the main drone
         // use the alitude from the secondary drone itself
         Vector3 focusPoint = new Vector3(main_position.x, sec_position.y, main_position.z);

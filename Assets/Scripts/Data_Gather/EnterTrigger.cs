@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnterTrigger : MonoBehaviour
 {
-    // These variables should be defined if you're using them in your script
+    
     // private bool inCleaning = false;
     // private bool inFlight = false;
     private GameObject mission;
@@ -18,7 +18,7 @@ public class EnterTrigger : MonoBehaviour
         }
         mis = mission.GetComponent<MissionManager>();
     }
-    // OnTriggerEnter is called when another collider enters the trigger collider attached to this GameObject
+    
     private void OnTriggerEnter(Collider other)
     {
         // Check if the collider that entered the trigger has the tag "inCleaning"

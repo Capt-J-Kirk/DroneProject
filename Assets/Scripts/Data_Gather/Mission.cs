@@ -147,6 +147,10 @@ public class MissionManager : MonoBehaviour
     private bool loadsetup = true;
 
     bool populate = false;
+
+    private bool start_clean_timer = false;
+    private bool runOnes = true;
+
     void Awake()
     {
         if (grid != null)
@@ -164,15 +168,7 @@ public class MissionManager : MonoBehaviour
     {
         //performanceCleaning.GenerateGrid();
         dataCollectionIntance.type = missionCombination;
-        // if (grid != null)
-        // {
-        //     performanceCleaning = grid.GetComponent<GridManager>();
-            
-        // }
-        // else
-        // {
-        //     Debug.Log("set ref to grid: ");
-        // }
+       
         InvokeRepeating("DataUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("TrackingUpdate", 0.05f, 0.05f); // call 1/20 a sec 
         InvokeRepeating("PerformanceUpdate", 0.05f, 0.05f); // call 1/20 a sec 
@@ -197,11 +193,7 @@ public class MissionManager : MonoBehaviour
         {
             //Debug.Log("incleaning");
         }
-        // Four states, RUN:
-        // Menu
-        // Tutorial
-        // Mission
-        // Debug
+    
 
         if(false)//runMenu)
         {
@@ -213,14 +205,7 @@ public class MissionManager : MonoBehaviour
             }
             if(waithere && !id)
             {
-                // 
-            //    if(Input.GetKeyDown(KeyCode.Q))
-            //    {
-            //         runTutorial = true;
-            //         runMission = false;
-            //         runDebugging = false;
-            //         Debug.Log("runTutorial");
-            //    }
+            
                if(loadsetup && Input.GetKeyDown(KeyCode.W))
                {
                     runTutorial = false;
@@ -229,21 +214,7 @@ public class MissionManager : MonoBehaviour
                     Debug.Log("runMission");
                     waithere = false;
                }
-            //    if(Input.GetKeyDown(KeyCode.E))
-            //    {
-            //         runTutorial = false;
-            //         runMission = false;
-            //         runDebugging = true;
-            //         Debug.Log("runDebugging");
-            //         waithere = false;
-            //    }
-
-
-                // if(runTutorial)
-                // {
-                //    waithere = RunTutorial();
-    
-                // }
+           
 
 
             }
@@ -266,20 +237,7 @@ public class MissionManager : MonoBehaviour
             }
         }
         
-        // if (runTutorial)
-        // {   // parse this to a text box
-        //     float timeLeft = Tutorial_Timer-timer;
-
-        //     if(timer >= Tutorial_Timer || Input.GetKeyDown(KeyCode.C))
-        //     {
-        //         // set the correct booleans for toggling the menu to be active again
-        //         runMenu = true;
-        //         // stop running the tutorial
-        //         runTutorial = false;  
-        //         Debug.Log("Times up!");
-                 
-        //     }
-        // }
+        
 
         if(runMission)
         {
@@ -323,8 +281,17 @@ public class MissionManager : MonoBehaviour
                     
             if(inCleaning)
             {
-                // give the user xxx time to wash the blade.
-                if(timer >= (Inflight_Timer + targetTime))
+                if(runOnes)
+                {
+                    Inflight_Timer = timer;
+                }
+                if(performanceCleaning.toClean && runOnes)
+                {
+                    Debug.Log("starting clean timer");
+                    start_clean_timer = true;
+                    runOnes = false;
+                }// give the user xxx time to wash the blade.
+                if(start_clean_timer && timer >= (Inflight_Timer + targetTime))
                 {
                     OnTimeOut();
                     selectCombination = true;
@@ -362,7 +329,7 @@ public class MissionManager : MonoBehaviour
         if(loadsetup && Input.GetKeyDown(KeyCode.Alpha9))
         {
             start_time = timer;
-            missionCombination = 15;//12;//9;
+            missionCombination = 12;//9;
             LoadMission();
             missionActive = false;
             isRecording = false;
@@ -388,11 +355,7 @@ public class MissionManager : MonoBehaviour
                 performanceCleaning.ClearGridData();
             }
 
-            // if(loadsetup && Input.GetKeyDown(KeyCode.M))
-            // {
-            //     manualMenu = !manualMenu;
-            //     Menu.SetActive(manualMenu);
-            // }
+         
         
                     
             if(loadsetup && Input.GetKeyDown(KeyCode.G))
@@ -402,11 +365,7 @@ public class MissionManager : MonoBehaviour
                 if(test22)
                 {
                     Debug.Log("grid 1");
-                    //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
-                    // performanceCleaning.width = 30;
-                    // performanceCleaning.height = 20;
-                    //grid.transform.position = new Vector3(395,116,638);
-                    //grid.transform.rotation = Quaternion.Euler(90,180,0);
+                   
                     grid.transform.position = new Vector3(399.839996f,131.279999f,638f);
                     grid.transform.rotation = Quaternion.Euler(90,180,0);
                 }
@@ -418,17 +377,14 @@ public class MissionManager : MonoBehaviour
                     grid.transform.position = new Vector3(397.26001f,116.07f,638.130005f);
                     grid.transform.rotation = Quaternion.Euler(35,0,0);
                 }
-                // clear old grid
-                //performanceCleaning.ClearGeneratedGrid();
-                // generate a new grid
-                //performanceCleaning.GenerateGrid();
+               
             }
         }
         
 
 
 
-        // make the mission time, two timers, first for inflight 
+       
         
 
     }
@@ -443,10 +399,6 @@ public class MissionManager : MonoBehaviour
             second = Random.Range(10,100);
             id = false;
         }
-        // if(Input.GetKeyDown(KeyCode.A))
-        // {
-        //     id = false;
-        // }
        
         
 
@@ -527,20 +479,14 @@ public class MissionManager : MonoBehaviour
         // set start pose of both drones
         if(startPose == "start1")
         {
-            // main_drone.transform.position = new Vector3(100,80,110);
-            // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-            // sec_drone.transform.position = new Vector3(100,80,100);
-            // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+            
             Windmill.transform.position = new Vector3(405.799988f,60.7999992f,656.400024f);
             Windmill.transform.rotation = Quaternion.Euler(0,-90,0);
             
         }
         if(startPose == "start2")
         {
-            // main_drone.transform.position = new Vector3(100,80,110);
-            // main_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
-            // sec_drone.transform.position = new Vector3(100,80,100);
-            // sec_drone.transform.rotation = Quaternion.Euler(0, 0, 0);
+           
             Windmill.transform.position = new Vector3(405.799988f,60.7999992f,656.400024f);
             Windmill.transform.rotation = Quaternion.Euler(0,120,0);
         }
@@ -551,37 +497,22 @@ public class MissionManager : MonoBehaviour
         {
             grid1.SetActive(true);
             grid2.SetActive(false);
-            //performanceCleaning.ClearboxList();
-            //performanceCleaning.gameObject.grid1 = grid1;
+           
             performanceCleaning.PopulateBoxListFromExistingGrid();
             performanceCleaning.ClearGridData();
-            //UnityEditor.TransformWorldPlacementJSON:{"position":{"x":395.4469909667969,"y":116.12999725341797,"z":638.197021484375},"rotation":{"x":0.0,"y":0.7071068286895752,"z":-0.7071068286895752,"w":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}
-            // performanceCleaning.width = 10;
-            // performanceCleaning.height = 10;
-            // grid.transform.position = grid1.transform.position;
-            // grid.transform.rotation = grid1.transform.rotation;
-            // grid.transform.position = new Vector3(395,116,638);
-            // grid.transform.rotation = Quaternion.Euler(90,180,0);
+           
         }
         if(gridLocation == "grid2")
         {
             grid1.SetActive(false);
             grid2.SetActive(true);
-            //performanceCleaning.ClearboxList();
+        
           
             performanceCleaning.PopulateBoxListFromExistingGrid();
             performanceCleaning.ClearGridData();
-            // performanceCleaning.width = 200;
-            // performanceCleaning.height = 10;
-            // grid.transform.position = grid2.transform.position;
-            // grid.transform.rotation = grid2.transform.rotation;
-            //grid.transform.position = new Vector3(395,116,638);
-            //grid.transform.rotation = Quaternion.Euler(90,180,0);
+           
         }
-        // clear old grid
-        //performanceCleaning.ClearGeneratedGrid();
-        // generate a new grid
-        //performanceCleaning.GenerateGrid();
+ 
 
         // set user interface
 
@@ -617,23 +548,7 @@ public class MissionManager : MonoBehaviour
             objectTransform.ControlScheme = 2;
         }
 
-        // start the recording of data logging of:
-        // overall data
-        // head tracking
-
-        // set the drones into a starting position
-        // main_drone.Rigidbody.transform.Velocity = 0f;
-        // main_drone.transform.angularVelocity = 0f;
-        // sec_drone.transform.velocity = 0f;
-        // sec_drone.transform.angularVelocity = 0f;
-
-
-        // main_drone.xPID.ClearPID();
-        // main_drone.zPID.ClearPID();
-        // main_drone.AltitudePID.ClearPID();
-        // main_drone.pitchPIDQuaternion.ClearPID();
-        // main_drone.rollPIDQuaternion.ClearPID();
-        // main_drone.yawPIDQuaternion.ClearPID();
+        
         
 
         main_drone.transform.position = new Vector3(411.408539f,79.9533463f,613.304993f);
@@ -652,7 +567,8 @@ public class MissionManager : MonoBehaviour
         objectTransform.prewYaw = 0f;
         missionActive = true;
         isRecording = true;
-
+        start_clean_timer = false;
+        runOnes = true;
         // starting of performance logging of cleaning, is started then transcition from inflight to incleaning
        
 
@@ -666,6 +582,8 @@ public class MissionManager : MonoBehaviour
         missionActive = false;
         isRecording = false;
         inCleaning = false;
+        start_clean_timer = false;
+        runOnes = true;
         Debug.Log("Time out");
         // data 
         dataCollectionIntance.SaveDataToCSV();
@@ -685,11 +603,13 @@ public class MissionManager : MonoBehaviour
         missionActive = false;
         startMission = true;
         isRecording = false;
+        start_clean_timer = false;
+        runOnes = true;
         dataCollectionIntance.ClearDataList();
         raycastCounter.ClearhitRecords();
         performanceCleaning.ClearGridData();
 
-        // add count of how many resets and i which mission
+       
     }
 
 
@@ -697,7 +617,7 @@ public class MissionManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider inChange)
     {
-        // selecting the object in Unity's editor, then in the Collider component (e.g., BoxCollider, SphereCollider, etc.), check the "Is Trigger" option.
+        
         // remenber to set the tag "inCleaning"
         if (inChange.CompareTag("inCleaning"))
         {
@@ -775,8 +695,7 @@ public class MissionManager : MonoBehaviour
     {
         if(inCleaning)
         {
-            //Debug.Log("performanceCleaning cuserInput.isSprayingalled");
-            //performanceCleaning.UpdateBoxValues();
+          
             performanceCleaning.UpdateBoxValuesWithRayCast();
         } 
     }

@@ -11,9 +11,7 @@ public class QuadcopterController_sec: MonoBehaviour
     private float drag = 0.5f; // Drag coefficient
     //private float mass = 5f; // Mass of the quadcopter
     private float maxAngularVelocity = 5f; // Maximum angular velocity
-    //private float maxAngularAcceleration = 2f; // Maximum angular acceleration
-    //public Vector3 thrustForce = new Vector3(0f, 5f, 0f); // Thrust force
-    //private float speed = 5.0f;
+    
 
     // Max angle
     public float maxYaw = 20.0f;
@@ -51,12 +49,6 @@ public class QuadcopterController_sec: MonoBehaviour
     private float zKp = 7.82403f, zKi = 18.87807f, zKd = 5f; 
 
 
-    // // needs fine tuning! 
-    // public float rollKp = 1.0f, rollKi = 0.1f, rollKd = 0.01f;
-    // public float pitchKp = 1.0f, pitchKi = 0.1f, pitchKd = 0.01f;
-    // public float yawKp = 1.0f, yawKi = 0.1f, yawKd = 0.01f;
-    // public float altitudeKp = 2.0f, altitudeKi = 0.1f, altitudeKd = 0.01f;    
-
     // desired pose
     public Vector3 desiredPosition;
     public Vector3 desiredEulerAngles; 
@@ -73,8 +65,7 @@ public class QuadcopterController_sec: MonoBehaviour
     public GameObject Visual_Quadcopter_secondary;
 
 
-    // object avoidance
-
+  
     // remenber to set the windblade in the inspector!
     public Transform windblade;
     private Collider targetCollider; // Collider of the target object
@@ -106,71 +97,7 @@ public class QuadcopterController_sec: MonoBehaviour
         return neutralOrientation;
     }
 
-    // void MoveTowardsTarget2(Vector3 targetPosition, Quaternion rot)
-    // {
-    //     float speed = 0.5f;
-    //     float turnSpeed = 0.5f;
-    //     Vector3 currentPosition = transform.position;
-    //     Vector3 directionToTarget = (targetPosition - currentPosition).normalized;
-
-    //     // Calculate pitch. No changes needed here as your approach was correct.
-    //     float targetPitch = Mathf.Asin(directionToTarget.x) * Mathf.Rad2Deg;
-
-    //     // Extract yaw from the given rotation 'rot'.
-    //     float targetYaw = rot.eulerAngles.y;
-
-    //     // Roll might not be directly calculable in the context of just moving towards a point without more context
-    //     // (e.g., desired bank angle during a turn, which would involve the object's current velocity and desired turn rate).
-    //     // For a basic implementation that orients towards a target, roll is typically not adjusted based on target position.
-    //     // Here, we'll set roll to zero for simplicity unless you have a specific use case requiring it.
-    //     float targetRoll = 0f;
-
-    //     // Clamp pitch values within allowed limits.
-    //     targetPitch = Mathf.Clamp(targetPitch, -maxPitch, maxPitch);
-
-    //     // For this implementation, we're assuming roll is not influenced by the target position, so it's not clamped.
-    //     targetRoll = Mathf.Clamp(targetRoll, -maxRoll, maxRoll); // Uncomment if roll is determined differently.
-
-    //     // Apply the calculated orientation and the target position.
-    //     // Here, we set the object's orientation directly, but for smooth movement, consider using Quaternion.Lerp or Quaternion.Slerp.
-    //     Quaternion desiredOrientation2 = Quaternion.Euler(targetPitch, targetYaw, targetRoll);
-    //     Vector3 desiredPosition2 = targetPosition;
-
-    //     // To apply the orientation, you might do something like this in Update or FixedUpdate:
-    //     transform.position = Vector3.MoveTowards(transform.position, desiredPosition2, speed * Time.deltaTime);
-    //     transform.rotation = Quaternion.Slerp(transform.rotation, desiredOrientation2, turnSpeed * Time.deltaTime);
-    // }
-
-    // void MoveTowardsTarget(Vector3 targetPosition, Quaternion rot)
-    // {
-             
-    //     // pitch should be x
-    //     // roll = z
-    //     // they should be controlling the horizontale plane movement
-    //     // altitude is z 
-
-    //     Vector3 directionToTarget = (targetPosition - transform.position).normalized;
-    //     float horizontalDistance = new Vector3(directionToTarget.x, 0, directionToTarget.z).magnitude;
-    //     Debug.Log("directionToTarget: " + directionToTarget);
-    //     Debug.Log("horizontalDistance: " + horizontalDistance);
-
-    //     directionToTarget = directionToTarget / horizontalDistance; // Normalize horizontal component
-    //     Debug.Log("directionToTarget: " + directionToTarget);
-    //     // Calculate pitch and roll based on the target's direction
-    //     float targetPitch = Mathf.Asin(directionToTarget.y) * Mathf.Rad2Deg; // Asin gives the angle in radians, convert to degrees
-    //     float targetRoll = Mathf.Atan2(directionToTarget.x, directionToTarget.z) * Mathf.Rad2Deg;
-
-    //     // clamp pitch and roll 
-    //     targetPitch = Mathf.Clamp(targetPitch, -maxPitch, maxPitch);
-    //     targetRoll = Mathf.Clamp(targetRoll, -maxRoll, maxRoll);
-    //     Debug.Log("targetPitch: " + targetPitch);
-    //     Debug.Log("targetRoll: " + targetRoll);
-
-    //     // Apply desired orientation and position
-    //     desiredOrientation = Quaternion.Euler(targetPitch, rot.y, targetRoll);
-    //     desiredPosition = targetPosition;
-       
-    // }
+   
 
     private void TestingDesiredPose()
     {
@@ -181,10 +108,7 @@ public class QuadcopterController_sec: MonoBehaviour
         float newRoll = 0;
         float newYaw = 0;
            
-        //Debug.Log("newPitch: " + newPitch);
-        //Debug.Log("newRoll: " + newRoll);
-        //Debug.Log("newYaw: " + newYaw);
-        //Debug.Log("newYaw: " + newYaw);
+    
         Vector3 neutralEulerAngles = neutralOrientation.eulerAngles;
         newPitch = Mathf.Clamp(neutralEulerAngles.x + newPitch, -maxPitch, maxPitch);
         newRoll = Mathf.Clamp(neutralEulerAngles.z + newRoll, -maxRoll, maxRoll);
@@ -256,12 +180,6 @@ public class QuadcopterController_sec: MonoBehaviour
         //Update desired orientation
         desiredOrientation = Quaternion.Euler(0, newYaw, 0);
        
-
-
-
-
-        //Debug.Log("desiredOrientation euler: " + desiredOrientation.eulerAngles);
-    
         // current position should be the desired position, as its the starting position. 
 
         Vector3 currentDesiredPosition = desiredPosition;
@@ -269,7 +187,7 @@ public class QuadcopterController_sec: MonoBehaviour
         Vector3 newPositionChange = Vector3.up * throttleChange * altitudeSensitivity;
         // Update desired position
         desiredPosition = currentDesiredPosition + newPositionChange;
-        //desiredPosition = currentDesiredPosition + newPositionChangeWorld;
+   
        
     }
 
@@ -422,7 +340,7 @@ public class QuadcopterController_sec: MonoBehaviour
         Visual_Quadcopter_secondary.transform.position = transform.position;
         Visual_Quadcopter_secondary.transform.rotation = transform.rotation;
 
-        //MoveTowardsTarget2(targetPositionTEST, rotTEST);
+       
         UpdatePID();
 
         if (targetCollider != null)
@@ -470,7 +388,7 @@ public class QuadcopterController_sec: MonoBehaviour
             TWO_i_sec_dist.color = blinkColor;
             ONE_i_sec_dist.color = blinkColor;
             yield return new WaitForSeconds(0.5f); // Blink interval
-            TWO_i_sec_dist.color = Color.clear; // Choose the off color, e.g., clear or white
+            TWO_i_sec_dist.color = Color.clear; // Choose the off color
             ONE_i_sec_dist.color = Color.clear;
             yield return new WaitForSeconds(0.5f);
         }
@@ -550,13 +468,7 @@ public class QuadcopterController_sec: MonoBehaviour
         // Gravity compensation 
         float altitudeControlInput = altitudeError + gravityComp;
 
-        // test
-        // Debug.Log("yawControlInput: " + yawControlInput);
-        // Debug.Log("desiredOrientation: " + desiredOrientation);
-        // Debug.Log("currentOrientation: " + currentOrientation);
-        // //Debug.Log("orientationDelta: " + orientationDelta);
-        // Debug.Log("angularVelocityError: " + angularVelocityError);
-        //rb.transform.rotation = desiredOrientation;
+    
         // Apply control input 
         ControlMotors(rollControlInput, pitchControlInput, yawControlInput, altitudeControlInput, xControlInput, zControlInput);
  
@@ -612,27 +524,12 @@ public class QuadcopterController_sec: MonoBehaviour
             rb.AddForce(transform.up * throttle2, ForceMode.Force);
         }
     
-        // Vector3 controlForceWorld = new Vector3(x, lift2, z);
-        // Vector3 controlForceLocal = controlForceWorld;//transform.InverseTransformDirection(controlForceWorld);
-
-        // // apply force in x, y, and z
-        // controlForceLocal.x = Mathf.Clamp(controlForceLocal.x, -maxVelocity, maxVelocity);
-        // controlForceLocal.y = Mathf.Clamp(controlForceLocal.y, -maxVelocity, maxVelocity);
-        // controlForceLocal.z = Mathf.Clamp(controlForceLocal.z, -maxVelocity, maxVelocity);
-        // rb.AddForce(controlForceLocal, ForceMode.Force);
-
-
-        // float xforce = Mathf.Clamp(x, -maxVelocity, maxVelocity);
-        // rb.AddForce(transform.right * xforce, ForceMode.Force);
-
-        // float zforce = Mathf.Clamp(z, -maxVelocity, maxVelocity);
-        // rb.AddForce(transform.forward * zforce, ForceMode.Force);
-
+    
 
 
         // pitch, forward and backward
         float clampPitch = Mathf.Clamp(pitch, -maxVelPitch, maxVelPitch);
-        //rb.AddTorque(transform.right * clampPitch, ForceMode.Force);
+       
 
 
         // roll, left and right
@@ -642,9 +539,7 @@ public class QuadcopterController_sec: MonoBehaviour
         // yaw, left and right
         float clampYaw = Mathf.Clamp(yaw, -maxVelYaw, maxVelYaw);
         rb.AddTorque(transform.up * clampYaw, ForceMode.Force);
-        // Debug.Log("yaw: " + yaw);
-        // Debug.Log("yawForce: " + clampYaw);
-        //Debug.Log("clamplift: " + throttle2);
+ 
 
         if (toggleDebug)
         {
@@ -697,9 +592,7 @@ public class QuadcopterController_sec: MonoBehaviour
 
     public void SetQuadcopterPose(Vector3 pos, Quaternion rot)
     {
-        // transform.position = pos;
-        // transform.rotation = rot;
-        //MoveTowardsTarget(pos, rot);
+        
         // Already calc by the transform script, for follow behaviour.
         desiredOrientation = rot;
         desiredPosition = pos;
